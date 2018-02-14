@@ -54,10 +54,10 @@ namespace GrandHotel_WebApplication.Controllers
 
             if (ModelState.IsValid)
             {
-                if (_context.Reservation.Where(m => m.Jour == Jour).Include(c=>c.NumChambre).Select(c=>c.NbNuit== !=null||)
-                {
+                //if (_context.Reservation.Where(m => m.Jour == Jour).Include(c=>c.NumChambre).Select(c=>c.NbNuit== !=null||)
+                //{
 
-                }
+                //}
             }
             return View();
         }

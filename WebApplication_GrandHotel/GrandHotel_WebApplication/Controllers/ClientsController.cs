@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GrandHotel_WebApplication.Data;
 using GrandHotel_WebApplication.Models;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace GrandHotel_WebApplication.Controllers
 {
@@ -22,12 +24,46 @@ namespace GrandHotel_WebApplication.Controllers
         // GET: Clients
         public async Task<IActionResult> Index(string lettre)
         {
-         
-            var client = await _context.Client
-                .Where(a => a.Nom.StartsWith(lettre))
-                .Include(c=>c.Reservation)
-                .OrderBy(a => a.Nom).ToListAsync();
-            return View(client);
+            var clients = new List<Client>();
+            if (lettre == null) lettre = " ";
+            string req = @"select C.Id, C.Nom, C.Prenom, C.Email, count(R.IdClient) NbReservation
+                           from Reservation R
+                           left outer join Client C on C.Id = R.IdClient
+                           where left(C.Nom,1)= @lettre 
+                           group by C.Id, C.Nom, C.Prenom, C.Email
+                           order by C.Id";
+
+            using (var conn = (SqlConnection)_context.Database.GetDbConnection())
+            {
+                var cmd = new SqlCommand(req, conn);
+                cmd.Parameters.Add(new SqlParameter
+                {
+                    SqlDbType = SqlDbType.NVarChar,
+                    ParameterName = "@lettre",
+                    Value = lettre
+                });
+                await conn.OpenAsync();
+
+                using (var sdr = await cmd.ExecuteReaderAsync())
+                {
+                    while (sdr.Read())
+                    {
+                        var cli = new Client();
+                        cli.Id = (int)sdr["Id"];
+                        cli.Nom = (string)sdr["Nom"];
+                        cli.Prenom = (string)sdr["Prenom"];
+                        cli.Email = (string)sdr["Email"];
+                        cli.NbReservation = (int)sdr["NbReservation"];
+                        clients.Add(cli);
+                    }
+                }
+            }
+
+            //var client = await _context.Client
+            //    .Where(a => a.Nom.StartsWith(lettre))
+            //    .Include(c => c.Reservation)
+            //    .OrderBy(a => a.Id).ToListAsync();
+            return View(clients);
         }
 
         // GET: Clients/Details/5
@@ -38,46 +74,40 @@ namespace GrandHotel_WebApplication.Controllers
                 return NotFound();
             }
 
-            var client = await _context.Client
-                .SingleOrDefaultAsync(m => m.Id == id);
+            //var client = await _context.Client
+            //    .SingleOrDefaultAsync(m => m.Id == id);
 
+            var client = new Client();
+            string req = @"select C.Id, C.Nom, C.Prenom, C.Email,count(R.IdClient) NbReservationEnCours
+                           from Reservation R
+                           left outer join Client C on C.Id = R.IdClient
+                           where R.Jour<=GETDATE() And C.Id=@Id
+                           group by C.Id, C.Nom, C.Prenom, C.Email
+                           order by C.Id";
+            
+            using (var conn = (SqlConnection)_context.Database.GetDbConnection())
+            {
+                var cmd = new SqlCommand(req, conn);
+                cmd.Parameters.Add(new SqlParameter
+                {
+                    SqlDbType = SqlDbType.Int,
+                    ParameterName = "@Id",
+                    Value = id
+                });
+                await conn.OpenAsync();
 
-            //   string req = @"select C.Id, C.Nom, C.Prenom, C.Email,count(R.IdClient) NbReservation
-            //                  from Reservation R
-            //            left outer join Client C on C.Id = R.IdClient
-            //where R.Jour<=GETDATE() And C.Id=@Id
-            //group by C.Id, C.Nom, C.Prenom, C.Email
-            //order by C.Id";
-
-            //   var Client = new List<Aliment>();
-            //   using (var conn = (SqlConnection)_context.Database.GetDbConnection())
-            //   {
-            //       var cmd = new SqlCommand(req, conn);
-            //       cmd.Parameters.Add(new SqlParameter
-            //       {
-            //           SqlDbType = SqlDbType.Char,
-            //           ParameterName = "@codeFamille",
-            //           Value = codeFSelect
-            //       });
-            //       await conn.OpenAsync();
-
-            //       using (var sdr = await cmd.ExecuteReaderAsync())
-            //       {
-            //           while (sdr.Read())
-            //           {
-            //               var a = new Aliment();
-
-            //               a.Nom = (string)sdr["Nom"];
-            //               a.IdAliment = (int)sdr["IdAliment"];
-            //               a.CodeFamille = (string)sdr["CodeFamille"];
-            //               a.NbConstituant = (int)sdr["Constituant"];
-            //               aliment.Add(a);
-            //           }
-            //       }
-            //   }
-
-            //   vmAliments.Aliments = aliment;
-            //   return View(vmAliments);
+                using (var sdr = await cmd.ExecuteReaderAsync())
+                {
+                    while (sdr.Read())
+                    {
+                        client.Id = (int)sdr["Id"];
+                        client.Nom = (string)sdr["Nom"];
+                        client.Prenom = (string)sdr["Prenom"];
+                        client.NbReservEnCours = (int)sdr["NbReservationEnCours"];
+                    }
+                }
+            }
+            
             if (client == null)
             {
                 return NotFound();

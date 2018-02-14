@@ -19,10 +19,15 @@ namespace GrandHotel_WebApplication.Data
         public virtual DbSet<TarifChambre> TarifChambre { get; set; }
         public virtual DbSet<Telephone> Telephone { get; set; }
 
+
+
         public GrandHotelContext(DbContextOptions<GrandHotelContext> options): base(options)
         {
 
         }
+
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

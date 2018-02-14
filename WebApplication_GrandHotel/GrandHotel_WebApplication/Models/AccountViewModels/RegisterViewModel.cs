@@ -8,20 +8,21 @@ namespace GrandHotel_WebApplication.Models.AccountViewModels
 {
     public class RegisterViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Email requis")]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [Required(ErrorMessage ="Mot de passe requis")]
+        [StringLength(100, ErrorMessage = "Entre 6 et 100 caractères et doit contenir des majuscules et des minuscules", MinimumLength = 6)]
+        //[RegularExpression("^(?=.*[a-z])(?=.*[A-Z]).+$", ErrorMessage = "Entre 6 et 100 caractères et doit contenir des majuscules et des minuscules")]
+        [Display(Name = "Mot de passe")]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "Confirmer le mot de passe")]
+        [Compare("Password", ErrorMessage = "Le mot de passe ne correspond pas...")]
         public string ConfirmPassword { get; set; }
     }
 }

@@ -11,9 +11,10 @@ using System;
 namespace GrandHotel_WebApplication.Data.Migrations
 {
     [DbContext(typeof(GrandHotelContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180214112601_essai")]
+    partial class essai
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

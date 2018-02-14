@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace GrandHotel_WebApplication
+namespace GrandHotel_WebApplication.Models
 {
     public partial class Adresse
     {

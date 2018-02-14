@@ -5,6 +5,13 @@
     <UserSecretsId>aspnet-GrandHotel_WebApplication-04AEE2D8-EF92-4A77-BAF0-92E6A81BC1EF</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20180214112601_essai.cs" />
+    <Compile Remove="Data\Migrations\20180214112601_essai.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180214120130_dfsdf.cs" />
+    <Compile Remove="Data\Migrations\20180214120130_dfsdf.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />

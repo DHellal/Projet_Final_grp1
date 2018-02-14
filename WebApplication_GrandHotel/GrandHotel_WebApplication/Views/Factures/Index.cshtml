@@ -1,53 +1,65 @@
-﻿@model IEnumerable<GrandHotel_WebApplication.Models.Facture>
+﻿@model FactureVM
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Les factures pour client N°:  </h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
+<form asp-controller="Factures" asp-action="Index" method="get">
+    <p>
+        <span>Année</span>
+
+
+        <select asp-for="AnneeEnCour" asp-items="@(new SelectList(ViewBag.Years))"></select>
+
+
+        <input type="submit" value="Filtrer" />
+    </p>
+</form>
+
+
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.DateFacture)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DatePaiement)
-                </th>
             <th>
-                @Html.DisplayNameFor(model => model.CodeModePaiementNavigation)
+                @Html.DisplayNameFor(model => model.Factures[0].Id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IdClientNavigation)
+                @Html.DisplayNameFor(model => model.Factures[0].DateFacture)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Factures[0].DatePaiement)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Factures[0].CodeModePaiement)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateFacture)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DatePaiement)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CodeModePaiementNavigation.Code)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdClientNavigation.Civilite)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Factures)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateFacture)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DatePaiement)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CodeModePaiement)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

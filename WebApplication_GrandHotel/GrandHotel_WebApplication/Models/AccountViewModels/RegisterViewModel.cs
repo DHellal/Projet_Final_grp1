@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebApplication_GrandHotel.Models.AccountViewModels
+namespace GrandHotel_WebApplication.Models.AccountViewModels
 {
     public class RegisterViewModel
     {
@@ -14,7 +14,7 @@ namespace WebApplication_GrandHotel.Models.AccountViewModels
         public string Email { get; set; }
 
         [Required]
-        [StringLength(6, ErrorMessage = "6 caracteres minimum", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }

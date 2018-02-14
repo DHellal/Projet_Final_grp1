@@ -1,11 +1,12 @@
 ﻿using System;
 using GrandHotel_WebApplication.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace GrandHotel_WebApplication.Data
 {
-    public partial class GrandHotelContext : DbContext
+    public partial class GrandHotelContext : IdentityDbContext<ApplicationUser>
     {
         public virtual DbSet<Adresse> Adresse { get; set; }
         public virtual DbSet<Calendrier> Calendrier { get; set; }
@@ -25,9 +26,6 @@ namespace GrandHotel_WebApplication.Data
         {
 
         }
-
-
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

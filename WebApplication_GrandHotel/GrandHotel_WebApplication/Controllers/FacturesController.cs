@@ -20,24 +20,42 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: Factures
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int id, string AnneeEnCour)
         {
-            var grandHotelContext = _context.Facture.Include(f => f.CodeModePaiementNavigation).Include(f => f.IdClientNavigation);
-            return View(await grandHotelContext.ToListAsync());
+            id = 1; // faut modifier selon idclient
+
+            List<int> years = new List<int> { 2018, 2017, 2016, 2015 };
+            ViewBag.Years = years;
+
+            if (AnneeEnCour == null)
+            {
+                AnneeEnCour = "2018";
+            }
+
+            int year = int.Parse(AnneeEnCour);
+
+            var facturesVM = new FactureVM();
+
+            facturesVM.Factures= await _context.Facture.Where(f => f.IdClient == id && f.DateFacture.Year == year).OrderByDescending(o => o.DateFacture).ToListAsync();
+            facturesVM.AnneeEnCour = AnneeEnCour;
+
+            return View(facturesVM);
         }
 
         // GET: Factures/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            if (id == 0)
             {
                 return NotFound();
             }
 
+            // id = 1;
+
             var facture = await _context.Facture
-                .Include(f => f.CodeModePaiementNavigation)
-                .Include(f => f.IdClientNavigation)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .Include(f => f.LigneFacture)
+                .Where(l => l.Id == id)
+                .SingleOrDefaultAsync();
             if (facture == null)
             {
                 return NotFound();

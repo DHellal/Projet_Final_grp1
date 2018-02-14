@@ -48,19 +48,19 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: Reservations/Create
-        //public IActionResult VerifDisponibilité(DateTime Jour, int NbNuit, byte NbPersonnes)
-        //{
-        //    bool verif = false;
+        public IActionResult VerifDisponibilité(DateTime Jour, int NbNuit, byte NbPersonnes)
+        {
+            bool verif = false;
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (_context.Reservation.Where(m => m.Jour == Jour).Include(c=>c.NumChambre).Select(c=>c.NbNuit== !=null||)
-        //        {
+            if (ModelState.IsValid)
+            {
+                //if (_context.Reservation.Where(m => m.Jour == Jour).Include(c=>c.NumChambre).Select(c=>c.NbNuit== !=null||)
+                //{
 
-        //        }
-        //    }
-        //    return View();
-        //}
+                //}
+            }
+            return View();
+        }
 
         // POST: Reservations/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 

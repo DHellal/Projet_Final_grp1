@@ -22,10 +22,10 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: Clients
-        public async Task<IActionResult> Index(string lettre)
+        public async Task<IActionResult> Index(char lettre='A')
         {
             var clients = new List<Client>();
-            if (lettre == null) lettre = " ";
+            
             string req = @"select C.Id, C.Nom, C.Prenom, C.Email, count(R.IdClient) NbReservation
                            from Reservation R
                            left outer join Client C on C.Id = R.IdClient
@@ -38,7 +38,7 @@ namespace GrandHotel_WebApplication.Controllers
                 var cmd = new SqlCommand(req, conn);
                 cmd.Parameters.Add(new SqlParameter
                 {
-                    SqlDbType = SqlDbType.NVarChar,
+                    SqlDbType = SqlDbType.Char,
                     ParameterName = "@lettre",
                     Value = lettre
                 });

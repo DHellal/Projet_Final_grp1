@@ -1,0 +1,54 @@
+﻿@model GrandHotel_WebApplication.Models.Reservation
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Reservation</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.NbPersonnes)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NbPersonnes)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.HeureArrivee)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.HeureArrivee)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Travail)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Travail)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IdClientNavigation)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IdClientNavigation.Civilite)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.JourNavigation)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.JourNavigation.Jour)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NumChambreNavigation)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NumChambreNavigation.Numero)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>

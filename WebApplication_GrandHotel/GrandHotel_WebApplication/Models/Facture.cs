@@ -12,12 +12,14 @@ namespace GrandHotel_WebApplication.Models
             LigneFacture = new HashSet<LigneFacture>();
         }
 
-        [Display(Name="IdFacture")]
+        [Display(Name = "Id Facture")]
         public int Id { get; set; }
         public int IdClient { get; set; }
         [DataType(DataType.Date)]
+        [Display(Name = "Date de Facture")]
         public DateTime DateFacture { get; set; }
         [DataType(DataType.Date)]
+        [Display(Name = "Date de Paiement")]
         public DateTime? DatePaiement { get; set; }
         public string CodeModePaiement { get; set; }
 

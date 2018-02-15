@@ -1,16 +1,13 @@
-﻿@model GrandHotel_WebApplication.Models.CreationClientVM
-
+﻿@model CreationClientVM
 @{
-    ViewData["Title"] = "Création du compte";
-    Layout = "_LayoutCreation";
+    ViewData["Title"] = "Modification du compte";
+    ViewData.AddActivePage(ManageNavPages.ChangePassword);
 }
 
-<h2>Create</h2>
-
-<h4>Client</h4>
-<hr />
+<h2>@ViewData["Title"]</h2>
+@Html.Partial("_StatusMessage", Model.StatusMessage)
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-6">
         <form asp-controller="Clients" asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row form-group col-md-2">
@@ -44,28 +41,24 @@
                 <span><input asp-for="AdresseVille" class="form-control" /> </span>
 
             </div>
-
-            <div class=" form-inline col-md-5">
+            <div class="form-group form-inline col-md-7">
                 <label asp-for="TelephoneDom" class="control-label"></label>
                 <input asp-for="TelephoneDom" class="form-control" />
                 <span asp-validation-for="TelephoneDom" class="text-danger"></span>
-            </div>
-            <div class="row form-group form-inline col-md-5">
                 <label asp-for="ProDom" class="control-label"></label>
                 <input asp-for="ProDom" class="form-control" />
                 <span asp-validation-for="ProDom" class="text-danger"></span>
+
+
             </div>
-            <div class=" form-inline col-md-5">
+            <div class="form-group form-inline col-md-7">
                 <label asp-for="TelephonePort" class="control-label"></label>
                 <input asp-for="TelephonePort" class="form-control" />
                 <span asp-validation-for="TelephonePort" class="text-danger"></span>
-            </div>
-            <div class="row form-group form-inline col-md-5">
                 <label asp-for="ProPort" class="control-label"></label>
                 <input asp-for="ProPort" class="form-control" />
                 <span asp-validation-for="ProPort" class="text-danger"></span>
             </div>
-
 
             <div class="form-inline form-group col-md-3">
                 <input type="submit" value="Enregistrer" class="btn btn-default" />
@@ -74,10 +67,6 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Annuler</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

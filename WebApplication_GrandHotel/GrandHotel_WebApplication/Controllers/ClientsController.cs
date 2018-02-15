@@ -9,28 +9,32 @@ using GrandHotel_WebApplication.Data;
 using GrandHotel_WebApplication.Models;
 using System.Data.SqlClient;
 using System.Data;
+using GrandHotel_WebApplication.Models.AccountViewModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace GrandHotel_WebApplication.Controllers
 {
     public class ClientsController : Controller
     {
         private readonly GrandHotelContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ClientsController(GrandHotelContext context)
+        public ClientsController(GrandHotelContext context, UserManager<ApplicationUser> userManager)
         {
+            _userManager = userManager;
             _context = context;
         }
 
         // GET: Clients
-        public async Task<IActionResult> Index(char lettre='A')
+        public async Task<IActionResult> Index(char lettre = 'A')
         {
             var clients = new List<Client>();
-            
-            string req = @"select C.Id, C.Nom, C.Prenom, C.Email, count(R.IdClient) NbReservation
+
+            string req = @"select C.Id, C.Civilite, C.Nom, C.Prenom, C.Email, count(R.IdClient) NbReservation
                            from Reservation R
                            left outer join Client C on C.Id = R.IdClient
                            where left(C.Nom,1)= @lettre 
-                           group by C.Id, C.Nom, C.Prenom, C.Email
+                           group by C.Id, C.Civilite, C.Nom, C.Prenom, C.Email
                            order by C.Id";
 
             using (var conn = (SqlConnection)_context.Database.GetDbConnection())
@@ -50,6 +54,7 @@ namespace GrandHotel_WebApplication.Controllers
                     {
                         var cli = new Client();
                         cli.Id = (int)sdr["Id"];
+                        cli.Civilite = (string)sdr["Civilite"];
                         cli.Nom = (string)sdr["Nom"];
                         cli.Prenom = (string)sdr["Prenom"];
                         cli.Email = (string)sdr["Email"];
@@ -78,13 +83,12 @@ namespace GrandHotel_WebApplication.Controllers
             //    .SingleOrDefaultAsync(m => m.Id == id);
 
             var client = new Client();
-            string req = @"select C.Id, C.Nom, C.Prenom, C.Email,count(R.IdClient) NbReservationEnCours
+            string req = @"select C.Id,C.Civilite, C.Nom, C.Prenom, C.Email,count(R.IdClient) NbReservationEnCours
                            from Reservation R
                            left outer join Client C on C.Id = R.IdClient
-                           where R.Jour<=GETDATE() And C.Id=@Id
-                           group by C.Id, C.Nom, C.Prenom, C.Email
-                           order by C.Id";
-            
+                           where R.Jour>=GETDATE() And C.Id=@Id
+                           group by C.Id, C.Civilite, C.Nom, C.Prenom, C.Email";
+
             using (var conn = (SqlConnection)_context.Database.GetDbConnection())
             {
                 var cmd = new SqlCommand(req, conn);
@@ -101,13 +105,15 @@ namespace GrandHotel_WebApplication.Controllers
                     while (sdr.Read())
                     {
                         client.Id = (int)sdr["Id"];
+                        client.Civilite = (string)sdr["Civilite"];
                         client.Nom = (string)sdr["Nom"];
                         client.Prenom = (string)sdr["Prenom"];
+                        client.Email = (string)sdr["Email"];
                         client.NbReservEnCours = (int)sdr["NbReservationEnCours"];
                     }
                 }
             }
-            
+
             if (client == null)
             {
                 return NotFound();
@@ -127,15 +133,73 @@ namespace GrandHotel_WebApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Civilite,Nom,Prenom,Email,CarteFidelite,Societe")] Client client)
+        public async Task<IActionResult> Create(CreationClientVM clientVM)
         {
             if (ModelState.IsValid)
             {
+                var user = await _userManager.GetUserAsync(User);
+
+                Client client = new Client
+                {
+                    Civilite = clientVM.Civilite,
+                    Nom = clientVM.Nom,
+                    Prenom = clientVM.Prenom,
+                    Email = user.Email,
+                    CarteFidelite = false
+                };
                 _context.Add(client);
                 await _context.SaveChangesAsync();
+
+
+                int id = _context.Client.OrderBy(c => c.Id).Select(c => c.Id).LastOrDefault();
+
+                if (clientVM.AdresseVille != null && clientVM.AdresseRue != null && clientVM.AdresseCodePostal != null)
+                {
+
+                    Adresse Adresse = new Adresse()
+                    {
+                        IdClient = id,
+                        Rue = clientVM.AdresseRue,
+                        CodePostal = clientVM.AdresseCodePostal,
+                        Ville = clientVM.AdresseVille
+                    };
+                    _context.Add(Adresse);
+                    await _context.SaveChangesAsync();
+                }
+                if (clientVM.TelephoneDom.Length == 10)
+                {
+                  Telephone telDom = new Telephone()
+                    {
+                        IdClient = id,
+                        CodeType = "F",
+                        Numero = clientVM.TelephoneDom,
+                        Pro = clientVM.ProDom
+                    };
+                    _context.Add(telDom);
+                    await _context.SaveChangesAsync();
+                };
+                if (clientVM.TelephonePort.Length == 10)
+                {
+                    Telephone telPort = new Telephone()
+                    {
+                        IdClient = id,
+                        CodeType = "M",
+                        Numero = clientVM.TelephonePort,
+                        Pro = clientVM.ProPort
+                    };
+                    _context.Add(telPort);
+
+
+
+                    await _context.SaveChangesAsync();
+
+
+
+                };
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(client);
+            return View(clientVM);
         }
 
         // GET: Clients/Edit/5

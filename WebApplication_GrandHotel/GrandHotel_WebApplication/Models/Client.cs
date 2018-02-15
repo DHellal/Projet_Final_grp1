@@ -15,14 +15,18 @@ namespace GrandHotel_WebApplication.Models
         }
 
         public int Id { get; set; }
+        [Required(ErrorMessage = "Requis")]
         public string Civilite { get; set; }
+        [Required(ErrorMessage = "Requis")]
         public string Nom { get; set; }
+        [Required(ErrorMessage = "Requis")]
         public string Prenom { get; set; }
+        
         public string Email { get; set; }
         public bool CarteFidelite { get; set; }
         public string Societe { get; set; }
 
-        [Display(Name = "Reservation encours")]
+        [Display(Name = "Reservation en cours")]
         [NotMapped]
         public int NbReservEnCours { get; set; }
 
@@ -35,6 +39,7 @@ namespace GrandHotel_WebApplication.Models
         public ICollection<Facture> Facture { get; set; }
         [Display(Name = "Reservations effectuées")]
         public ICollection<Reservation> Reservation { get; set; }
+        [Phone]
         public ICollection<Telephone> Telephone { get; set; }
     }
 }

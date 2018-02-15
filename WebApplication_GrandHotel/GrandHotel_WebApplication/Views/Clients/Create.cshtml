@@ -34,46 +34,42 @@
             </div>
             <div class="row form-group form-inline col-md-10">
                 <label asp-for="AdresseRue" class="control-label"></label>
-                <input asp-for="AdresseRue" class="form-control" /> 
+                <input asp-for="AdresseRue" class="form-control" />
 
                 <label asp-for="AdresseCodePostal" class="control-label"></label>
-                <input asp-for="AdresseCodePostal" class="form-control" /> 
+                <input asp-for="AdresseCodePostal" class="form-control" />
                 <span asp-validation-for="AdresseCodePostal" class="text-danger"></span>
 
                 <label asp-for="AdresseVille" class="control-label"></label>
                 <span><input asp-for="AdresseVille" class="form-control" /> </span>
 
             </div>
-            <div class="form-group form-inline col-md-7">
+
+            <div class=" form-inline col-md-5">
                 <label asp-for="TelephoneDom" class="control-label"></label>
                 <input asp-for="TelephoneDom" class="form-control" />
                 <span asp-validation-for="TelephoneDom" class="text-danger"></span>
+            </div>
+            <div class="row form-group form-inline col-md-5">
                 <label asp-for="ProDom" class="control-label"></label>
                 <input asp-for="ProDom" class="form-control" />
                 <span asp-validation-for="ProDom" class="text-danger"></span>
-
-
             </div>
-            <div class="form-group form-inline col-md-7">
+            <div class=" form-inline col-md-5">
                 <label asp-for="TelephonePort" class="control-label"></label>
                 <input asp-for="TelephonePort" class="form-control" />
                 <span asp-validation-for="TelephonePort" class="text-danger"></span>
+            </div>
+            <div class="row form-group form-inline col-md-5">
                 <label asp-for="ProPort" class="control-label"></label>
                 <input asp-for="ProPort" class="form-control" />
                 <span asp-validation-for="ProPort" class="text-danger"></span>
             </div>
 
+
             <div class="form-inline form-group col-md-3">
                 <input type="submit" value="Enregistrer" class="btn btn-default" />
             </div>
-
-            <div class="invisible">
-
-                <input asp-for="ProPort" class="form-control" />
-
-            </div>
-
-
         </form>
     </div>
 </div>

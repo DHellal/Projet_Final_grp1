@@ -495,6 +495,7 @@ namespace GrandHotel_WebApplication.Controllers
                              where c.Email == user.Email
                              select new Client
                              {
+                                 Id =  c.Id,
                                  Nom = c.Nom,
                                  Prenom = c.Prenom,
                                  Civilite = c.Civilite,
@@ -503,8 +504,11 @@ namespace GrandHotel_WebApplication.Controllers
 
                              }).SingleOrDefault();
 
+            
+
             CreationClientVM model = new CreationClientVM()
             {
+                id = client.Id,
                 Nom = client.Nom,
                 Prenom = client.Prenom,
                 Civilite = client.Civilite,
@@ -535,18 +539,16 @@ namespace GrandHotel_WebApplication.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            //var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            //var changeClient = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
             //if (!changePasswordResult.Succeeded)
             //{
             //    AddErrors(changePasswordResult);
             //    return View(model);
             //}
 
-            await _signInManager.SignInAsync(user, isPersistent: false);
-            _logger.LogInformation("User changed their password successfully.");
-            StatusMessage = "Your password has been changed.";
+            model.MAJ = true;
 
-            return RedirectToAction(nameof(ChangePassword));
+            return RedirectToAction("Create","Clients",model);
         }
 
 

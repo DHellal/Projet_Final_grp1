@@ -29,7 +29,9 @@ namespace GrandHotel_WebApplication.Controllers
                                             .Include(tc => tc.CodeTarifNavigation)
                                             .Where(tc=>tc.CodeTarifNavigation.DateDebut>= date).ToListAsync();
             //if (statusChambre!=null)
-            
+                var ChambreReserv = await _context.Reservation
+                    .Include(r=>r.NumChambreNavigation).Where(r=>r.Jour== date).ToListAsync();
+
 
             return View(vmChambre);
             //return View(await _context.Chambre.ToListAsync());

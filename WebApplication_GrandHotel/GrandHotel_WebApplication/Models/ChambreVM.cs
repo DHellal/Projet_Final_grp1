@@ -8,7 +8,8 @@ namespace GrandHotel_WebApplication.Models
     public class ChambreVM
     {
         public ICollection<TarifChambre> TarifChambre { get; set; }
+        public ICollection<Reservation> Reservation { get; set; }
         public List<Chambre> Chambre { get; set; }
-        public bool? StatusChambre { get; set; }
+        public string StatusChambre { get; set; }
     }
 }

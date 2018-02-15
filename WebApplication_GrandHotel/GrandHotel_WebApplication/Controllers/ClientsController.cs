@@ -142,7 +142,7 @@ namespace GrandHotel_WebApplication.Controllers
                 Client client = new Client
                 {
                     Civilite = clientVM.Civilite,
-                    Nom = clientVM.Nom,
+                    Nom = clientVM.Nom.ToUpper(),
                     Prenom = clientVM.Prenom,
                     Email = user.Email,
                     CarteFidelite = false
@@ -161,7 +161,7 @@ namespace GrandHotel_WebApplication.Controllers
                         IdClient = id,
                         Rue = clientVM.AdresseRue,
                         CodePostal = clientVM.AdresseCodePostal,
-                        Ville = clientVM.AdresseVille
+                        Ville = clientVM.AdresseVille.ToUpper()
                     };
                     _context.Add(Adresse);
                     await _context.SaveChangesAsync();

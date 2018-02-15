@@ -1,1 +1,64 @@
-﻿
+﻿@model IEnumerable<GrandHotel_WebApplication.Models.Chambre>
+
+@{
+    ViewData["Title"] = "Chambres Disponibles";
+}
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Numero)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.Etage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bain)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Douche)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Wc)
+            </th>*@
+            @*<th>
+        @Html.DisplayNameFor(model => model.NbLits)
+            </th>*@
+            @*<th>
+            @Html.DisplayNameFor(model => model.NumTel)
+        </th>*@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Numero)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.Etage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bain)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Douche)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Wc)
+            </td>*@
+            @*<td>
+            @Html.DisplayFor(modelItem => item.NbLits)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumTel)
+        </td>*@
+
+        </tr>
+        }
+    </tbody>
+</table>

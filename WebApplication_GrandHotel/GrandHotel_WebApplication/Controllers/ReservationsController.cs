@@ -53,15 +53,33 @@ namespace GrandHotel_WebApplication.Controllers
         //GET: Reservations/Create
         public IActionResult VerifDisponibilite(DateTime Jour, int NbNuit, byte NbPersonnes)
         {
+            //var ChambreOccupe = new List<Chambre>();
+            //List<Chambre> resultat = new List<Chambre>();
+            //for (int i = 0; i < NbNuit; i++)
+            //{
+
+            //var ChambreOccupe = (from r in _context.Reservation
+            //                     join c in _context.Chambre on r.NumChambre equals c.Numero
+            //                     where c.NbLits >= NbPersonnes
+            //                        && r.Jour == Jour
+            //                     select (new Chambre { Numero = c.Numero, Etage = c.Etage, Bain = c.Bain, Douche = c.Douche, Wc = c.Wc, NbLits = c.NbLits, NumTel = c.NumTel }))
+            //                .ToList();
+            //if (ChambreOccupe.Count != 0)
+            //{
+            //    foreach (var item in ChambreOccupe)
+            //    {
+            //        Chambre.Remove;
+            //    }
+            //}
+
+            //Jour = Jour.AddDays(1);
+            //}
+
             var numeroChambre = _context.Chambre.Select(m => m.Numero).ToList();
-            //List<Reservation> reserv = new List<Reservation>();
+            
             List<Chambre> chambre = new List<Chambre>();
             var numeroChambreOccupe = new List<int>();
-            //bool verif = false;
-            //var dateDepart = Jour.AddDays(NbNuit);
-            //string datestring = "18 / 02 / 2018";
-
-            //DateTime.TryParse(datestring, out Jour);
+            
 
             if (ModelState.IsValid)
             {
@@ -73,7 +91,7 @@ namespace GrandHotel_WebApplication.Controllers
                         string req = @"select  r.NumChambre 
                                 from reservation r
                                 inner join chambre c on r.NumChambre=c.Numero
-                                where c.NbLits<@NbLits and r.Jour=@Jour";
+                                where c.NbLits>=@NbLits and r.Jour=@Jour";
 
                         var param = new SqlParameter { SqlDbType = SqlDbType.TinyInt, ParameterName = "@NbLits", Value = NbPersonnes };
 
@@ -104,9 +122,10 @@ namespace GrandHotel_WebApplication.Controllers
                             }
                         }
                         Jour = Jour.AddDays(1);
-                    }                    
+                    }
                     chambre = _context.Chambre.Where(x => !numeroChambreOccupe.Contains(x.Numero)).ToList();
                 }
+               
             }
             return View(chambre);
         }

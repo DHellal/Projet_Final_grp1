@@ -104,7 +104,7 @@ namespace GrandHotel_WebApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreationClientVM clientVM) //[Bind("Civilite,Nom,Prenom,AdresseRue,AdresseCodePostal,AdresseVille,ProDom,ProPort,TelephoneDom,TelephonePort")] 
+        public async Task<IActionResult> Create(CreationClientVM clientVM)  
         {
             if (ModelState.IsValid)
             {

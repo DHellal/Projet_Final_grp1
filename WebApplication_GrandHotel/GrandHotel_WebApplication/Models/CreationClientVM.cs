@@ -29,12 +29,13 @@ namespace GrandHotel_WebApplication.Models
         [RegularExpression("^(?:[0-9]{10}|)$", ErrorMessage = "Numero de 10 chiffres")]
         public string TelephoneDom { get; set; }
 
+        [Display(Name = "Cochez si numéro professionel")]
         public bool ProDom { get; set; }
 
         [RegularExpression("^(?:[0-9]{10}|)$", ErrorMessage = "Numero de 10 chiffres")]
         [Display(Name = "Telephone Portable")]
         public string TelephonePort { get; set; }
-
+        [Display(Name = "Cochez si numéro professionel")]
         public bool ProPort { get; set; }
 
         public string Email { get; set; }

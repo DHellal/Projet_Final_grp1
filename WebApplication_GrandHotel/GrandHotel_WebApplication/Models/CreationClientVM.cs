@@ -42,6 +42,10 @@ namespace GrandHotel_WebApplication.Models
 
         public string StatusMessage { get; set; }
 
+        public bool MAJ = false;
+
+        public int id;
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             CreationClientVM cli = (CreationClientVM)validationContext.ObjectInstance;

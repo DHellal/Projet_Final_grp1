@@ -1,0 +1,65 @@
+﻿@model IEnumerable<GrandHotel_WebApplication.Models.Chambre>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Etage)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Bain)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Douche)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Wc)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NbLits)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NumTel)
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Etage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bain)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Douche)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Wc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NbLits)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumTel)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Numero">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Numero">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Numero">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -30,11 +30,11 @@
                     @Html.DisplayNameFor(model => model.Email)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Reservation)
+                    @Html.DisplayNameFor(model => model.NbReservation)
                 </th>
-                <th>
+                @*<th>
                     @Html.DisplayNameFor(model => model.Societe)
-                </th>
+                </th>*@
             <th></th>
         </tr>
     </thead>
@@ -54,11 +54,11 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Reservation.Count)
+                @Html.DisplayFor(modelItem => item.NbReservation)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.Societe)
-            </td>
+            </td>*@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Editer</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

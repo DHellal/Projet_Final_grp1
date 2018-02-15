@@ -4,39 +4,97 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+<h2>Details de la facture N° </h2>
 
-<div>
-    <h4>Facture</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.DateFacture)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.DateFacture)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.DatePaiement)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.DatePaiement)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.CodeModePaiementNavigation)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.CodeModePaiementNavigation.Code)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.IdClientNavigation)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.IdClientNavigation.Civilite)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.LigneFacture.First().NumLigne)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LigneFacture.First().Quantite)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LigneFacture.First().MontantHt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LigneFacture.First().TauxTva)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LigneFacture.First().TauxReduction)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.LigneFacture)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumLigne)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantite)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MontantHt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TauxTva)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TauxReduction)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.NumLigne">Edit</a> |
+
+                    <a asp-action="Delete" asp-route-id="@item.NumLigne">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@*<div>
+        <h4>FactureDDétails</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.LigneFacture.First().NumLigne)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.DateFacture)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.LigneFacture.First().Quantite)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.DatePaiement)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.LigneFacture.First().MontantHt)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.CodeModePaiementNavigation.Code)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.LigneFacture.First().TauxTva)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.IdClientNavigation.Civilite)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.LigneFacture.First().TauxReduction)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.IdClientNavigation.Civilite)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>*@

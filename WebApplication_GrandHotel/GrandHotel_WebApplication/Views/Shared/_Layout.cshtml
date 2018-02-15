@@ -33,9 +33,24 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    <li><a asp-area="" asp-controller="Reservations" asp-action="Create">Reservation</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Factures</a></li>
-                    <li><a asp-area="" asp-controller="Clients" asp-action="Index">Gestion</a></li>
+                    <li><a asp-area="" asp-controller="Reservations" asp-action="Index">Reservation</a></li>
+                    <li><a asp-area="" asp-controller="Facture" asp-action="Index">Factures</a></li>
+                    <li>
+                        @*<a asp-area="" asp-controller="Clients" asp-action="Index">Gestion</a>*@
+                        <div class="dropdown navbar-collapse collapse">@*  *@
+                            <button class="btn btn-link btn-lg dropdown-toggle" type="button" data-toggle="dropdown">
+                                Gestion
+                                <span class="caret"></span>
+                            </button>
+
+                            <ul class="dropdown-menu  ">
+                                <li><a asp-area="" asp-controller="Clients" asp-action="Index">Liste des clients</a></li>
+                                <li><a asp-area="" asp-controller="Chambres" asp-action="Index">Liste des chambres</a></li>
+                            </ul>
+
+                        </div>
+                    </li>
+
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>

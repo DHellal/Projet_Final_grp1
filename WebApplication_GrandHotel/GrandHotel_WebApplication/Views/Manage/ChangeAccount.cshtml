@@ -8,7 +8,7 @@
 @Html.Partial("_StatusMessage", Model.StatusMessage)
 <div class="row">
     <div class="col-md-6">
-        <form asp-controller="Manage" asp-action="ChangeAccount" method="post">
+        <form asp-controller="Clients" asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row form-group col-md-2">
                 <label asp-for="Civilite" class="control-label"></label>
@@ -59,6 +59,8 @@
                 <input asp-for="ProPort" class="form-control" />
                 <span asp-validation-for="ProPort" class="text-danger"></span>
             </div>
+
+            <input asp-for="MAJ" checked class="invisible" />
 
             <div class="form-inline form-group col-md-3">
                 <input type="submit" value="Enregistrer" class="btn btn-default" />

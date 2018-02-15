@@ -6,15 +6,12 @@
 }
 
 <h2>@ViewData["Title"]</h2>
-
-<h4>Client</h4>
-@Html.Partial("_StatusMessage", Model.StatusMessage);
 <hr />
 <div class="row">
-    <div class="col-md-10">
-        <form asp-controller="Clients" asp-action="CreateUpdate" method="post">
+    <div class="col-md-9 col-sm-9">
+        <form asp-controller="Clients" asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="row form-group col-md-2">
+            <div class="row form-group col-md-2 col-sm-2">
                 <label asp-for="Civilite" class="control-label"></label>
                 <select asp-for="Civilite" class="form-control">
                     <option value="M">M</option>
@@ -23,17 +20,17 @@
                 </select>
                 <span asp-validation-for="Civilite" class="text-danger"></span>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-4 col-sm-4">
                 <label asp-for="Nom" class="control-label"></label>
                 <input asp-for="Nom" class="form-control" />
                 <span asp-validation-for="Nom" class="text-danger"></span>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3 col-sm-3">
                 <label asp-for="Prenom" class="control-label"></label>
                 <input asp-for="Prenom" class="form-control" />
                 <span asp-validation-for="Prenom" class="text-danger"></span>
             </div>
-            <div class="row form-group form-inline col-md-10">
+            <div class="row form-group form-inline col-md-10 col-sm-10">
                 <label asp-for="AdresseRue" class="control-label"></label>
                 <input asp-for="AdresseRue" class="form-control" />
 
@@ -46,29 +43,29 @@
 
             </div>
 
-            <div class=" form-inline col-md-5">
+            <div class=" form-inline col-md-5 col-sm-5">
                 <label asp-for="TelephoneDom" class="control-label"></label>
                 <input asp-for="TelephoneDom" class="form-control" />
                 <span asp-validation-for="TelephoneDom" class="text-danger"></span>
             </div>
-            <div class="row form-group form-inline col-md-5">
+            <div class="row form-group form-inline col-md-5 col-sm-5">
                 <label asp-for="ProDom" class="control-label"></label>
                 <input asp-for="ProDom" class="form-control" />
                 <span asp-validation-for="ProDom" class="text-danger"></span>
             </div>
-            <div class=" form-inline col-md-5">
+            <div class=" form-inline col-md-5 col-sm-5">
                 <label asp-for="TelephonePort" class="control-label"></label>
                 <input asp-for="TelephonePort" class="form-control" />
                 <span asp-validation-for="TelephonePort" class="text-danger"></span>
             </div>
-            <div class="row form-group form-inline col-md-5">
+            <div class="row form-group form-inline col-md-5 col-sm-5">
                 <label asp-for="ProPort" class="control-label"></label>
                 <input asp-for="ProPort" class="form-control" />
                 <span asp-validation-for="ProPort" class="text-danger"></span>
             </div>
 
 
-            <div class="form-inline form-group col-md-3">
+            <div class="form-inline form-group col-md-3 col-sm-3">
                 <input type="submit" value="Enregistrer" class="btn btn-default" />
             </div>
         </form>

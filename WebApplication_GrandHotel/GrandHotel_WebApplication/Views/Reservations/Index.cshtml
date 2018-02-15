@@ -5,7 +5,7 @@
 }
 @{ 
     var date = DateTime.Today.ToString("yyyy-MM-dd");
-    ;
+   
 }
 
 
@@ -25,13 +25,13 @@
 
             <div class="form-group">
                 <label asp-for="NbNuit" class="control-label"></label>
-                <input asp-for="NbNuit" class="form-control" type="number"  />
+                <input asp-for="NbNuit" class="form-control" type="number" min="1" />
                 <span asp-validation-for="NbNuit" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="NbPersonnes" class="control-label"></label>
-                <input asp-for="NbPersonnes" class="form-control" type="number"  />
+                <input asp-for="NbPersonnes" class="form-control" type="number" min="1" />
                 <span asp-validation-for="NbPersonnes" class="text-danger"></span>
             </div>
 

@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2003
+VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrandHotel_WebApplication", "GrandHotel_WebApplication\GrandHotel_WebApplication.csproj", "{50A8FA15-54B9-401D-9A36-745872471919}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrandHotel_WebApplication", "GrandHotel_WebApplication\GrandHotel_WebApplication.csproj", "{50A8FA15-54B9-401D-9A36-745872471919}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csproj", "{0D4BF5C4-4B08-41CB-88B9-F26FE50018F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{50A8FA15-54B9-401D-9A36-745872471919}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50A8FA15-54B9-401D-9A36-745872471919}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50A8FA15-54B9-401D-9A36-745872471919}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D4BF5C4-4B08-41CB-88B9-F26FE50018F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D4BF5C4-4B08-41CB-88B9-F26FE50018F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D4BF5C4-4B08-41CB-88B9-F26FE50018F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D4BF5C4-4B08-41CB-88B9-F26FE50018F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

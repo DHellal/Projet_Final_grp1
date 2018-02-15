@@ -7,39 +7,78 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GrandHotel_WebApplication.Data;
 using GrandHotel_WebApplication.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace GrandHotel_WebApplication.Controllers
 {
     public class FacturesController : Controller
     {
         private readonly GrandHotelContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public FacturesController(GrandHotelContext context)
+        public FacturesController(GrandHotelContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Factures
-        public async Task<IActionResult> Index(int id, string AnneeEnCour)
+        public async Task<IActionResult> Index(string AnneeEnCour)
         {
-            id = 1; // faut modifier selon idclient
 
-            List<int> years = new List<int> { 2018, 2017, 2016, 2015 };
-            ViewBag.Years = years;
+            // id = 16; // faut modifier selon idclient
 
-            if (AnneeEnCour == null)
+            var user = await _userManager.GetUserAsync(User);
+
+            var email = user.Email;
+
+            var clientId = await _context.Client.Where(e => e.Email == email).Select(i => i.Id).SingleOrDefaultAsync();
+
+            if (clientId != 0)
             {
-                AnneeEnCour = "2018";
+
+                if (AnneeEnCour == null)
+                {
+                    AnneeEnCour = "2018";
+                }
+
+                int year = int.Parse(AnneeEnCour);
+
+                var facturesVM = new FactureVM();
+
+                //créer la liste de l'année : récupérer l'année dans BDD
+                facturesVM.Factures = await _context.Facture.Where(f => f.IdClient == clientId).OrderByDescending(o => o.DateFacture).ToListAsync();
+
+                List<int> years = new List<int>();
+                //add l'année en cours
+                int ThisYear = DateTime.Today.Year;
+                years.Add(ThisYear);
+
+                int yearToAdd = 0;
+
+                foreach (var facture in facturesVM.Factures)
+                {
+                    yearToAdd = facture.DateFacture.Year;
+                    if (!years.Contains(yearToAdd))
+                    {
+                        years.Add(yearToAdd);
+                    }
+                }
+                ViewBag.Years = years;
+
+                //liste factures selon l'année choisi
+                facturesVM.Factures = await _context.Facture.Where(f => f.IdClient == clientId && f.DateFacture.Year == year).OrderByDescending(o => o.DateFacture).ToListAsync();
+                facturesVM.AnneeEnCour = AnneeEnCour;
+
+
+                return View(facturesVM);
+
+            }
+            else
+            {
+                return View();  //à faire
             }
 
-            int year = int.Parse(AnneeEnCour);
-
-            var facturesVM = new FactureVM();
-
-            facturesVM.Factures= await _context.Facture.Where(f => f.IdClient == id && f.DateFacture.Year == year).OrderByDescending(o => o.DateFacture).ToListAsync();
-            facturesVM.AnneeEnCour = AnneeEnCour;
-
-            return View(facturesVM);
         }
 
         // GET: Factures/Details/5

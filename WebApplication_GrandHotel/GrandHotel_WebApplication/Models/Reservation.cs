@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GrandHotel_WebApplication.Models
 {
-    public partial class Reservation : IValidatableObject
+    public partial class Reservation 
     {
         public short NumChambre { get; set; }
         [DataType(DataType.Date)]
@@ -17,7 +17,7 @@ namespace GrandHotel_WebApplication.Models
         [Required(ErrorMessage = "Saississez le nombre de personnes")]
         public byte NbPersonnes { get; set; }
         [Display(Name = "Heure d'arrivée")]
-        [Range(7, 21, ErrorMessage = "entrer un heure entre 7h et 21h")]
+        [Range(1, 24, ErrorMessage = "entrer un heure entre 1h et 24h")]
         public byte HeureArrivee { get; set; }
         [Display(Name = "Nature du séjour(Travail)")]
         public bool? Travail { get; set; }
@@ -25,19 +25,10 @@ namespace GrandHotel_WebApplication.Models
         [Display(Name = "Nombre de nuit")]
         [Required(ErrorMessage = "Saississez le nombre de nuit")]
         public int NbNuit { get; set; }
+
         public Client IdClientNavigation { get; set; }
         public Calendrier JourNavigation { get; set; }
         public Chambre NumChambreNavigation { get; set; }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            Reservation reservation = (Reservation)validationContext.ObjectInstance;
-
-            if (reservation.Jour < DateTime.Today)
-            {
-                yield return new ValidationResult("La date saisie est invalide", new string[] { "Jour" });
-            }
-        }
 
     }
 }

@@ -5,13 +5,14 @@
     Layout = "_LayoutCreation";
 }
 
-<h2>Create</h2>
+<h2>@ViewData["Title"]</h2>
 
 <h4>Client</h4>
+@Html.Partial("_StatusMessage", Model.StatusMessage);
 <hr />
 <div class="row">
     <div class="col-md-10">
-        <form asp-controller="Clients" asp-action="Create" method="post">
+        <form asp-controller="Clients" asp-action="CreateUpdate" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row form-group col-md-2">
                 <label asp-for="Civilite" class="control-label"></label>

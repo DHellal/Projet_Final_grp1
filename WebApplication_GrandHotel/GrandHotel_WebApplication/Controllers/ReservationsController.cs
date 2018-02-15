@@ -24,7 +24,7 @@ namespace GrandHotel_WebApplication.Controllers
         // GET: Reservations
         public IActionResult Index()
         {
-            
+
             return View();
         }
 
@@ -49,51 +49,66 @@ namespace GrandHotel_WebApplication.Controllers
             return View(reservation);
         }
 
-        // GET: Reservations/Create
-        public IActionResult VerifDisponibilite(DateTime Jour, int NbNuit, byte NbPersonnes=2)
+
+        //GET: Reservations/Create
+        public IActionResult VerifDisponibilite(DateTime Jour, int NbNuit, byte NbPersonnes)
         {
-            var numeroChambre = _context.Chambre.Select(m => m.Numero).ToList() ;
-            List<Reservation> reserv = new List<Reservation>();
+            var numeroChambre = _context.Chambre.Select(m => m.Numero).ToList();
+            //List<Reservation> reserv = new List<Reservation>();
+            List<Chambre> chambre = new List<Chambre>();
+            var numeroChambreOccupe = new List<int>();
             //bool verif = false;
             //var dateDepart = Jour.AddDays(NbNuit);
-            string datestring = "18 / 02 / 2018";
-            
-             DateTime.TryParse(datestring, out Jour);
-          
+            //string datestring = "18 / 02 / 2018";
+
+            //DateTime.TryParse(datestring, out Jour);
+
             if (ModelState.IsValid)
-            { 
-
-                string req = @"select  r.NumChambre 
-                                from reservation r
-                                inner join chambre c on r.NumChambre=c.Numero
-                                where c.NbLits=@NbNuit and r.Jour=@Jour";
-
-                var param = new SqlParameter { SqlDbType = SqlDbType.TinyInt, ParameterName = "@NbNuit", Value = NbPersonnes };
-                var param1 = new SqlParameter { SqlDbType = SqlDbType.DateTime, ParameterName = "@Jour", Value = Jour };
-
-
+            {
                 using (var conn = (SqlConnection)_context.Database.GetDbConnection())
                 {
-                    var cmd = new SqlCommand(req, conn);
-
-                    cmd.Parameters.Add(param);
-                    cmd.Parameters.Add(param1);
-                    conn.Open();
-
-                    using (var sdr = cmd.ExecuteReader())
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    for (int i = 0; i < NbNuit; i++)
                     {
-                        while (sdr.Read())
-                        {
-                            var r = new Reservation();
-                            r.NumChambre = (short)sdr["NumChambre"];
-                            numeroChambre.Remove(r.NumChambre);
+                        string req = @"select  r.NumChambre 
+                                from reservation r
+                                inner join chambre c on r.NumChambre=c.Numero
+                                where c.NbLits<@NbLits and r.Jour=@Jour";
 
+                        var param = new SqlParameter { SqlDbType = SqlDbType.TinyInt, ParameterName = "@NbLits", Value = NbPersonnes };
+
+
+                        var param1 = new SqlParameter { SqlDbType = SqlDbType.DateTime, ParameterName = "@Jour", Value = Jour };
+
+                        var cmd = new SqlCommand(req, conn);
+
+                        cmd.Parameters.Add(param);
+                        cmd.Parameters.Add(param1);
+
+                        using (var sdr = cmd.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                var c = new Chambre();
+                                if (sdr["NumChambre"] == DBNull.Value)
+                                    break;
+                                c.Numero = (short)sdr["NumChambre"];
+                                numeroChambreOccupe.Add(c.Numero);
+
+                                //c.Etage = (byte)sdr["etage"];
+                                //c.Bain = (bool)sdr["bain"];
+                                //c.Douche = (bool)sdr["douche"];
+                                //c.Wc = (bool)sdr["wc"];
+                                //numeroChambre.Remove(c.Numero);
+
+                            }
                         }
-                    }
+                        Jour = Jour.AddDays(1);
+                    }                    
+                    chambre = _context.Chambre.Where(x => !numeroChambreOccupe.Contains(x.Numero)).ToList();
                 }
             }
-           
-            return View(numeroChambre);
+            return View(chambre);
         }
 
         // POST: Reservations/Create

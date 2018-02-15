@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using GrandHotel_WebApplication.Models;
 using GrandHotel_WebApplication.Models.ManageViewModels;
 using GrandHotel_WebApplication.Services;
+using GrandHotel_WebApplication.Data;
 
 namespace GrandHotel_WebApplication.Controllers
 {
@@ -20,6 +21,7 @@ namespace GrandHotel_WebApplication.Controllers
     [Route("[controller]/[action]")]
     public class ManageController : Controller
     {
+        private readonly GrandHotelContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
@@ -33,13 +35,15 @@ namespace GrandHotel_WebApplication.Controllers
           SignInManager<ApplicationUser> signInManager,
           IEmailSender emailSender,
           ILogger<ManageController> logger,
-          UrlEncoder urlEncoder)
+          UrlEncoder urlEncoder,
+          GrandHotelContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
             _urlEncoder = urlEncoder;
+            _context = context;
         }
 
         [TempData]
@@ -463,6 +467,89 @@ namespace GrandHotel_WebApplication.Controllers
 
             return View(model);
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ChangeAccount()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            var hasPassword = await _userManager.HasPasswordAsync(user);
+            if (!hasPassword)
+            {
+                return RedirectToAction(nameof(SetPassword));
+            }
+
+            var hasEmail = await _userManager.GetEmailAsync(user);
+            if (hasEmail == null)
+            {
+                return RedirectToPage("Index", "Home");
+            }
+
+
+            Client client = (from c in _context.Client
+                             where c.Email == user.Email
+                             select new Client
+                             {
+                                 Nom = c.Nom,
+                                 Prenom = c.Prenom,
+                                 Civilite = c.Civilite,
+                                 Adresse = c.Adresse,
+                                 Telephone = c.Telephone
+
+                             }).SingleOrDefault();
+
+            CreationClientVM model = new CreationClientVM()
+            {
+                Nom = client.Nom,
+                Prenom = client.Prenom,
+                Civilite = client.Civilite,
+                AdresseRue = client.Adresse.Rue,
+                AdresseCodePostal = client.Adresse.CodePostal,
+                AdresseVille = client.Adresse.Ville,
+                TelephoneDom = client.Telephone.Where(t => t.CodeType == "F").Select(t => t.Numero).SingleOrDefault(),
+                TelephonePort = client.Telephone.Where(t => t.CodeType == "M").Select(t => t.Numero).SingleOrDefault(),
+                ProPort = client.Telephone.Where(t => t.CodeType == "M").Select(t => t.Pro).SingleOrDefault(),
+                ProDom = client.Telephone.Where(t => t.CodeType == "F").Select(t => t.Pro).SingleOrDefault()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeAccount(CreationClientVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            //var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            //if (!changePasswordResult.Succeeded)
+            //{
+            //    AddErrors(changePasswordResult);
+            //    return View(model);
+            //}
+
+            await _signInManager.SignInAsync(user, isPersistent: false);
+            _logger.LogInformation("User changed their password successfully.");
+            StatusMessage = "Your password has been changed.";
+
+            return RedirectToAction(nameof(ChangePassword));
+        }
+
+
 
         #region Helpers
 

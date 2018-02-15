@@ -206,9 +206,10 @@ namespace GrandHotel_WebApplication.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Register(string returnUrl = null)
+        public IActionResult Register(RegisterViewModel client)
         {
-            ViewData["ReturnUrl"] = returnUrl;
+            ModelState.Clear();
+            ViewBag.mail = client.Email;
             return View();
         }
 

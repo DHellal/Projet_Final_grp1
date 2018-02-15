@@ -9,7 +9,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="index">
+        <form asp-action="VerifDisponibilite">
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -27,13 +27,13 @@
 
             <div class="form-group">
                 <label asp-for="NbPersonnes" class="control-label"></label>
-                <input asp-for="NbPersonnes" class="form-control" />
+                <input asp-for="NbPersonnes" class="form-control" type="number" min="1" />
                 <span asp-validation-for="NbPersonnes" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="HeureArrivee" class="control-label"></label>
-                <input asp-for="HeureArrivee" class="form-control" type="number" min="1" max="24" />
+                <input asp-for="HeureArrivee" class="form-control" type="number" min="1" max="21" />
                 <span asp-validation-for="HeureArrivee" class="text-danger"></span>
             </div>
 

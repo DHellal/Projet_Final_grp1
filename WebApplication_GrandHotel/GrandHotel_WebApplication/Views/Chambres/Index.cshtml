@@ -1,0 +1,68 @@
+﻿@*@model IEnumerable<GrandHotel_WebApplication.Models.Chambre>*@
+
+@model  ChambreVM
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TarifChambre.First().NumChambre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TarifChambre.First().CodeTarifNavigation.Prix)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.Chambre[0].Douche)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Chambre[0].Wc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Chambre[0].NbLits)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Chambre[0].NumTel)
+            </th>*@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.TarifChambre)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumChambre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CodeTarifNavigation.Prix)
+                </td>
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.Douche)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Wc)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NbLits)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumTel)
+                </td>*@
+                @*<td>
+                    <a asp-action="Edit" asp-route-id="@item.Numero">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Numero">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Numero">Delete</a>
+                </td>*@
+            </tr>
+        }
+    </tbody>
+</table>

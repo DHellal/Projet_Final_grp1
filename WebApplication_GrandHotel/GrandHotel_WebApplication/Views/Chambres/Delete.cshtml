@@ -1,0 +1,57 @@
+﻿@model GrandHotel_WebApplication.Models.Chambre
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Chambre</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Etage)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Etage)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Bain)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Bain)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Douche)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Douche)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Wc)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Wc)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NbLits)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NbLits)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NumTel)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NumTel)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Numero" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

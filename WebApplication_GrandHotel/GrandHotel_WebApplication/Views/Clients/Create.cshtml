@@ -1,7 +1,7 @@
-﻿@model GrandHotel_WebApplication.Models.Client
+﻿@model GrandHotel_WebApplication.Models.CreationClientVM
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Création du compte";
     Layout = "_LayoutCreation";
 }
 
@@ -10,50 +10,76 @@
 <h4>Client</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="col-md-10">
+        <form asp-controller="Clients" asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="row form-group col-md-2">
                 <label asp-for="Civilite" class="control-label"></label>
-                <input asp-for="Civilite" class="form-control" />
+                <select asp-for="Civilite" class="form-control">
+                    <option value="M">M</option>
+                    <option value="Mme">Mme</option>
+                    <option value="Mlle">Mlle</option>
+                </select>
                 <span asp-validation-for="Civilite" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-4">
                 <label asp-for="Nom" class="control-label"></label>
                 <input asp-for="Nom" class="form-control" />
                 <span asp-validation-for="Nom" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-4">
                 <label asp-for="Prenom" class="control-label"></label>
                 <input asp-for="Prenom" class="form-control" />
                 <span asp-validation-for="Prenom" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+            <div class="row form-group form-inline col-md-10">
+                <label asp-for="AdresseRue" class="control-label"></label>
+                <input asp-for="AdresseRue" class="form-control" /> 
+
+                <label asp-for="AdresseCodePostal" class="control-label"></label>
+                <input asp-for="AdresseCodePostal" class="form-control" /> 
+                <span asp-validation-for="AdresseCodePostal" class="text-danger"></span>
+
+                <label asp-for="AdresseVille" class="control-label"></label>
+                <span><input asp-for="AdresseVille" class="form-control" /> </span>
+
             </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="CarteFidelite" /> @Html.DisplayNameFor(model => model.CarteFidelite)
-                    </label>
-                </div>
+            <div class="form-group form-inline col-md-7">
+                <label asp-for="TelephoneDom" class="control-label"></label>
+                <input asp-for="TelephoneDom" class="form-control" />
+                <span asp-validation-for="TelephoneDom" class="text-danger"></span>
+                <label asp-for="ProDom" class="control-label"></label>
+                <input asp-for="ProDom" class="form-control" />
+                <span asp-validation-for="ProDom" class="text-danger"></span>
+
+
             </div>
-            <div class="form-group">
-                <label asp-for="Societe" class="control-label"></label>
-                <input asp-for="Societe" class="form-control" />
-                <span asp-validation-for="Societe" class="text-danger"></span>
+            <div class="form-group form-inline col-md-7">
+                <label asp-for="TelephonePort" class="control-label"></label>
+                <input asp-for="TelephonePort" class="form-control" />
+                <span asp-validation-for="TelephonePort" class="text-danger"></span>
+                <label asp-for="ProPort" class="control-label"></label>
+                <input asp-for="ProPort" class="form-control" />
+                <span asp-validation-for="ProPort" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+
+            <div class="form-inline form-group col-md-3">
+                <input type="submit" value="Enregistrer" class="btn btn-default" />
             </div>
+
+            <div class="invisible">
+
+                <input asp-for="ProPort" class="form-control" />
+
+            </div>
+
+
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Annuler</a>  
+    <a asp-action="Index">Annuler</a>
 </div>
 
 @section Scripts {

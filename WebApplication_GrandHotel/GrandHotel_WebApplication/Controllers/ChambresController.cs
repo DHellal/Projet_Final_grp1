@@ -20,9 +20,20 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: Chambres
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(bool? statusChambre)
         {
-            return View(await _context.Chambre.ToListAsync());
+            var vmChambre = new ChambreVM();
+            DateTime date = new DateTime(DateTime.Now.Year, 01, 01);
+            vmChambre.TarifChambre = await _context.TarifChambre
+                                            .Include(tc => tc.NumChambreNavigation)
+                                            .Include(tc => tc.CodeTarifNavigation)
+                                            .Where(tc=>tc.CodeTarifNavigation.DateDebut>= date).ToListAsync();
+            //if (statusChambre!=null)
+            
+
+            return View(vmChambre);
+            //return View(await _context.Chambre.ToListAsync());
+
         }
 
         // GET: Chambres/Details/5
@@ -32,7 +43,7 @@ namespace GrandHotel_WebApplication.Controllers
             {
                 return NotFound();
             }
-
+            
             var chambre = await _context.Chambre
                 .SingleOrDefaultAsync(m => m.Numero == id);
             if (chambre == null)

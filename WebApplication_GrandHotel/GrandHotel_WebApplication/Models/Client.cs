@@ -22,7 +22,7 @@ namespace GrandHotel_WebApplication.Models
         public bool CarteFidelite { get; set; }
         public string Societe { get; set; }
 
-        [Display(Name = "Reservation encours")]
+        [Display(Name = "Reservation en cours")]
         [NotMapped]
         public int NbReservEnCours { get; set; }
 

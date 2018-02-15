@@ -26,11 +26,11 @@ namespace GrandHotel_WebApplication.Controllers
         {
             var clients = new List<Client>();
             
-            string req = @"select C.Id, C.Nom, C.Prenom, C.Email, count(R.IdClient) NbReservation
+            string req = @"select C.Id, C.Civilite, C.Nom, C.Prenom, C.Email, count(R.IdClient) NbReservation
                            from Reservation R
                            left outer join Client C on C.Id = R.IdClient
                            where left(C.Nom,1)= @lettre 
-                           group by C.Id, C.Nom, C.Prenom, C.Email
+                           group by C.Id, C.Civilite, C.Nom, C.Prenom, C.Email
                            order by C.Id";
 
             using (var conn = (SqlConnection)_context.Database.GetDbConnection())
@@ -50,6 +50,7 @@ namespace GrandHotel_WebApplication.Controllers
                     {
                         var cli = new Client();
                         cli.Id = (int)sdr["Id"];
+                        cli.Civilite = (string)sdr["Civilite"];
                         cli.Nom = (string)sdr["Nom"];
                         cli.Prenom = (string)sdr["Prenom"];
                         cli.Email = (string)sdr["Email"];
@@ -81,9 +82,8 @@ namespace GrandHotel_WebApplication.Controllers
             string req = @"select C.Id, C.Nom, C.Prenom, C.Email,count(R.IdClient) NbReservationEnCours
                            from Reservation R
                            left outer join Client C on C.Id = R.IdClient
-                           where R.Jour<=GETDATE() And C.Id=@Id
-                           group by C.Id, C.Nom, C.Prenom, C.Email
-                           order by C.Id";
+                           where R.Jour>=GETDATE() And C.Id=@Id
+                           group by C.Id, C.Nom, C.Prenom, C.Email";
             
             using (var conn = (SqlConnection)_context.Database.GetDbConnection())
             {

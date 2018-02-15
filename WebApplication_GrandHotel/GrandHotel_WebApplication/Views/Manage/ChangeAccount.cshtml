@@ -1,16 +1,13 @@
-﻿@model GrandHotel_WebApplication.Models.CreationClientVM
-
+﻿@model CreationClientVM
 @{
-    ViewData["Title"] = "Création du compte";
-    Layout = "_LayoutCreation";
+    ViewData["Title"] = "Modification du compte";
+    ViewData.AddActivePage(ManageNavPages.ChangePassword);
 }
 
-<h2>Create</h2>
-
-<h4>Client</h4>
-<hr />
+<h2>@ViewData["Title"]</h2>
+@Html.Partial("_StatusMessage", Model.StatusMessage)
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-6">
         <form asp-controller="Clients" asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row form-group col-md-2">
@@ -34,10 +31,10 @@
             </div>
             <div class="row form-group form-inline col-md-10">
                 <label asp-for="AdresseRue" class="control-label"></label>
-                <input asp-for="AdresseRue" class="form-control" /> 
+                <input asp-for="AdresseRue" class="form-control" />
 
                 <label asp-for="AdresseCodePostal" class="control-label"></label>
-                <input asp-for="AdresseCodePostal" class="form-control" /> 
+                <input asp-for="AdresseCodePostal" class="form-control" />
                 <span asp-validation-for="AdresseCodePostal" class="text-danger"></span>
 
                 <label asp-for="AdresseVille" class="control-label"></label>
@@ -66,22 +63,10 @@
             <div class="form-inline form-group col-md-3">
                 <input type="submit" value="Enregistrer" class="btn btn-default" />
             </div>
-
-            <div class="invisible">
-
-                <input asp-for="ProPort" class="form-control" />
-
-            </div>
-
-
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Annuler</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

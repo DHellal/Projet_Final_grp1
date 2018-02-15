@@ -123,7 +123,7 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: Clients/Create
-        public IActionResult Create()
+        public IActionResult CreateUpdate()
         {
             return View();
         }
@@ -140,13 +140,13 @@ namespace GrandHotel_WebApplication.Controllers
             {
                 var user = await _userManager.GetUserAsync(User);
 
-                //Test email unique
+                //Test si email unique
                 #region
                 Client testEmail = _context.Client.Where(c => c.Email == user.Email).FirstOrDefault();
 
-                if(testEmail != null)
+                if (testEmail != null)
                 {
-                    clientVM.StatusMessage = "Adresse Mail deja prise..";
+                    clientVM.StatusMessage = "Erreur :Adresse Mail deja prise..";
                     return View(clientVM);
                 }
                 #endregion
@@ -171,9 +171,10 @@ namespace GrandHotel_WebApplication.Controllers
                 }
                 else
                 {
-                _context.Add(client);
-                await _context.SaveChangesAsync();
-                int id = _context.Client.OrderBy(c => c.Id).Select(c => c.Id).LastOrDefault();
+                    _context.Add(client);
+                    await _context.SaveChangesAsync();
+                    int id = _context.Client.OrderBy(c => c.Id).Select(c => c.Id).LastOrDefault();
+                    clientVM.id = id;
                 }
                 #endregion
 
@@ -225,8 +226,8 @@ namespace GrandHotel_WebApplication.Controllers
                     {
                         if (!clientVM.MAJ)
                         {
-                        clientVM.StatusMessage = "Numero de telephone Domicile déja utilisé..";
-                        return View(clientVM);
+                            clientVM.StatusMessage = "Erreur : Numero de telephone Domicile déja utilisé..";
+                            return View(clientVM);
                         }
                     }
                 };
@@ -254,15 +255,20 @@ namespace GrandHotel_WebApplication.Controllers
                     {
                         if (!clientVM.MAJ)
                         {
-                            clientVM.StatusMessage = "Numero de telephone Portable déja utilisé..";
+                            clientVM.StatusMessage = "Erreur : Numero de telephone Portable déja utilisé..";
                             return View(clientVM);
                         }
                     }
                 };
                 #endregion
 
-
-                return RedirectToAction(nameof(Index));
+                if (!clientVM.MAJ)
+                {
+                    clientVM.StatusMessage = "Compte mis à jour !";
+                    return RedirectToAction("ChangeAccount", "Manage");
+                }
+                else
+                    return RedirectToAction(nameof(Index));
             }
             return View(clientVM);
         }

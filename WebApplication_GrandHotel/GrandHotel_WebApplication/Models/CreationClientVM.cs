@@ -40,7 +40,7 @@ namespace GrandHotel_WebApplication.Models
 
         public string Email { get; set; }
 
-        public string StatusMessage { get; set; }
+        public string StatusMessage = "Bienvenue";
 
         public bool MAJ = false;
 

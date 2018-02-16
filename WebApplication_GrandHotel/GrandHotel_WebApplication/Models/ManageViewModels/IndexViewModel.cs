@@ -8,12 +8,14 @@ namespace GrandHotel_WebApplication.Models.ManageViewModels
 {
     public class IndexViewModel
     {
+        [Display(Name = "Nom d'utilisateur")]
         public string Username { get; set; }
 
         public bool IsEmailConfirmed { get; set; }
 
         [Required]
         [EmailAddress]
+        [Display(Name = "Adresse Mail")]
         public string Email { get; set; }
 
         [Phone]

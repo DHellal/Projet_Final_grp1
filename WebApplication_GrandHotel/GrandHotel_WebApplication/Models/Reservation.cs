@@ -15,9 +15,10 @@ namespace GrandHotel_WebApplication.Models
         public int IdClient { get; set; }
         [Display(Name = "Nombre de personnes")]
         [Required(ErrorMessage = "Saississez le nombre de personnes")]
+        [Range(1, 6, ErrorMessage = "une chambre ne prend pas plus de 5 personnes")]
         public byte NbPersonnes { get; set; }
         [Display(Name = "Heure d'arrivée")]
-        [Range(1, 24, ErrorMessage = "entrer un heure entre 1h et 24h")]
+        [Range(6, 22, ErrorMessage = "entrer un heure entre 6h et 22h")]
         public byte HeureArrivee { get; set; }
         [Display(Name = "Nature du séjour(Travail)")]
         public bool? Travail { get; set; }

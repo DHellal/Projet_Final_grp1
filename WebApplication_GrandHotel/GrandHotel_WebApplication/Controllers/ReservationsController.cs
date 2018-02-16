@@ -9,15 +9,19 @@ using GrandHotel_WebApplication.Data;
 using GrandHotel_WebApplication.Models;
 using System.Data.SqlClient;
 using System.Data;
+using GrandHotel_WebApplication.Extensions;
+using Microsoft.AspNetCore.Identity;
 
 namespace GrandHotel_WebApplication.Controllers
 {
     public class ReservationsController : Controller
     {
         private readonly GrandHotelContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ReservationsController(GrandHotelContext context)
+        public ReservationsController(GrandHotelContext context, UserManager<ApplicationUser> userManager)
         {
+            _userManager = userManager;
             _context = context;
         }
 
@@ -32,25 +36,58 @@ namespace GrandHotel_WebApplication.Controllers
         [Route("reservations/{id}/{prix}")]
         public async Task<IActionResult> Details(short id, decimal prix, DateTime jour, byte nbpersonne, bool? travail, int nbnuit, byte heure)
         {
+            ViewBag.DetailJour = jour.Day;
+            ViewBag.DetailMois = jour.Month;
+            ViewBag.DetailAnnee = jour.Year;
+
+            ViewBag.DetailNbPersonne = nbpersonne;
+            ViewBag.DetailNbnuit = nbnuit;
+
+
             DateTime date = new DateTime(DateTime.Now.Year, 01, 01);
             ReservationVM chambreVM = new ReservationVM();
-            chambreVM.ChambreSelectionne = await _context
+            chambreVM.tarifChambre = await _context
                 .TarifChambre.Include(m => m.CodeTarifNavigation)
+                .Include(m => m.NumChambreNavigation)
                 .Where(m => m.NumChambre == id && m.CodeTarifNavigation.DateDebut >= date)
-                .SingleOrDefaultAsync();
-            chambreVM.ChambreSelectionne.TarifTotal = prix;
+                .FirstOrDefaultAsync();
+            chambreVM.tarifChambre.TarifTotal = prix;
+            Guid g = Guid.NewGuid();
+            var guid = g.ToString();
+            ViewBag.guid = guid;
+            var reservation = new Reservation();
+            
+            reservation.Jour = jour;
+            reservation.NbPersonnes = nbpersonne;
+            reservation.NumChambre = id;
+            reservation.Travail = travail;
+            reservation.HeureArrivee = heure;
+            HttpContext.Session.SetObjectAsJson(guid, reservation);
+           
             return View(chambreVM);
         }
 
 
         //GET: Reservations/Create
+        
         public async Task<IActionResult> VerifDisponibilite(DateTime Jour, int NbNuit, byte NbPersonnes, byte HeureArrivee, bool? Travail)
         {
+
+            ViewBag.Nbnuit = NbNuit;
+            ViewBag.NbPersonnes = NbPersonnes;
+            ViewBag.Jour = Jour.Day;
+            ViewBag.Mois = Jour.Month;
+            ViewBag.Annee = Jour.Year;
+            ViewBag.HeureArrivee = HeureArrivee;
+            ViewBag.Travail = Travail;
+
             var numeroChambre = _context.Chambre.Select(m => m.Numero).ToList();
-            
+
+            DateTime j = Jour;
+
             ReservationVM chambreVM = new ReservationVM();
             var numeroChambreOccupe = new List<int>();
-            
+
 
             if (ModelState.IsValid)
             {
@@ -91,17 +128,14 @@ namespace GrandHotel_WebApplication.Controllers
                     chambreVM.TarifChambre = await _context.TarifChambre
                         .Include(t => t.NumChambreNavigation)
                         .Include(t => t.CodeTarifNavigation)
-                        .Where(x => !numeroChambreOccupe.Contains(x.NumChambre) && x.CodeTarifNavigation.DateDebut>=date )
+                        .Where(x => !numeroChambreOccupe.Contains(x.NumChambre) && x.CodeTarifNavigation.DateDebut >= date)
                         .ToListAsync();
                 }
-               
+
             }
-            ViewBag.Nbnuit = NbNuit;
-            ViewBag.NbPersonnes = NbPersonnes;
-            ViewBag.Jour = Jour;
-            ViewBag.HeureArrivee = HeureArrivee;
-            ViewBag.Travail = Travail;
-            return View(chambreVM);  
+
+
+            return View(chambreVM);
         }
 
         // POST: Reservations/Create
@@ -109,18 +143,19 @@ namespace GrandHotel_WebApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("NumChambre,Jour,IdClient,NbPersonnes,HeureArrivee,Travail")] Reservation reservation)
+        public async Task<IActionResult> Create()
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(reservation);
+            string guid = ViewBag.guid;
+            var user = await _userManager.GetUserAsync(User);
+            var email=user.Email;
+            var id = _context.Client.Where(c => c.Email == email).Select(c => c.Id).FirstOrDefault();
+            var reservations = HttpContext.Session.GetObjectFromJson<Reservation>(guid);
+            reservations.IdClient = id;
+            _context.Add(reservations);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["IdClient"] = new SelectList(_context.Client, "Id", "Civilite", reservation.IdClient);
-            ViewData["Jour"] = new SelectList(_context.Calendrier, "Jour", "Jour", reservation.Jour);
-            ViewData["NumChambre"] = new SelectList(_context.Chambre, "Numero", "Numero", reservation.NumChambre);
-            return View(reservation);
+           
+            
         }
 
         // GET: Reservations/Edit/5

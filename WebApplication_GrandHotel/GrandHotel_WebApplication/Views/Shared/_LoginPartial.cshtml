@@ -19,14 +19,17 @@
 }
 else
 {
-    <form asp-area="" asp-controller="Account" asp-action="Login" class="navbar-right">
+    <form asp-area="" asp-controller="Account" asp-action="Login" method="post" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li>
-                <a class="glyphicon glyphicon-user btn btn-link navbar-btn navbar-link"> Votre compte </a>
+                <a class="glyphicon glyphicon glyphicon-user"></a>
             </li>
+            <li>
+                <a asp-area="" asp-controller="Account" asp-action="Login" title="Login">Votre Compte</a>
+            </li>
+
         </ul>
     </form>
-
 }
 
 @*@glyphicon glyphicon glyphicon-user*@ 

@@ -7,12 +7,6 @@ namespace GrandHotel_WebApplication.Models
 {
     public partial class Client
     {
-        public Client()
-        {
-            Facture = new HashSet<Facture>();
-            Reservation = new HashSet<Reservation>();
-            Telephone = new HashSet<Telephone>();
-        }
 
         public int Id { get; set; }
         [Required(ErrorMessage = "Requis")]
@@ -36,10 +30,10 @@ namespace GrandHotel_WebApplication.Models
         public int NbReservationEnCours { get; set; }
 
         public Adresse Adresse { get; set; }
-        public ICollection<Facture> Facture { get; set; }
+        public List<Facture> Facture { get; set; }
         [Display(Name = "Reservations effectuées")]
-        public ICollection<Reservation> Reservation { get; set; }
-        [Phone]
-        public ICollection<Telephone> Telephone { get; set; }
+        public List<Reservation> Reservation { get; set; }
+
+        public List<Telephone> Telephone { get; set; }
     }
 }

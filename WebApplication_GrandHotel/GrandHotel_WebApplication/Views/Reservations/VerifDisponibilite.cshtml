@@ -1,6 +1,7 @@
 ﻿@*@model IEnumerable<GrandHotel_WebApplication.Models.Chambre>*@
 @model ReservationVM
 
+<br /><br />
 @{
     ViewData["Title"] = "Chambres Disponibles";
 }
@@ -19,7 +20,7 @@
                 @Html.DisplayNameFor(model => model.TarifChambre.First().NumChambreNavigation.NbLits)
             </th>
 
-            
+
             <th>
                 @Html.DisplayNameFor(model => model.TarifChambre.First().CodeTarifNavigation.Prix)
             </th>
@@ -43,7 +44,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.NumChambreNavigation.NbLits)
                 </td>
-               
+
                 <td>
                     @Html.DisplayFor(modelItem => item.CodeTarifNavigation.Prix)
                 </td>
@@ -56,10 +57,10 @@
                     @prix
                 </td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.NumChambreNavigation.Numero" asp-route-prix="@prix.ToString().Replace(",", ".")" 
-                      asp-route-nbnuit="@ViewBag.Nbnuit" asp-route-Nbpersonne="@ViewBag.NbPersonnes" 
-                       asp-route-jour="@ViewBag.Jour", asp-route-heure="@ViewBag.HeureArrivee",
-                      asp-route-travail="@ViewBag.Travail" >Détails</a>
+                    <a asp-action="Details" asp-route-id="@item.NumChambreNavigation.Numero" asp-route-prix="@prix.ToString().Replace(",", ".")"
+                       asp-route-nbnuit="@ViewBag.Nbnuit" asp-route-nbpersonne="@ViewBag.NbPersonnes"
+                       asp-route-jour="@(new DateTime(ViewBag.Annee, ViewBag.Mois, ViewBag.Jour).ToString("yyyy-MM-dd"))" asp-route-heure="@ViewBag.HeureArrivee"
+                       asp-route-travail="@ViewBag.Travail">Détails</a>
                 </td>
             </tr>
         }

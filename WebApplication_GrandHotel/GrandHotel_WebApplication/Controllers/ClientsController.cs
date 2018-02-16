@@ -75,10 +75,11 @@ namespace GrandHotel_WebApplication.Controllers
                         });
                         client.NbReservationEnCours = (int)cmd.ExecuteScalar();
                         clients.Add(client);
+                        ViewBag.id = client.Id;
                     }
                 }
             }
-
+            ViewBag.stat = lettre;
             //var client = await _context.Client
             //    .Where(a => a.Nom.StartsWith(lettre))
             //    .Include(c => c.Reservation)
@@ -87,50 +88,21 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: Clients/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string status)
         {
+            ViewBag.DetailStatus = status;
             if (id == null)
             {
                 return NotFound();
             }
 
-            //var client = new Client();
-            //string req = @"select C.Id,C.Civilite, C.Nom, C.Prenom, C.Email,count(R.IdClient) NbReservationEnCours
-            //               from Reservation R
-            //               inner join Client C on C.Id = R.IdClient
-            //               where R.Jour>=GETDATE() And C.Id=@Id
-            //               group by C.Id, C.Civilite, C.Nom, C.Prenom, C.Email";
-
-            //using (var conn = (SqlConnection)_context.Database.GetDbConnection())
-            //{
-            //    var cmd = new SqlCommand(req, conn);
-            //    cmd.Parameters.Add(new SqlParameter
-            //    {
-            //        SqlDbType = SqlDbType.Int,
-            //        ParameterName = "@Id",
-            //        Value = id
-            //    });
-            //    await conn.OpenAsync();
-
-            //    using (var sdr = await cmd.ExecuteReaderAsync())
-            //    {
-            //        while (sdr.Read())
-            //        {
-            //            client.Id = (int)sdr["Id"];
-            //            client.Civilite = (string)sdr["Civilite"];
-            //            client.Nom = (string)sdr["Nom"];
-            //            client.Prenom = (string)sdr["Prenom"];
-            //            client.Email = (string)sdr["Email"];
-            //            client.NbReservEnCours = (int)sdr["NbReservationEnCours"];
-            //        }
-            //    }
-            //}
+           
             var client = await _context.Client.SingleOrDefaultAsync(m => m.Id == id);
             if (client == null)
             {
                 return NotFound();
             }
-
+            ViewBag.id = id;
             return View(client);
         }
 
@@ -268,10 +240,21 @@ namespace GrandHotel_WebApplication.Controllers
 
 
         // GET: Clients/Edit/5
-        public async Task<IActionResult> Edit()
+        public async Task<IActionResult> Edit(int? id, string status)
         {
+            ViewBag.EditStatus = status;
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            return View();
+            var client = await _context.Client.SingleOrDefaultAsync(m => m.Id == id);
+            if (client == null)
+            {
+                return NotFound();
+            }
+            return View(client);
+            //return View();
         }
 
         // POST: Clients/Edit/5
@@ -411,8 +394,9 @@ namespace GrandHotel_WebApplication.Controllers
 
 
         // GET: Clients/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, string status)
         {
+            ViewBag.SupprimerStatus = status;
             if (id == null)
             {
                 return NotFound();
@@ -424,7 +408,7 @@ namespace GrandHotel_WebApplication.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.id = id;
             return View(client);
         }
 
@@ -438,7 +422,7 @@ namespace GrandHotel_WebApplication.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+       
         private bool ClientExists(int id)
         {
             return _context.Client.Any(e => e.Id == id);

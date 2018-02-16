@@ -13,7 +13,6 @@
     }
 </div>
 <br/>
-<br/>
 <table class="table">
     <thead>
         <tr>
@@ -67,9 +66,9 @@
                 @Html.DisplayFor(modelItem => item.NbReservationEnCours)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Editer</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Supprimer</a>
+                <a asp-action="Edit" asp-route-id="@item.Id" asp-route-status="@ViewBag.stat">Editer</a> |
+                <a asp-action="Details" asp-route-id="@item.Id" asp-route-status="@ViewBag.stat">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id" asp-route-status="@ViewBag.stat">Supprimer</a>
             </td>
         </tr>
         }

@@ -1,5 +1,5 @@
 ﻿@model ReservationVM
-
+<br /><br />
 @{
     ViewData["Title"] = "Details";
 }
@@ -7,64 +7,106 @@
 <h2>Details</h2>
 
 <div>
-    
-    @*<hr />*@
+
+    <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.ChambreSelectionne.NumChambre)
+            @Html.DisplayNameFor(model => model.tarifChambre.NumChambre)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ChambreSelectionne.NumChambre)
+            @Html.DisplayFor(model => model.tarifChambre.NumChambre)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.ChambreSelectionne.NumChambreNavigation.Etage)
+            @Html.DisplayNameFor(model => model.tarifChambre.NumChambreNavigation.Etage)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ChambreSelectionne.NumChambreNavigation.Etage)
+            @Html.DisplayFor(model => model.tarifChambre.NumChambreNavigation.Etage)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.ChambreSelectionne.NumChambreNavigation.Bain)
+            @Html.DisplayNameFor(model => model.tarifChambre.NumChambreNavigation.Bain)
         </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ChambreSelectionne.NumChambreNavigation.Bain)
-        </dd>
+        @{
+            bool b = Model.tarifChambre.NumChambreNavigation.Bain;
+            if (b == true)
+            {
+                <dd>
+                    oui
+                </dd>
+            }
+            else
+            {
+                <dd>
+                    Non
+                </dd>
+            }
+
+        }
 
         <dt>
-            @Html.DisplayNameFor(model => model.ChambreSelectionne.NumChambreNavigation.Douche)
+            @Html.DisplayNameFor(model => model.tarifChambre.NumChambreNavigation.Douche)
 
         </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ChambreSelectionne.NumChambreNavigation.Douche)
+        @{
+            bool? c = Model.tarifChambre.NumChambreNavigation.Douche;
+            if (c == true)
+            {
+                <dd>
+                    oui
+                </dd>
+            }
+            else
+            {
+                <dd>
+                    Non
+                </dd>
+            }
 
-        </dd>
+        }
 
         <dt>
-            @Html.DisplayNameFor(model => model.ChambreSelectionne.NumChambreNavigation.Wc)
+
+            @Html.DisplayNameFor(model => model.tarifChambre.NumChambreNavigation.Wc)
+
+
+        </dt>
+        @{
+            bool? d = Model.tarifChambre.NumChambreNavigation.Wc;
+            if (d == true)
+            {
+                <dd>
+                    oui
+                </dd>
+            }
+            else
+            {
+                <dd>
+                    Non
+                </dd>
+            }
+
+        }
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tarifChambre.CodeTarifNavigation.Prix)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ChambreSelectionne.NumChambreNavigation.Wc)
+            @Html.DisplayFor(model => model.tarifChambre.CodeTarifNavigation.Prix)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ChambreSelectionne.CodeTarifNavigation.Prix)
+            @Html.DisplayNameFor(model => model.tarifChambre.TarifTotal)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ChambreSelectionne.CodeTarifNavigation.Prix)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ChambreSelectionne.TarifTotal)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ChambreSelectionne.TarifTotal)
+            @Html.DisplayFor(model => model.tarifChambre.TarifTotal)
         </dd>
     </dl>
     <dl>
         <dd>
-            <a asp-controller="Account" asp-action="Login" asp-route-id="">Reserver</a>
+            <a asp-controller="Account" asp-action="Login" asp-route-id="" class="btn btn-primary">Reserver</a>
         </dd>
     </dl>
 

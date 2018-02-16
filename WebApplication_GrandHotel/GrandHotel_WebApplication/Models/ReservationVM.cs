@@ -12,7 +12,7 @@ namespace GrandHotel_WebApplication.Models
         public List<Tarif> Tarif { get; set; }
         public List<TarifChambre> TarifChambre { get; set; }
        
-        public TarifChambre ChambreSelectionne { get; set; }
+        public TarifChambre tarifChambre { get; set; }
 
     }
 }

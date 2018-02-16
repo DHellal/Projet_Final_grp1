@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Identity;
 
 namespace GrandHotel_WebApplication.Controllers
 {
+    // Travail fait par ARMELLE
+
     public class ReservationsController : Controller
     {
         private readonly GrandHotelContext _context;
@@ -25,25 +27,25 @@ namespace GrandHotel_WebApplication.Controllers
             _context = context;
         }
 
-        // GET: Reservations
+        //J'affiche le formulaire qui permet à l'utilisateur de saisir les carractéristiques de sa reservation
         public IActionResult Index()
         {
 
             return View();
         }
 
-        // GET: Reservations/Details/5
+        
         [Route("reservations/{id}/{prix}")]
         public async Task<IActionResult> Details(short id, decimal prix, DateTime jour, byte nbpersonne, bool? travail, int nbnuit, byte heure)
         {
+            //je recupère les données passées en parametre avec ces ViewBag pour povoir faire le retour à la page préccedente dans ma vue
             ViewBag.DetailJour = jour.Day;
             ViewBag.DetailMois = jour.Month;
             ViewBag.DetailAnnee = jour.Year;
-
             ViewBag.DetailNbPersonne = nbpersonne;
             ViewBag.DetailNbnuit = nbnuit;
 
-
+            //j'affiche le détail de la chambre selectionné par le client
             DateTime date = new DateTime(DateTime.Now.Year, 01, 01);
             ReservationVM chambreVM = new ReservationVM();
             chambreVM.tarifChambre = await _context
@@ -52,9 +54,11 @@ namespace GrandHotel_WebApplication.Controllers
                 .Where(m => m.NumChambre == id && m.CodeTarifNavigation.DateDebut >= date)
                 .FirstOrDefaultAsync();
             chambreVM.tarifChambre.TarifTotal = prix;
+            //je crée un guid pour reconnaitre la session de chaque client au cas ou l'on a plusieurs client qui reserve en meme temps
             Guid g = Guid.NewGuid();
             var guid = g.ToString();
             ViewBag.guid = guid;
+            //j'enregistre les information de ma reservation dans la session
             var reservation = new Reservation();
             
             reservation.Jour = jour;
@@ -68,11 +72,10 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
 
-        //GET: Reservations/Create
         
         public async Task<IActionResult> VerifDisponibilite(DateTime Jour, int NbNuit, byte NbPersonnes, byte HeureArrivee, bool? Travail)
         {
-
+            //je stocke les informations de mes parametres dans des ViewBag pour pouvoir les envoyer dans les paramètre de mon action Details
             ViewBag.Nbnuit = NbNuit;
             ViewBag.NbPersonnes = NbPersonnes;
             ViewBag.Jour = Jour.Day;
@@ -80,7 +83,7 @@ namespace GrandHotel_WebApplication.Controllers
             ViewBag.Annee = Jour.Year;
             ViewBag.HeureArrivee = HeureArrivee;
             ViewBag.Travail = Travail;
-
+            //je selectionne liste des numero de chambre
             var numeroChambre = _context.Chambre.Select(m => m.Numero).ToList();
 
             DateTime j = Jour;
@@ -88,12 +91,14 @@ namespace GrandHotel_WebApplication.Controllers
             ReservationVM chambreVM = new ReservationVM();
             var numeroChambreOccupe = new List<int>();
 
-
+            //je verifie que la saisie du client dans le formulaire respecte les attributs des propriétés  
             if (ModelState.IsValid)
             {
+                //je fais ma requête sql pour recuperer la liste des chambres qui ne correspondent pas au besoin de l'utilisateur
                 using (var conn = (SqlConnection)_context.Database.GetDbConnection())
                 {
                     if (conn.State == ConnectionState.Closed) conn.Open();
+                    //je fais une boucle sur le nombre de nuit saisie par l'utilisateur
                     for (int i = 0; i < NbNuit; i++)
                     {
                         string req = @"select  r.NumChambre 
@@ -122,8 +127,10 @@ namespace GrandHotel_WebApplication.Controllers
                                 numeroChambreOccupe.Add(c.Numero);
                             }
                         }
+                        //j'incremente le jour saisie par le client jusqu'au nombre de nuit saisie
                         Jour = Jour.AddDays(1);
                     }
+                    //je deduis dela liste total des chambres les chambres occupées et j'inclus le prix
                     DateTime date = new DateTime(DateTime.Now.Year, 01, 01);
                     chambreVM.TarifChambre = await _context.TarifChambre
                         .Include(t => t.NumChambreNavigation)
@@ -138,114 +145,33 @@ namespace GrandHotel_WebApplication.Controllers
             return View(chambreVM);
         }
 
-        // POST: Reservations/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Creates()
         {
             string guid = ViewBag.guid;
+            //je recupere l'email l'email de l'utilisateur
             var user = await _userManager.GetUserAsync(User);
-            var email=user.Email;
+            var email = user.Email;
+            //je recupere l'id du client avec l'email
             var id = _context.Client.Where(c => c.Email == email).Select(c => c.Id).FirstOrDefault();
+            //je recupere mon objet reservation de ma session
             var reservations = HttpContext.Session.GetObjectFromJson<Reservation>(guid);
             reservations.IdClient = id;
-            _context.Add(reservations);
+            var duree = ViewBag.NBnuit;
+            //je fais une boucle pour enregistrer la reservion sur la durée du sejour
+            for (int i = 1; i <= duree; i++)
+            {
+                _context.Add(reservations);
+                //j'enregistre la reservation
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-           
+            }
+            return View(reservations);
             
         }
 
-        // GET: Reservations/Edit/5
-        public async Task<IActionResult> Edit(short? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var reservation = await _context.Reservation.SingleOrDefaultAsync(m => m.NumChambre == id);
-            if (reservation == null)
-            {
-                return NotFound();
-            }
-            ViewData["IdClient"] = new SelectList(_context.Client, "Id", "Civilite", reservation.IdClient);
-            ViewData["Jour"] = new SelectList(_context.Calendrier, "Jour", "Jour", reservation.Jour);
-            ViewData["NumChambre"] = new SelectList(_context.Chambre, "Numero", "Numero", reservation.NumChambre);
-            return View(reservation);
-        }
-
-        // POST: Reservations/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(short id, [Bind("NumChambre,Jour,IdClient,NbPersonnes,HeureArrivee,Travail")] Reservation reservation)
-        {
-            if (id != reservation.NumChambre)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(reservation);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ReservationExists(reservation.NumChambre))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["IdClient"] = new SelectList(_context.Client, "Id", "Civilite", reservation.IdClient);
-            ViewData["Jour"] = new SelectList(_context.Calendrier, "Jour", "Jour", reservation.Jour);
-            ViewData["NumChambre"] = new SelectList(_context.Chambre, "Numero", "Numero", reservation.NumChambre);
-            return View(reservation);
-        }
-
-        // GET: Reservations/Delete/5
-        public async Task<IActionResult> Delete(short? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var reservation = await _context.Reservation
-                .Include(r => r.IdClientNavigation)
-                .Include(r => r.JourNavigation)
-                .Include(r => r.NumChambreNavigation)
-                .SingleOrDefaultAsync(m => m.NumChambre == id);
-            if (reservation == null)
-            {
-                return NotFound();
-            }
-
-            return View(reservation);
-        }
-
-        // POST: Reservations/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(short id)
-        {
-            var reservation = await _context.Reservation.SingleOrDefaultAsync(m => m.NumChambre == id);
-            _context.Reservation.Remove(reservation);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+       
 
         private bool ReservationExists(short id)
         {

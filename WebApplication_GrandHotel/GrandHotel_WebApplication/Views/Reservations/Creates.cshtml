@@ -1,0 +1,43 @@
+﻿@model Reservation
+
+
+    
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.NumChambre)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NumChambre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Jour)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Jour)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NbPersonnes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NbPersonnes)
+        </dd>
+           
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HeureArrivee)
+
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HeureArrivee)
+        </dd>
+
+</dl>
+<a asp-action="Index">Quitter</a>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

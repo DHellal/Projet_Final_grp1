@@ -4,11 +4,11 @@
     ViewData["Title"] = "Delete";
 }
 
-<h2>Delete</h2>
+@*<h2>Delete</h2>*@
 
-<h3>Are you sure you want to delete this?</h3>
+<h3 style="text-align:center">Voulez-vous supprimer le client @ViewBag.id?</h3>
 <div>
-    <h4>Client</h4>
+    @*<h4>Client</h4>*@
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -51,7 +51,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="Supprimer" class="btn btn-default" /> |
+        <a asp-action="Index"  asp-route-Lettre="@ViewBag.SupprimerStatus">Retour</a>
     </form>
 </div>

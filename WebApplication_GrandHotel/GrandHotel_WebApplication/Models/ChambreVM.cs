@@ -8,6 +8,8 @@ namespace GrandHotel_WebApplication.Models
     public class ChambreVM
     {
         public List<Chambre> Chambre { get; set; }
+        public Chambre Cham { get; set; }
+        public TarifChambre TarifChambre { get; set; }
         public string StatusChambre { get; set; }
     }
 }

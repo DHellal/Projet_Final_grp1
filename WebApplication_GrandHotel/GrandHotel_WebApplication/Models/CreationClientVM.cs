@@ -27,13 +27,13 @@ namespace GrandHotel_WebApplication.Models
         public string AdresseVille { get; set; }
 
         [Display(Name ="Telephone Domicile")]
-        [RegularExpression("^(?:[0-9]{10}|)$", ErrorMessage = "Numero de 10 chiffres")]
+        [RegularExpression("(0[1-6]{1}[0-9]{8})|", ErrorMessage = "10 chiffres commençant par 01-06")]
         public string TelephoneDom { get; set; }
 
         [Display(Name = "Cochez si numéro professionel")]
         public bool ProDom { get; set; }
 
-        [RegularExpression("^(?:[0-9]{10}|)$", ErrorMessage = "Numero de 10 chiffres")]
+        [RegularExpression("(0[6-7]{1}[0-9]{8})|", ErrorMessage = "10 chiffres commençant par 06 ou 07")]
         [Display(Name = "Telephone Portable")]
         public string TelephonePort { get; set; }
         [Display(Name = "Cochez si numéro professionel")]

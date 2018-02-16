@@ -75,10 +75,11 @@ namespace GrandHotel_WebApplication.Controllers
                         });
                         client.NbReservationEnCours = (int)cmd.ExecuteScalar();
                         clients.Add(client);
+                        ViewBag.id = client.Id;
                     }
                 }
             }
-
+            ViewBag.stat = lettre;
             //var client = await _context.Client
             //    .Where(a => a.Nom.StartsWith(lettre))
             //    .Include(c => c.Reservation)
@@ -87,50 +88,21 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: Clients/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string status)
         {
+            ViewBag.DetailStatus = status;
             if (id == null)
             {
                 return NotFound();
             }
 
-            //var client = new Client();
-            //string req = @"select C.Id,C.Civilite, C.Nom, C.Prenom, C.Email,count(R.IdClient) NbReservationEnCours
-            //               from Reservation R
-            //               inner join Client C on C.Id = R.IdClient
-            //               where R.Jour>=GETDATE() And C.Id=@Id
-            //               group by C.Id, C.Civilite, C.Nom, C.Prenom, C.Email";
-
-            //using (var conn = (SqlConnection)_context.Database.GetDbConnection())
-            //{
-            //    var cmd = new SqlCommand(req, conn);
-            //    cmd.Parameters.Add(new SqlParameter
-            //    {
-            //        SqlDbType = SqlDbType.Int,
-            //        ParameterName = "@Id",
-            //        Value = id
-            //    });
-            //    await conn.OpenAsync();
-
-            //    using (var sdr = await cmd.ExecuteReaderAsync())
-            //    {
-            //        while (sdr.Read())
-            //        {
-            //            client.Id = (int)sdr["Id"];
-            //            client.Civilite = (string)sdr["Civilite"];
-            //            client.Nom = (string)sdr["Nom"];
-            //            client.Prenom = (string)sdr["Prenom"];
-            //            client.Email = (string)sdr["Email"];
-            //            client.NbReservEnCours = (int)sdr["NbReservationEnCours"];
-            //        }
-            //    }
-            //}
+           
             var client = await _context.Client.SingleOrDefaultAsync(m => m.Id == id);
             if (client == null)
             {
                 return NotFound();
             }
-
+            ViewBag.id = id;
             return View(client);
         }
 
@@ -170,8 +142,9 @@ namespace GrandHotel_WebApplication.Controllers
                 }
 
                 //Test si email unique
-                Client DejaClient = _context.Client.Where(c => c.Email == user.Email).FirstOrDefault();
-                if (DejaClient != null)
+                
+                Client clientAncien = _context.Client.Where(c => c.Email == user.Email).FirstOrDefault();
+                if (clientAncien != null)
                 {
                     clientVM.StatusMessage = "Erreur : Adresse Mail deja utilisée pour un compte...";
                     return View(clientVM);
@@ -230,6 +203,7 @@ namespace GrandHotel_WebApplication.Controllers
                         _context.Add(telDom);
                         await _context.SaveChangesAsync();
                     }
+
                 };
                 #endregion
 
@@ -237,6 +211,8 @@ namespace GrandHotel_WebApplication.Controllers
                 #region
                 if (clientVM.TelephonePort.Length == 10)
                 {
+
+
                     Telephone telPort = new Telephone()
                     {
                         IdClient = clientVM.id,
@@ -250,17 +226,13 @@ namespace GrandHotel_WebApplication.Controllers
                         _context.Add(telPort);
                         await _context.SaveChangesAsync();
                     }
+
                 };
                 #endregion
 
-                //Si réussi, redirect vers change Account, sauf si viewBag.reservation existe, dans ce cas creation de la réservation
-                if (ViewBag.guid == null || ViewBag.guid == "")
-                    return RedirectToAction("Create", "Reservation");
-                else
-                {
+                //Si réussi, redirect vers change Account
                 clientVM.StatusMessage = "Bienvenue";
                 return RedirectToAction("ChangeAccount", "Manage", clientVM);
-                }
             }
             return View(clientVM);
         }
@@ -268,29 +240,163 @@ namespace GrandHotel_WebApplication.Controllers
 
 
         // GET: Clients/Edit/5
-        //public async Task<IActionResult> Edit()
-        //{
+        public async Task<IActionResult> Edit(int? id, string status)
+        {
+            ViewBag.EditStatus = status;
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        //    return View();
-        //}
+            var client = await _context.Client.SingleOrDefaultAsync(m => m.Id == id);
+            if (client == null)
+            {
+                return NotFound();
+            }
+            return View(client);
+            //return View();
+        }
 
-        //// POST: Clients/Edit/5
-        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(CreationClientVM clientVM)
-        //{
+        // POST: Clients/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(CreationClientVM clientVM)
+        {
+
+            var user = await _userManager.GetUserAsync(User);
 
 
-        //}
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    Client clientAncien = _context.Client.Where(c => c.Email == user.Email).FirstOrDefault();
+
+                    Client client = new Client
+                    {
+                        Civilite = clientVM.Civilite,
+                        Nom = clientVM.Nom.ToUpper(),
+                        // Le nom et la premiere lettre du prénom en majuscule
+                        Prenom = clientVM.Prenom[0].ToString().ToUpper() + clientVM.Prenom.Substring(1),
+                        Email = user.Email,
+                        CarteFidelite = false
+                    };
+
+                    clientVM.id = clientAncien.Id;
+                    _context.Update(client);
+                    await _context.SaveChangesAsync();
+
+
+                    if (clientVM.AdresseVille != null && clientVM.AdresseRue != null && clientVM.AdresseCodePostal != null)
+                    {
+
+                        Adresse Adresse = new Adresse()
+                        {
+                            IdClient = clientVM.id,
+                            Rue = clientVM.AdresseRue,
+                            CodePostal = clientVM.AdresseCodePostal,
+                            Ville = clientVM.AdresseVille.ToUpper()
+                        };
+                        _context.Update(Adresse);
+                        await _context.SaveChangesAsync();
+
+                    }
+
+
+                    if (clientVM.TelephoneDom.Length == 10)
+                    {
+                        string telClient = await _context.Telephone.Where(t => t.IdClient == clientVM.id).Select(t => t.Numero).SingleOrDefaultAsync();
+                        string telExist = await _context.Telephone.Where(t => t.Numero == clientVM.TelephoneDom).Select(t => t.Numero).SingleOrDefaultAsync();
+
+                        Telephone telDom = new Telephone()
+                        {
+                            IdClient = clientVM.id,
+                            CodeType = "F",
+                            Numero = clientVM.TelephoneDom,
+                            Pro = clientVM.ProDom
+                        };
+
+                        // Si le client n'avait pas de numéro
+                        if (telClient == null)
+                        {
+                            _context.Telephone.Add(telDom);
+                            await _context.SaveChangesAsync();
+                        }
+                        else if (telExist == null)
+                        {
+                            _context.Update(telDom);
+                            await _context.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            clientVM.TelephonePort = "";
+                            clientVM.StatusMessage = "Erreur : Numero de telephone Portable déja utilisé..";
+                            return RedirectToAction("ChangeAccount", "Manage", clientVM);
+                        }
+                    }
+
+
+                    if (clientVM.TelephonePort.Length == 10)
+                    {
+                        string telClient = await _context.Telephone.Where(t => t.IdClient == clientVM.id).Select(t => t.Numero).SingleOrDefaultAsync();
+                        string telExist = await _context.Telephone.Where(t => t.Numero == clientVM.TelephonePort).Select(t => t.Numero).SingleOrDefaultAsync();
+
+                        Telephone telPort = new Telephone()
+                        {
+                            IdClient = clientVM.id,
+                            CodeType = "M",
+                            Numero = clientVM.TelephonePort,
+                            Pro = clientVM.ProPort
+                        };
+
+                        // Si le client n'avait pas de numéro
+                        if (telClient == null)
+                        {
+                            _context.Telephone.Add(telPort);
+                            await _context.SaveChangesAsync();
+                        }
+                        else if (telExist == null)
+                        {
+                            _context.Update(telPort);
+                            await _context.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            clientVM.TelephonePort = "";
+                            clientVM.StatusMessage = "Erreur : Numero de telephone Portable déja utilisé..";
+                            return RedirectToAction("ChangeAccount", "Manage", clientVM);
+                        }
+                    }
+
+
+                }
+                catch (Exception e)
+                {
+                    clientVM.StatusMessage = "Erreur : " + e.Message;
+                    return RedirectToAction("ChangeAccount", "Manage", clientVM);
+                }
+
+
+                clientVM.StatusMessage = "Compte modifié avec succés";
+                RedirectToAction("ChangeAccount", "Manage", clientVM);
+
+
+            }
+            clientVM.StatusMessage = "Erreur dans le saisie des informations";
+            return RedirectToAction("ChangeAccount", "Manage", clientVM);
+
+        }
+
+
+
 
 
         // GET: Clients/Delete/5
-
-
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, string status)
         {
+            ViewBag.SupprimerStatus = status;
             if (id == null)
             {
                 return NotFound();
@@ -302,7 +408,7 @@ namespace GrandHotel_WebApplication.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.id = id;
             return View(client);
         }
 
@@ -316,7 +422,7 @@ namespace GrandHotel_WebApplication.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+       
         private bool ClientExists(int id)
         {
             return _context.Client.Any(e => e.Id == id);

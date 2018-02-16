@@ -1,54 +1,74 @@
-﻿@model GrandHotel_WebApplication.Models.Chambre
+﻿@model GrandHotel_WebApplication.Models.ChambreVM
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
-
+@*<h2>Details</h2>*@
+<h2 style="text-align:center">Détails de la chambre @ViewBag.id</h2>
 <div>
-    <h4>Chambre</h4>
+    @*<h4>Chambre</h4>*@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Etage)
+            @Html.DisplayNameFor(model => model.TarifChambre.NumChambreNavigation.Etage)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Etage)
+            @Html.DisplayFor(model => model.TarifChambre.NumChambreNavigation.Etage)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Bain)
+            @Html.DisplayNameFor(model => model.TarifChambre.NumChambreNavigation.Bain)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Bain)
+            @Html.DisplayFor(model => model.TarifChambre.NumChambreNavigation.Bain)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Douche)
+            @Html.DisplayNameFor(model => model.TarifChambre.NumChambreNavigation.Douche)
+        </dt>
+        @{
+            bool? status = Model.TarifChambre.NumChambreNavigation.Douche;
+            if (status == true)
+            {
+                <dd>Oui</dd> }
+            else
+            {
+                <dd>Non</dd> }
+        }
+        <dt>
+            @Html.DisplayNameFor(model => model.TarifChambre.NumChambreNavigation.Wc)
+        </dt>
+        @{ bool? stat = Model.TarifChambre.NumChambreNavigation.Wc;
+            if (stat == true)
+            {
+                <dd>Oui</dd>
+            }
+            else
+            {
+                <dd>Non</dd>
+            }
+        }
+        <dt>
+            @Html.DisplayNameFor(model => model.TarifChambre.NumChambreNavigation.NbLits)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Douche)
+            @Html.DisplayFor(model => model.TarifChambre.NumChambreNavigation.NbLits)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Wc)
+            @Html.DisplayNameFor(model => model.TarifChambre.NumChambreNavigation.NumTel)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Wc)
+            @Html.DisplayFor(model => model.TarifChambre.NumChambreNavigation.NumTel)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.NbLits)
+            @Html.DisplayNameFor(model => model.TarifChambre.NumChambreNavigation.Tarifc)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.NbLits)
+            @Html.DisplayFor(model => model.TarifChambre.CodeTarifNavigation.Prix)
         </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.NumTel)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.NumTel)
-        </dd>
+
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Numero">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.TarifChambre.NumChambreNavigation.Numero">Editer</a> |
+    <a asp-action="Index" asp-route-statusChambre="@ViewBag.DetailStatus">Retour</a>
 </div>

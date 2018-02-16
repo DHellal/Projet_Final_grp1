@@ -9,7 +9,6 @@ using GrandHotel_WebApplication.Data;
 using GrandHotel_WebApplication.Models;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Authorization;
-//using System.Data;
 
 namespace GrandHotel_WebApplication.Controllers
 {
@@ -31,12 +30,18 @@ namespace GrandHotel_WebApplication.Controllers
             //string req = "";
             if (string.IsNullOrWhiteSpace(statusChambre)) statusChambre = "";
 
-            string req = @"select Numero, Prix from vwChambresTarif";
+            ViewBag.stat = statusChambre;
+            /*Requete sql qui affiche toutes les chambres ainsi que leur tarif reviser au 1er janvier de l'année en cours
+             La requette est placé dans une vue dans la base GrandHotel*/
 
-            if (statusChambre == "Occupe") req = @"select Numero, Prix from vwChambresOccupeesTarif";
+            string req = @"select Numero, Etage, NbLits,  Prix from vwChambresTarif";
+            /*Requete sql qui affiche toutes les chambres ainsi que leur tarif reviser au 1er janvier de l'année en cours
+            La requette est placé dans une vue dans la base GrandHotel*/
 
-            else if (statusChambre == "NonOccupe") req = @"select Numero, Prix from vwChambresLibreTarif";
+            if (statusChambre == "Occupe") req = @"select Numero, Etage, NbLits,  Prix from vwChambresOccupeesTarif";
 
+            else if (statusChambre == "NonOccupe")  req = @"select Numero, Etage, NbLits,  Prix from vwChambresLibreTarif";
+            
             using (var conn = (SqlConnection)_context.Database.GetDbConnection())
             {
                 var cmd = new SqlCommand(req, conn);
@@ -48,12 +53,15 @@ namespace GrandHotel_WebApplication.Controllers
                     {
                         var chambre = new Chambre();
                         chambre.Numero = (short)sdr["Numero"];
+                        chambre.Etage= (byte)sdr["Etage"];
+                        chambre.NbLits= (byte)sdr["NbLits"];
                         chambre.Tarifc = (decimal)sdr["Prix"];
                         chambres.Add(chambre);
                     }
                 }
-            }
 
+            }
+           
             vmChambre.Chambre = chambres;
 
             return View(vmChambre);
@@ -61,22 +69,28 @@ namespace GrandHotel_WebApplication.Controllers
         }
         #endregion
         // GET: Chambres/Details/5
-        [Authorize]
-        public async Task<IActionResult> Details(short? id)
+        //[Authorize]
+        public IActionResult Details(short? id, string status)
         {
+            ViewBag.DetailStatus = status;
+            var vmChambre = new ChambreVM();
+            var chambres = new Chambre();
+            DateTime date = new DateTime(DateTime.Now.Year, 01, 01);
             if (id == null)
             {
                 return NotFound();
             }
-
-            var chambre = await _context.Chambre
-                .SingleOrDefaultAsync(m => m.Numero == id);
-            if (chambre == null)
+            var tarif = _context.TarifChambre
+                .Include(tc => tc.NumChambreNavigation)
+                .Include(tc=> tc.CodeTarifNavigation)
+                .Where(tc => tc.CodeTarifNavigation.DateDebut >= date && tc.NumChambreNavigation.Numero == id).FirstOrDefault();
+            if (chambres == null)
             {
                 return NotFound();
             }
-
-            return View(chambre);
+            ViewBag.id = id;
+            vmChambre.TarifChambre = tarif;
+            return View(vmChambre);
         }
 
         // GET: Chambres/Create
@@ -104,8 +118,9 @@ namespace GrandHotel_WebApplication.Controllers
 
         // GET: Chambres/Edit/5
         //[Authorize]
-        public async Task<IActionResult> Edit(short? id)
+        public async Task<IActionResult> Edit(short? id, string status)
         {
+            ViewBag.EditStatus = status;
             if (id == null)
             {
                 return NotFound();
@@ -116,6 +131,7 @@ namespace GrandHotel_WebApplication.Controllers
             {
                 return NotFound();
             }
+            ViewBag.id = id;
             return View(chambre);
         }
 
@@ -156,8 +172,10 @@ namespace GrandHotel_WebApplication.Controllers
 
         // GET: Chambres/Delete/5
         //[Authorize]
-        public async Task<IActionResult> Delete(short? id)
+        public async Task<IActionResult> Delete(short? id, string status)
         {
+         
+            ViewBag.SupprimerStatus = status;
             if (id == null)
             {
                 return NotFound();
@@ -169,7 +187,7 @@ namespace GrandHotel_WebApplication.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.id = id;
             return View(chambre);
         }
 

@@ -10,7 +10,7 @@ using GrandHotel_WebApplication.Models;
 using System.Data.SqlClient;
 using System.Data;
 using GrandHotel_WebApplication.Extensions;
-//https://benjii.me/2015/07/using-sessions-and-httpcontext-in-aspnet5-and-mvc6/
+
 namespace GrandHotel_WebApplication.Controllers
 {
     public class ReservationsController : Controller

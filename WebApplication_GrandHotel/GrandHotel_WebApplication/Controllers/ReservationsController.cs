@@ -36,6 +36,14 @@ namespace GrandHotel_WebApplication.Controllers
         [Route("reservations/{id}/{prix}")]
         public async Task<IActionResult> Details(short id, decimal prix, DateTime jour, byte nbpersonne, bool? travail, int nbnuit, byte heure)
         {
+            ViewBag.DetailJour = jour.Day;
+            ViewBag.DetailMois = jour.Month;
+            ViewBag.DetailAnnee = jour.Year;
+
+            ViewBag.DetailNbPersonne = nbpersonne;
+            ViewBag.DetailNbnuit = nbnuit;
+
+
             DateTime date = new DateTime(DateTime.Now.Year, 01, 01);
             ReservationVM chambreVM = new ReservationVM();
             chambreVM.tarifChambre = await _context
@@ -64,11 +72,22 @@ namespace GrandHotel_WebApplication.Controllers
         
         public async Task<IActionResult> VerifDisponibilite(DateTime Jour, int NbNuit, byte NbPersonnes, byte HeureArrivee, bool? Travail)
         {
+
+            ViewBag.Nbnuit = NbNuit;
+            ViewBag.NbPersonnes = NbPersonnes;
+            ViewBag.Jour = Jour.Day;
+            ViewBag.Mois = Jour.Month;
+            ViewBag.Annee = Jour.Year;
+            ViewBag.HeureArrivee = HeureArrivee;
+            ViewBag.Travail = Travail;
+
             var numeroChambre = _context.Chambre.Select(m => m.Numero).ToList();
-            
+
+            DateTime j = Jour;
+
             ReservationVM chambreVM = new ReservationVM();
             var numeroChambreOccupe = new List<int>();
-            
+
 
             if (ModelState.IsValid)
             {
@@ -109,25 +128,14 @@ namespace GrandHotel_WebApplication.Controllers
                     chambreVM.TarifChambre = await _context.TarifChambre
                         .Include(t => t.NumChambreNavigation)
                         .Include(t => t.CodeTarifNavigation)
-                        .Where(x => !numeroChambreOccupe.Contains(x.NumChambre) && x.CodeTarifNavigation.DateDebut>=date )
+                        .Where(x => !numeroChambreOccupe.Contains(x.NumChambre) && x.CodeTarifNavigation.DateDebut >= date)
                         .ToListAsync();
                 }
-               
+
             }
-            ViewBag.Nbnuit = NbNuit;
-            //chambreVM.Jour = Jour;
-            //chambreVM.NbNuit = NbNuit;
-            //chambreVM.NbPersonnes = NbPersonnes;
-            //chambreVM.HeureArrivee = HeureArrivee;
-            //chambreVM.Travail=Travail;
-            ViewBag.Nbnuit = NbNuit;
-            ViewBag.NbPersonnes = NbPersonnes;
-            ViewBag.Jour = Jour.Day;
-            ViewBag.Mois = Jour.Month;
-            ViewBag.Annee = Jour.Year;
-            ViewBag.HeureArrivee = HeureArrivee;
-            ViewBag.Travail = Travail;
-            return View(chambreVM);  
+
+
+            return View(chambreVM);
         }
 
         // POST: Reservations/Create

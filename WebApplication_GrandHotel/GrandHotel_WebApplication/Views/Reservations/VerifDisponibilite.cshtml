@@ -57,9 +57,7 @@
                         @prix
                     </td>
                     <td>
-                        @{
-                            DateTime date = new DateTime(ViewBag.Annee, ViewBag.Mois, ViewBag.Jour);
-                        }                                
+                                                       
                         <a asp-action="Details" asp-route-id="@item.NumChambreNavigation.Numero" asp-route-prix="@prix.ToString().Replace(",", ".")"
                            asp-route-nbnuit="@item." asp-route-Nbpersonne="@ViewBag.NbPersonnes"
                            asp-route-jour="@(new DateTime(ViewBag.Annee, ViewBag.Mois, ViewBag.Jour).ToString("yyyy-MM-dd"))" asp-route-heure="@ViewBag.HeureArrivee"

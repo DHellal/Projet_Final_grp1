@@ -59,6 +59,7 @@ namespace GrandHotel_WebApplication.Controllers
 
 
         //GET: Reservations/Create
+        
         public async Task<IActionResult> VerifDisponibilite(DateTime Jour, int NbNuit, byte NbPersonnes, byte HeureArrivee, bool? Travail)
         {
             var numeroChambre = _context.Chambre.Select(m => m.Numero).ToList();
@@ -116,6 +117,12 @@ namespace GrandHotel_WebApplication.Controllers
 
             ViewBag.J = j;
             ViewBag.Nbnuit = NbNuit;
+            //chambreVM.Jour = Jour;
+            //chambreVM.NbNuit = NbNuit;
+            //chambreVM.NbPersonnes = NbPersonnes;
+            //chambreVM.HeureArrivee = HeureArrivee;
+            //chambreVM.Travail=Travail;
+            ViewBag.Nbnuit = NbNuit;
             ViewBag.NbPersonnes = NbPersonnes;
             ViewBag.Jour = Jour.Day;
             ViewBag.Mois = Jour.Month;
@@ -132,16 +139,12 @@ namespace GrandHotel_WebApplication.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("NumChambre,Jour,IdClient,NbPersonnes,HeureArrivee,Travail")] Reservation reservation)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(reservation);
+            var myComplexObject = HttpContext.Session.GetObjectFromJson<Reservation>("Test");
+            _context.Add(myComplexObject);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["IdClient"] = new SelectList(_context.Client, "Id", "Civilite", reservation.IdClient);
-            ViewData["Jour"] = new SelectList(_context.Calendrier, "Jour", "Jour", reservation.Jour);
-            ViewData["NumChambre"] = new SelectList(_context.Chambre, "Numero", "Numero", reservation.NumChambre);
-            return View(reservation);
+           
+            return View();
         }
 
         // GET: Reservations/Edit/5

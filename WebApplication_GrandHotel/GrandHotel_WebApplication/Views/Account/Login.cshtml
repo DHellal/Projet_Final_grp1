@@ -10,8 +10,8 @@
 }
 <h1></h1>
 <div class="container">
-    <div class="row justify-content-start">
-        <div class="col-md-4 row justify-content-start">
+    <div class="row ">
+        <div class="col-md-4 " style="vertical-align:central ">
             <section>
                 <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
                     <h3>VOUS AVEZ UN COMPTE</h3>
@@ -51,7 +51,7 @@
                 <h3>VOUS NE POSSÉDEZ PAS DE COMPTE</h3>
                 <hr />
                 <a href="@Url.Action("Register","Account")"
-                   class="btn btn-default">Créer un compte</a>
+                   class="btn btn-default">CREER UN COMPTE</a>
             </section>
         </div>
     </div>

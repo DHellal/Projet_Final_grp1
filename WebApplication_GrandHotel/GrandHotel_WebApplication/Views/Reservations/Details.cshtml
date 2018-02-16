@@ -1,4 +1,4 @@
-﻿@model GrandHotel_WebApplication.Models.Reservation
+﻿@model ReservationVM
 
 @{
     ViewData["Title"] = "Details";
@@ -7,48 +7,68 @@
 <h2>Details</h2>
 
 <div>
-    <h4>Reservation</h4>
-    <hr />
+    
+    @*<hr />*@
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.NbPersonnes)
+            @Html.DisplayNameFor(model => model.ChambreSelectionne.NumChambre)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.NbPersonnes)
+            @Html.DisplayFor(model => model.ChambreSelectionne.NumChambre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ChambreSelectionne.NumChambreNavigation.Etage)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ChambreSelectionne.NumChambreNavigation.Etage)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ChambreSelectionne.NumChambreNavigation.Bain)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ChambreSelectionne.NumChambreNavigation.Bain)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ChambreSelectionne.NumChambreNavigation.Douche)
+
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ChambreSelectionne.NumChambreNavigation.Douche)
+
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ChambreSelectionne.NumChambreNavigation.Wc)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ChambreSelectionne.NumChambreNavigation.Wc)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.HeureArrivee)
+            @Html.DisplayNameFor(model => model.ChambreSelectionne.CodeTarifNavigation.Prix)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.HeureArrivee)
+            @Html.DisplayFor(model => model.ChambreSelectionne.CodeTarifNavigation.Prix)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Travail)
+            @Html.DisplayNameFor(model => model.ChambreSelectionne.TarifTotal)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Travail)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.IdClientNavigation)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.IdClientNavigation.Civilite)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.JourNavigation)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.JourNavigation.Jour)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.NumChambreNavigation)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.NumChambreNavigation.Numero)
+            @Html.DisplayFor(model => model.ChambreSelectionne.TarifTotal)
         </dd>
     </dl>
-</div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
+    <dl>
+        <dd>
+            <a asp-controller="Account" asp-action="Login" asp-route-id="">Reserver</a>
+        </dd>
+    </dl>
+
+
+
+    <a asp-action="Index">Retour</a>
 </div>

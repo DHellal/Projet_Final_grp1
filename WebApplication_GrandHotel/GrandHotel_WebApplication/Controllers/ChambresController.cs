@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GrandHotel_WebApplication.Data;
 using GrandHotel_WebApplication.Models;
+using System.Data.SqlClient;
+using Microsoft.AspNetCore.Authorization;
+//using System.Data;
 
 namespace GrandHotel_WebApplication.Controllers
 {
@@ -18,27 +21,47 @@ namespace GrandHotel_WebApplication.Controllers
         {
             _context = context;
         }
-
+        #region Auteur : Lydia
         // GET: Chambres
-        public async Task<IActionResult> Index(bool? statusChambre)
+        //[Authorize]
+        public async Task<IActionResult> Index(string statusChambre)
         {
             var vmChambre = new ChambreVM();
-            DateTime date = new DateTime(DateTime.Now.Year, 01, 01);
-            vmChambre.TarifChambre = await _context.TarifChambre
-                                            .Include(tc => tc.NumChambreNavigation)
-                                            .Include(tc => tc.CodeTarifNavigation)
-                                            .Where(tc=>tc.CodeTarifNavigation.DateDebut>= date).ToListAsync();
-            //if (statusChambre!=null)
-                var ChambreReserv = await _context.Reservation
-                    .Include(r=>r.NumChambreNavigation).Where(r=>r.Jour== date).ToListAsync();
+            var chambres = new List<Chambre>();
+            //string req = "";
+            if (string.IsNullOrWhiteSpace(statusChambre)) statusChambre = "";
 
+            string req = @"select Numero, Prix from vwChambresTarif";
+
+            if (statusChambre == "Occupe") req = @"select Numero, Prix from vwChambresOccupeesTarif";
+
+            else if (statusChambre == "NonOccupe")  req = @"select Numero, Prix from vwChambresLibreTarif";
+            
+            using (var conn = (SqlConnection)_context.Database.GetDbConnection())
+            {
+                var cmd = new SqlCommand(req, conn);
+                await conn.OpenAsync();
+
+                using (var sdr = await cmd.ExecuteReaderAsync())
+                {
+                    while (sdr.Read())
+                    {
+                        var chambre = new Chambre();
+                        chambre.Numero = (short)sdr["Numero"];
+                        chambre.Tarifc = (decimal)sdr["Prix"];
+                        chambres.Add(chambre);
+                    }
+                }
+            }
+
+            vmChambre.Chambre = chambres;
 
             return View(vmChambre);
-            //return View(await _context.Chambre.ToListAsync());
 
         }
-
+        #endregion
         // GET: Chambres/Details/5
+        //[Authorize]
         public async Task<IActionResult> Details(short? id)
         {
             if (id == null)
@@ -57,6 +80,7 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: Chambres/Create
+        //[Authorize]
         public IActionResult Create()
         {
             return View();
@@ -79,6 +103,7 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: Chambres/Edit/5
+        //[Authorize]
         public async Task<IActionResult> Edit(short? id)
         {
             if (id == null)
@@ -130,6 +155,7 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: Chambres/Delete/5
+        //[Authorize]
         public async Task<IActionResult> Delete(short? id)
         {
             if (id == null)

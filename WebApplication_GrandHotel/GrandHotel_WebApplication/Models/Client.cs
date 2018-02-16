@@ -26,14 +26,13 @@ namespace GrandHotel_WebApplication.Models
         public bool CarteFidelite { get; set; }
         public string Societe { get; set; }
 
-        [Display(Name = "Reservation en cours")]
-        [NotMapped]
-        public int NbReservEnCours { get; set; }
-
-        [Display(Name = "Total de reservations")]
+        [Display(Name = "Reservations Totales")]
         [NotMapped]
         public int NbReservation { get; set; }
 
+        [Display(Name = "Reservations en cours")]
+        [NotMapped]
+        public int NbReservationEnCours { get; set; }
 
         public Adresse Adresse { get; set; }
         public ICollection<Facture> Facture { get; set; }

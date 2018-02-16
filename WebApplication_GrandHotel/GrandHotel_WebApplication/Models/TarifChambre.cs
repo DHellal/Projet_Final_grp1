@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GrandHotel_WebApplication.Models
 {
@@ -10,5 +11,7 @@ namespace GrandHotel_WebApplication.Models
 
         public Tarif CodeTarifNavigation { get; set; }
         public Chambre NumChambreNavigation { get; set; }
+        [NotMapped]
+        public  decimal TarifTotal { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace GrandHotel_WebApplication.Controllers
         }
         #region Auteur : Lydia
         // GET: Chambres
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> Index(string statusChambre)
         {
             var vmChambre = new ChambreVM();
@@ -35,8 +35,8 @@ namespace GrandHotel_WebApplication.Controllers
 
             if (statusChambre == "Occupe") req = @"select Numero, Prix from vwChambresOccupeesTarif";
 
-            else if (statusChambre == "NonOccupe")  req = @"select Numero, Prix from vwChambresLibreTarif";
-            
+            else if (statusChambre == "NonOccupe") req = @"select Numero, Prix from vwChambresLibreTarif";
+
             using (var conn = (SqlConnection)_context.Database.GetDbConnection())
             {
                 var cmd = new SqlCommand(req, conn);
@@ -61,14 +61,14 @@ namespace GrandHotel_WebApplication.Controllers
         }
         #endregion
         // GET: Chambres/Details/5
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> Details(short? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            
+
             var chambre = await _context.Chambre
                 .SingleOrDefaultAsync(m => m.Numero == id);
             if (chambre == null)

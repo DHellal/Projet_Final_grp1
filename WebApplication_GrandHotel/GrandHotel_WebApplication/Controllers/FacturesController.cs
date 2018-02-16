@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GrandHotel_WebApplication.Data;
 using GrandHotel_WebApplication.Models;
 using Microsoft.AspNetCore.Identity;
+using GrandHotel_WebApplication.Outil;
 
 namespace GrandHotel_WebApplication.Controllers
 {
@@ -38,7 +39,7 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: Factures
-        public async Task<IActionResult> Afficher(string AnneeEnCour)
+        public async Task<IActionResult> Afficher(string AnneeEnCour, int page = 1)
         {
 
             var user = await _userManager.GetUserAsync(User);
@@ -59,7 +60,7 @@ namespace GrandHotel_WebApplication.Controllers
 
             //créer la liste de l'année : récupérer l'année dans BDD
             facturesVM.Factures = await _context.Facture.Where(f => f.IdClient == clientId).OrderByDescending(o => o.DateFacture).ToListAsync();
-
+         
             List<int> years = new List<int>();
             //add l'année en cours
             int ThisYear = DateTime.Today.Year;

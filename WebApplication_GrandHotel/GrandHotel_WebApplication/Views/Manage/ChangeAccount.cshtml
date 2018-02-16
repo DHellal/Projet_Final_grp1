@@ -1,14 +1,15 @@
 ﻿@model CreationClientVM
 @{
     ViewData["Title"] = "Modification du compte";
-    ViewData.AddActivePage(ManageNavPages.ChangePassword);
+    ViewData.AddActivePage(ManageNavPages.ChangeAccount);
+    string statut = ViewBag.statutmssg;
 }
 
 <h2>@ViewData["Title"]</h2>
-@Html.Partial("_StatusMessage", Model.StatusMessage)
 <div class="row">
+    @Html.Partial("_StatusMessage", statut)
     <div class="col-md-6">
-        <form asp-controller="Clients" asp-action="Edit" method="post">
+        <form asp-controller="Manage" asp-action="ChangeAccount" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row form-group col-md-2">
                 <label asp-for="Civilite" class="control-label"></label>

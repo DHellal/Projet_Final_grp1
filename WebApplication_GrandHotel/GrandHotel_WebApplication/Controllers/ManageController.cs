@@ -625,6 +625,7 @@ namespace GrandHotel_WebApplication.Controllers
                         {
                             _context.Remove(telDom);
                             await _context.SaveChangesAsync();
+
                             telDom.IdClient = clientVM.id;
                             telDom.Numero = clientVM.TelephoneDom;
                             telDom.Pro = clientVM.ProDom;
@@ -639,6 +640,13 @@ namespace GrandHotel_WebApplication.Controllers
                             ViewBag.statutmssg = "Erreur : Numero de telephone Portable déja utilisé..";
                             return View();
                         }
+                    }
+                    // Si veut simplement supprimer un telephone
+                    else
+                    {
+                        Telephone telDom = await _context.Telephone.Where(t => t.IdClient == clientVM.id && t.CodeType == "F").SingleOrDefaultAsync();
+                        _context.Remove(telDom);
+                        await _context.SaveChangesAsync();
                     }
 
                     //Portable
@@ -684,14 +692,22 @@ namespace GrandHotel_WebApplication.Controllers
                             return View();
                         }
                     }
+                    // Si veut simplement supprimer un telephone
+                    else
+                    {
+                        Telephone telPort = await _context.Telephone.Where(t => t.IdClient == clientVM.id && t.CodeType == "M").SingleOrDefaultAsync();
+                        _context.Remove(telPort);
+                        await _context.SaveChangesAsync();
+                    }
                 }
+
                 else
                 {
                     ViewBag.statutmssg = "Erreur : Numeros identiques...";
                     return View();
                 }
-                #endregion
-            }
+                    #endregion
+                }
             catch (Exception e)
             {
                 ViewBag.statutmssg = "Erreur : " + e.Message;

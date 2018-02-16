@@ -124,16 +124,12 @@ namespace GrandHotel_WebApplication.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("NumChambre,Jour,IdClient,NbPersonnes,HeureArrivee,Travail")] Reservation reservation)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(reservation);
+            var myComplexObject = HttpContext.Session.GetObjectFromJson<Reservation>("Test");
+            _context.Add(myComplexObject);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["IdClient"] = new SelectList(_context.Client, "Id", "Civilite", reservation.IdClient);
-            ViewData["Jour"] = new SelectList(_context.Calendrier, "Jour", "Jour", reservation.Jour);
-            ViewData["NumChambre"] = new SelectList(_context.Chambre, "Numero", "Numero", reservation.NumChambre);
-            return View(reservation);
+           
+            return View();
         }
 
         // GET: Reservations/Edit/5

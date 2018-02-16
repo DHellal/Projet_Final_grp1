@@ -11,9 +11,11 @@ using System.Data.SqlClient;
 using System.Data;
 using GrandHotel_WebApplication.Models.AccountViewModels;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GrandHotel_WebApplication.Controllers
 {
+    [Authorize]
     public class ClientsController : Controller
     {
         private readonly GrandHotelContext _context;
@@ -133,7 +135,7 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: Clients/Create
-        public IActionResult CreateUpdate()
+        public IActionResult Create()
         {
             return View();
         }
@@ -143,7 +145,7 @@ namespace GrandHotel_WebApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateUpdate(CreationClientVM clientVM)
+        public async Task<IActionResult> Create(CreationClientVM clientVM)
         {
 
             if (ModelState.IsValid)
@@ -152,16 +154,16 @@ namespace GrandHotel_WebApplication.Controllers
 
                 //Test si email unique
                 #region
-                Client testEmail = _context.Client.Where(c => c.Email == user.Email).FirstOrDefault();
+                Client clientAncien = _context.Client.Where(c => c.Email == user.Email).FirstOrDefault();
 
-                if (testEmail != null)
+                if (clientAncien != null)
                 {
-                    clientVM.StatusMessage = "Erreur :Adresse Mail deja prise..";
-                    return View(clientVM);
+                    clientVM.StatusMessage = "Erreur :Adresse Mail deja utilisée pour un compte...";
+                    return RedirectToAction("ChangeAccount", "Manage");
                 }
                 #endregion
 
-                //Création/Mise à jour du client
+                //Création du client
                 #region
                 Client client = new Client
                 {
@@ -171,24 +173,14 @@ namespace GrandHotel_WebApplication.Controllers
                     Email = user.Email,
                     CarteFidelite = false
                 };
+                _context.Add(client);
+                await _context.SaveChangesAsync();
 
-                if (clientVM.MAJ)
-                {
-                    Client clientAncien = _context.Client.Where(c => c.Id == clientVM.id).FirstOrDefault();
-                    clientAncien = client;
-                    _context.SaveChanges();
-
-                }
-                else
-                {
-                    _context.Add(client);
-                    await _context.SaveChangesAsync();
-                    int id = _context.Client.OrderBy(c => c.Id).Select(c => c.Id).LastOrDefault();
-                    clientVM.id = id;
-                }
+                int id = _context.Client.OrderBy(c => c.Id).Select(c => c.Id).LastOrDefault();
+                clientVM.id = id;
                 #endregion
 
-                //Création/MAJ adresse
+                //Création adresse
                 #region
                 if (clientVM.AdresseVille != null && clientVM.AdresseRue != null && clientVM.AdresseCodePostal != null)
                 {
@@ -200,17 +192,9 @@ namespace GrandHotel_WebApplication.Controllers
                         CodePostal = clientVM.AdresseCodePostal,
                         Ville = clientVM.AdresseVille.ToUpper()
                     };
-                    if (clientVM.MAJ)
-                    {
-                        Adresse adresseAncien = _context.Adresse.Where(c => c.IdClient == clientVM.id).FirstOrDefault();
-                        adresseAncien = Adresse;
-                        _context.SaveChanges();
-                    }
-                    else
-                    {
-                        _context.Add(Adresse);
-                        await _context.SaveChangesAsync();
-                    }
+
+                    _context.Add(Adresse);
+                    await _context.SaveChangesAsync();
                 }
                 #endregion
 
@@ -220,65 +204,58 @@ namespace GrandHotel_WebApplication.Controllers
                 {
                     string tel = await _context.Telephone.Where(t => t.Numero == clientVM.TelephoneDom).Select(t => t.Numero).SingleOrDefaultAsync();
 
+                    Telephone telDom = new Telephone()
+                    {
+                        IdClient = clientVM.id,
+                        CodeType = "F",
+                        Numero = clientVM.TelephoneDom,
+                        Pro = clientVM.ProDom
+                    };
+
                     if (tel == null)
                     {
-                        Telephone telDom = new Telephone()
-                        {
-                            IdClient = clientVM.id,
-                            CodeType = "F",
-                            Numero = clientVM.TelephoneDom,
-                            Pro = clientVM.ProDom
-                        };
                         _context.Add(telDom);
                         await _context.SaveChangesAsync();
                     }
                     else
                     {
-                        if (!clientVM.MAJ)
-                        {
-                            clientVM.StatusMessage = "Erreur : Numero de telephone Domicile déja utilisé..";
-                            return View(clientVM);
-                        }
+                        clientVM.StatusMessage = "Numéro de telephone déja existant";
+                        return View(clientVM);
                     }
                 };
                 #endregion
 
-                //Création/MAJ Telephone Portable
+                //Création Telephone Portable
                 #region
                 if (clientVM.TelephonePort.Length == 10)
                 {
                     string tel = await _context.Telephone.Where(t => t.Numero == clientVM.TelephonePort).Select(t => t.Numero).SingleOrDefaultAsync();
 
+                    Telephone telPort = new Telephone()
+                    {
+                        IdClient = clientVM.id,
+                        CodeType = "M",
+                        Numero = clientVM.TelephonePort,
+                        Pro = clientVM.ProPort
+                    };
+
                     if (tel == null)
                     {
-                        Telephone telPort = new Telephone()
-                        {
-                            IdClient = clientVM.id,
-                            CodeType = "M",
-                            Numero = clientVM.TelephonePort,
-                            Pro = clientVM.ProPort
-                        };
                         _context.Add(telPort);
                         await _context.SaveChangesAsync();
                     }
+
                     else
                     {
-                        if (!clientVM.MAJ)
-                        {
-                            clientVM.StatusMessage = "Erreur : Numero de telephone Portable déja utilisé..";
-                            return View(clientVM);
-                        }
+                        clientVM.StatusMessage = "Numéro de telephone déja existant";
+                        return View(clientVM);
                     }
+
                 };
                 #endregion
 
-                if (!clientVM.MAJ)
-                {
-                    clientVM.StatusMessage = "Compte mis à jour !";
-                    return RedirectToAction("ChangeAccount", "Manage");
-                }
-                else
-                    return RedirectToAction(nameof(Index));
+                //Si réussi, retourne à l'accueil
+                return RedirectToAction(nameof(Index));
             }
             return View(clientVM);
         }
@@ -286,19 +263,10 @@ namespace GrandHotel_WebApplication.Controllers
 
 
         // GET: Clients/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var client = await _context.Client.SingleOrDefaultAsync(m => m.Id == id);
-            if (client == null)
-            {
-                return NotFound();
-            }
-            return View(client);
+            return View();
         }
 
         // POST: Clients/Edit/5
@@ -306,35 +274,128 @@ namespace GrandHotel_WebApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Civilite,Nom,Prenom,Email,CarteFidelite,Societe")] Client client)
+        public async Task<IActionResult> Edit(CreationClientVM clientVM)
         {
-            if (id != client.Id)
-            {
-                return NotFound();
-            }
+
+            var user = await _userManager.GetUserAsync(User);
+
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    Client clientAncien = _context.Client.Where(c => c.Email == user.Email).FirstOrDefault();
+
+                    Client client = new Client
+                    {
+                        Civilite = clientVM.Civilite,
+                        Nom = clientVM.Nom.ToUpper(),
+                        Prenom = clientVM.Prenom[0].ToString().ToUpper() + clientVM.Prenom.Substring(1),
+                        Email = user.Email,
+                        CarteFidelite = false
+                    };
+
+                    clientVM.id = clientAncien.Id;
                     _context.Update(client);
                     await _context.SaveChangesAsync();
+
+
+                    if (clientVM.AdresseVille != null && clientVM.AdresseRue != null && clientVM.AdresseCodePostal != null)
+                    {
+
+                        Adresse Adresse = new Adresse()
+                        {
+                            IdClient = clientVM.id,
+                            Rue = clientVM.AdresseRue,
+                            CodePostal = clientVM.AdresseCodePostal,
+                            Ville = clientVM.AdresseVille.ToUpper()
+                        };
+                        _context.Update(Adresse);
+                        await _context.SaveChangesAsync();
+
+                    }
+
+
+                    if (clientVM.TelephoneDom.Length == 10)
+                    {
+                        string telClient = await _context.Telephone.Where(t => t.IdClient == clientVM.id).Select(t => t.Numero).SingleOrDefaultAsync();
+                        string telExist = await _context.Telephone.Where(t => t.Numero == clientVM.TelephoneDom).Select(t => t.Numero).SingleOrDefaultAsync();
+
+                        Telephone telDom = new Telephone()
+                        {
+                            IdClient = clientVM.id,
+                            CodeType = "F",
+                            Numero = clientVM.TelephoneDom,
+                            Pro = clientVM.ProDom
+                        };
+
+                        // Si le client n'avait pas de numéro
+                        if (telClient == null)
+                        {
+                            _context.Telephone.Add(telDom);
+                            await _context.SaveChangesAsync();
+                        }
+                        else if (telExist == null)
+                        {
+                            _context.Update(telDom);
+                            await _context.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            clientVM.TelephonePort = "";
+                            clientVM.StatusMessage = "Erreur : Numero de telephone Portable déja utilisé..";
+                            return RedirectToAction("Create", "Manage", clientVM); // qsdsssssssssssssssssssssssssssssssssssssssss
+                        }
+                    }
+
+
+                    if (clientVM.TelephonePort.Length == 10)
+                    {
+                        string telClient = await _context.Telephone.Where(t => t.IdClient == clientVM.id).Select(t => t.Numero).SingleOrDefaultAsync();
+                        string telExist = await _context.Telephone.Where(t => t.Numero == clientVM.TelephonePort).Select(t => t.Numero).SingleOrDefaultAsync();
+
+                        Telephone telPort = new Telephone()
+                        {
+                            IdClient = clientVM.id,
+                            CodeType = "M",
+                            Numero = clientVM.TelephonePort,
+                            Pro = clientVM.ProPort
+                        };
+
+                        // Si le client n'avait pas de numéro
+                        if (telClient == null)
+                        {
+                            _context.Telephone.Add(telPort);
+                            await _context.SaveChangesAsync();
+                        }
+                        else if (telExist == null)
+                        {
+                            _context.Update(telPort);
+                            await _context.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            clientVM.TelephonePort = "";
+                            clientVM.StatusMessage = "Erreur : Numero de telephone Portable déja utilisé..";
+                            return RedirectToAction("Create", "Manage", clientVM); // qsdsssssssssssssssssssssssssssssssssssssssss
+                        }
+                    }
+
+
                 }
-                catch (DbUpdateConcurrencyException)
+                finally
                 {
-                    if (!ClientExists(client.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    RedirectToAction("Create", "Manage", clientVM); // qsdsssssssssssssssssssssssssssssssssssssssss
+
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return View(client);
+            return RedirectToAction("Create", "Manage", clientVM); // qsdsssssssssssssssssssssssssssssssssssssssss
+
         }
+
+
+
+
 
         // GET: Clients/Delete/5
         public async Task<IActionResult> Delete(int? id)

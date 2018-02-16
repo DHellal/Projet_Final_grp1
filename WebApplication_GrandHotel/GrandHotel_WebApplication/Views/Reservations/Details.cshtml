@@ -55,14 +55,20 @@
         <dd>
             @Html.DisplayFor(model => model.ChambreSelectionne.CodeTarifNavigation.Prix)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ChambreSelectionne.TarifTotal)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ChambreSelectionne.TarifTotal)
+        </dd>
     </dl>
     <dl>
         <dd>
-            <a asp-action="Details" asp-route-id="">Reserver</a>
+            <a asp-controller="Account" asp-action="Login" asp-route-id="">Reserver</a>
         </dd>
     </dl>
 
 
 
-    <a asp-action="VerifDisponibilite">Retour</a>
+    <a asp-action="Index">Retour</a>
 </div>

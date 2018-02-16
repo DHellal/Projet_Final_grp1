@@ -29,7 +29,8 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: Reservations/Details/5
-        public async Task<IActionResult> Details(short id )
+        [Route("reservations/{id}/{prix}")]
+        public async Task<IActionResult> Details(short id, decimal prix, DateTime jour, byte nbpersonne, bool? travail, int nbnuit, byte heure)
         {
             DateTime date = new DateTime(DateTime.Now.Year, 01, 01);
             ReservationVM chambreVM = new ReservationVM();
@@ -37,13 +38,13 @@ namespace GrandHotel_WebApplication.Controllers
                 .TarifChambre.Include(m => m.CodeTarifNavigation)
                 .Where(m => m.NumChambre == id && m.CodeTarifNavigation.DateDebut >= date)
                 .SingleOrDefaultAsync();
-           
+            chambreVM.ChambreSelectionne.TarifTotal = prix;
             return View(chambreVM);
         }
 
 
         //GET: Reservations/Create
-        public async Task<IActionResult> VerifDisponibilite(DateTime Jour, int NbNuit, byte NbPersonnes)
+        public async Task<IActionResult> VerifDisponibilite(DateTime Jour, int NbNuit, byte NbPersonnes, byte HeureArrivee, bool? Travail)
         {
             var numeroChambre = _context.Chambre.Select(m => m.Numero).ToList();
             
@@ -96,6 +97,10 @@ namespace GrandHotel_WebApplication.Controllers
                
             }
             ViewBag.Nbnuit = NbNuit;
+            ViewBag.NbPersonnes = NbPersonnes;
+            ViewBag.Jour = Jour;
+            ViewBag.HeureArrivee = HeureArrivee;
+            ViewBag.Travail = Travail;
             return View(chambreVM);  
         }
 

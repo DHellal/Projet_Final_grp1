@@ -14,6 +14,7 @@ namespace GrandHotel_WebApplication.Models.AccountViewModels
 
         [Required]
         [DataType(DataType.Password)]
+        [Display(Name ="Mot de passe")]
         public string Password { get; set; }
 
         [Display(Name = "Se souvenir de moi?")]

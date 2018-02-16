@@ -19,10 +19,14 @@
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right " >
-        <li><a class="glyphicon glyphicon glyphicon-user" asp-area="" asp-controller="Account" asp-action="Register"> Se connecter </a></li>
-        <li><a asp-area="" asp-controller="Account" asp-action="Register">Register</a></li>
-        <li><a asp-area="" asp-controller="Account" asp-action="Login">Log in</a></li>
-    </ul>
+    <form asp-area="" asp-controller="Account" asp-action="Login" class="navbar-right">
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a class="glyphicon glyphicon-user btn btn-link navbar-btn navbar-link"> Votre compte </a>
+            </li>
+        </ul>
+    </form>
+
 }
 
+@*@glyphicon glyphicon glyphicon-user*@ 

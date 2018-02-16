@@ -10,15 +10,18 @@ using GrandHotel_WebApplication.Models;
 using System.Data.SqlClient;
 using System.Data;
 using GrandHotel_WebApplication.Extensions;
-//https://benjii.me/2015/07/using-sessions-and-httpcontext-in-aspnet5-and-mvc6/
+using Microsoft.AspNetCore.Identity;
+
 namespace GrandHotel_WebApplication.Controllers
 {
     public class ReservationsController : Controller
     {
         private readonly GrandHotelContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ReservationsController(GrandHotelContext context)
+        public ReservationsController(GrandHotelContext context, UserManager<ApplicationUser> userManager)
         {
+            _userManager = userManager;
             _context = context;
         }
 
@@ -41,15 +44,18 @@ namespace GrandHotel_WebApplication.Controllers
                 .Where(m => m.NumChambre == id && m.CodeTarifNavigation.DateDebut >= date)
                 .FirstOrDefaultAsync();
             chambreVM.tarifChambre.TarifTotal = prix;
-
+            Guid g = Guid.NewGuid();
+            var guid = g.ToString();
+            ViewBag.guid = guid;
             var reservation = new Reservation();
+            
             reservation.Jour = jour;
             reservation.NbPersonnes = nbpersonne;
             reservation.NumChambre = id;
             reservation.Travail = travail;
             reservation.HeureArrivee = heure;
-            HttpContext.Session.SetObjectAsJson("Test", reservation);
-
+            HttpContext.Session.SetObjectAsJson(guid, reservation);
+           
             return View(chambreVM);
         }
 
@@ -129,14 +135,19 @@ namespace GrandHotel_WebApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("NumChambre,Jour,IdClient,NbPersonnes,HeureArrivee,Travail")] Reservation reservation)
+        public async Task<IActionResult> Create()
         {
-            var myComplexObject = HttpContext.Session.GetObjectFromJson<Reservation>("Test");
-            _context.Add(myComplexObject);
+            string guid = ViewBag.guid;
+            var user = await _userManager.GetUserAsync(User);
+            var email=user.Email;
+            var id = _context.Client.Where(c => c.Email == email).Select(c => c.Id).FirstOrDefault();
+            var reservations = HttpContext.Session.GetObjectFromJson<Reservation>(guid);
+            reservations.IdClient = id;
+            _context.Add(reservations);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
            
-            return View();
+            
         }
 
         // GET: Reservations/Edit/5

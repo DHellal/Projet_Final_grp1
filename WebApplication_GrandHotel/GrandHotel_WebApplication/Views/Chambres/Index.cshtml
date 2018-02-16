@@ -1,68 +1,60 @@
-﻿*@*@model IEnumerable<GrandHotel_WebApplication.Models.Chambre>*@
-
-@model  ChambreVM
+﻿
+@model ChambreVM
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2 style="text-align:center">Liste des Chambres</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
+
+<form asp-controller="Chambres" asp-action="Index" method="get" style="text-align:center">
+    <p>Date du jour @DateTime.Today.ToString("yyyy-MM-dd")</p>
+    <p>
+        <span>Chambres</span>
+        <select asp-for="StatusChambre" >
+            <option value="Null">Toutes</option>
+            <option value="Occupe">Occupées</option>
+            <option value="NonOccupe">Libres</option>
+        </select>
+        <input type="submit" value="Filtrer" />
+    </p>
+</form>
+<br />
+<br />
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.TarifChambre.First().NumChambre)
+                @Html.DisplayNameFor(model => model.Chambre.First().Numero)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TarifChambre.First().CodeTarifNavigation.Prix)
+                @Html.DisplayNameFor(model => model.Chambre.First().Tarifc)
             </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.Chambre[0].Douche)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Chambre[0].Wc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Chambre[0].NbLits)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Chambre[0].NumTel)
-            </th>*@
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.TarifChambre)
+        @foreach (var item in Model.Chambre)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.NumChambre)
+                    @Html.DisplayFor(modelItem => item.Numero)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CodeTarifNavigation.Prix)
-                </td>
-                @*<td>
-                    @Html.DisplayFor(modelItem => item.Douche)
+                    @Html.DisplayFor(modelItem => item.Tarifc)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Wc)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NbLits)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumTel)
-                </td>*@
-                @*<td>
-                    <a asp-action="Edit" asp-route-id="@item.Numero">Edit</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Numero">Editer</a> |
                     <a asp-action="Details" asp-route-id="@item.Numero">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Numero">Delete</a>
-                </td>*@
+                    <a asp-action="Delete" asp-route-id="@item.Numero">Supprimer</a>
+                </td>
             </tr>
         }
     </tbody>
-</table>*
+</table>
+
+<p>
+    <a asp-action="Create">Ajouter une chambre</a>
+</p>

@@ -34,6 +34,9 @@ namespace GrandHotel_WebApplication.Models
         [NotMapped]
         public int NbReservation { get; set; }
 
+        [Display(Name = "Reservations en cours")]
+        [NotMapped]
+        public int NbReservationEnCours { get; set; }
 
         public Adresse Adresse { get; set; }
         public ICollection<Facture> Facture { get; set; }

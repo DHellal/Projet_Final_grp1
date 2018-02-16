@@ -506,7 +506,7 @@ namespace GrandHotel_WebApplication.Controllers
 
             
 
-            CreationClientVM model = new CreationClientVM()
+            CreationClientVM clientVM = new CreationClientVM()
             {
                 id = client.Id,
                 Nom = client.Nom,
@@ -518,38 +518,42 @@ namespace GrandHotel_WebApplication.Controllers
                 TelephoneDom = client.Telephone.Where(t => t.CodeType == "F").Select(t => t.Numero).SingleOrDefault(),
                 TelephonePort = client.Telephone.Where(t => t.CodeType == "M").Select(t => t.Numero).SingleOrDefault(),
                 ProPort = client.Telephone.Where(t => t.CodeType == "M").Select(t => t.Pro).SingleOrDefault(),
-                ProDom = client.Telephone.Where(t => t.CodeType == "F").Select(t => t.Pro).SingleOrDefault()
+                ProDom = client.Telephone.Where(t => t.CodeType == "F").Select(t => t.Pro).SingleOrDefault(),
+                
+                
             };
 
-            return View(model);
+            
+
+            return View(clientVM);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangeAccount(CreationClientVM model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> ChangeAccount(CreationClientVM model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(model);
+        //    }
 
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+        //    var user = await _userManager.GetUserAsync(User);
+        //    if (user == null)
+        //    {
+        //        throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+        //    }
 
-            //var changeClient = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
-            //if (!changePasswordResult.Succeeded)
-            //{
-            //    AddErrors(changePasswordResult);
-            //    return View(model);
-            //}
+        //    //var changeClient = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+        //    //if (!changePasswordResult.Succeeded)
+        //    //{
+        //    //    AddErrors(changePasswordResult);
+        //    //    return View(model);
+        //    //}
 
-            model.MAJ = true;
+        //    model.MAJ = true;
 
-            return RedirectToAction("Create","Clients",model);
-        }
+        //    return RedirectToAction("Create","Clients",model);
+        //}
 
 
 

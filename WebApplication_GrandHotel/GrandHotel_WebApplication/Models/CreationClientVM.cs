@@ -21,6 +21,7 @@ namespace GrandHotel_WebApplication.Models
         [Display(Name = "Rue")]
         public string AdresseRue { get; set; }
         [Display(Name = "Code Postal")]
+        [RegularExpression("^(?:[0-9]{5}|)$", ErrorMessage = "Code de 5 chiffres")]
         public string AdresseCodePostal { get; set; }
         [Display(Name = "Ville")]
         public string AdresseVille { get; set; }
@@ -40,9 +41,9 @@ namespace GrandHotel_WebApplication.Models
 
         public string Email { get; set; }
 
-        public string StatusMessage = "Bienvenue";
+        public string StatusMessage { get; set; }
 
-        public bool MAJ = false;
+        public bool MAJ { get; set; }
 
         public int id;
 

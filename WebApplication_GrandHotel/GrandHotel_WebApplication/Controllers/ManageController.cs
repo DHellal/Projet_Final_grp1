@@ -14,6 +14,7 @@ using GrandHotel_WebApplication.Models;
 using GrandHotel_WebApplication.Models.ManageViewModels;
 using GrandHotel_WebApplication.Services;
 using GrandHotel_WebApplication.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace GrandHotel_WebApplication.Controllers
 {
@@ -472,14 +473,20 @@ namespace GrandHotel_WebApplication.Controllers
         [HttpGet]
         public async Task<IActionResult> ChangeAccount()
         {
-            var user = await _userManager.GetUserAsync(User);
 
+            var user = await _userManager.GetUserAsync(User);
             CreationClientVM clientVM = new CreationClientVM();
+
+
+            if (ViewBag.statutmssg == null)
+                clientVM.StatusMessage = "Bonjour !";
+            else
+                clientVM.StatusMessage = ViewBag.statutmssg;
 
             if (user == null)
             {
-                clientVM.StatusMessage = "Pas de client avec votre Email.. ";
-                return View(clientVM);
+                clientVM.StatusMessage = " Erreur : Pas de client avec votre Email ... ";
+                return RedirectToAction("Create", "Clients", clientVM);
             }
 
             var hasPassword = await _userManager.HasPasswordAsync(user);
@@ -499,66 +506,202 @@ namespace GrandHotel_WebApplication.Controllers
                              where c.Email == user.Email
                              select new Client
                              {
-                                 Id =  c.Id,
+                                 Id = c.Id,
                                  Nom = c.Nom,
                                  Prenom = c.Prenom,
                                  Civilite = c.Civilite,
                                  Adresse = c.Adresse,
                                  Telephone = c.Telephone
-
                              }).SingleOrDefault();
 
 
-
-            CreationClientVM clientInter = new CreationClientVM()
+            if (client == null)
             {
-                id = client.Id,
-                Nom = client.Nom,
-                Prenom = client.Prenom,
-                Civilite = client.Civilite,
-                AdresseRue = client.Adresse.Rue,
-                AdresseCodePostal = client.Adresse.CodePostal,
-                AdresseVille = client.Adresse.Ville,
-                TelephoneDom = client.Telephone.Where(t => t.CodeType == "F").Select(t => t.Numero).SingleOrDefault(),
-                TelephonePort = client.Telephone.Where(t => t.CodeType == "M").Select(t => t.Numero).SingleOrDefault(),
-                ProPort = client.Telephone.Where(t => t.CodeType == "M").Select(t => t.Pro).SingleOrDefault(),
-                ProDom = client.Telephone.Where(t => t.CodeType == "F").Select(t => t.Pro).SingleOrDefault(),
-                StatusMessage = "Bonjour"
-                
-                
-            };
+                return RedirectToAction("Create", "Clients");
+            }
+            else
+            {
+                CreationClientVM clientInter = new CreationClientVM()
+                {
+                    id = client.Id,
+                    Nom = client.Nom,
+                    Prenom = client.Prenom,
+                    Civilite = client.Civilite,
+                    StatusMessage = clientVM.StatusMessage
 
-            
+                };
 
-            return View(clientInter);
+                if (client.Adresse != null)
+                {
+                    clientInter.AdresseRue = client.Adresse.Rue;
+                    clientInter.AdresseCodePostal = client.Adresse.CodePostal;
+                    clientInter.AdresseVille = client.Adresse.Ville;
+                }
+                if (client.Telephone.Where(t => t.CodeType == "F") != null)
+                {
+                    clientInter.TelephoneDom = client.Telephone.Where(t => t.CodeType == "F").Select(t => t.Numero).SingleOrDefault();
+                    clientInter.ProDom = client.Telephone.Where(t => t.CodeType == "F").Select(t => t.Pro).SingleOrDefault();
+                }
+                if (client.Telephone.Where(t => t.CodeType == "M") != null)
+                {
+                    clientInter.TelephonePort = client.Telephone.Where(t => t.CodeType == "M").Select(t => t.Numero).SingleOrDefault();
+                    clientInter.ProPort = client.Telephone.Where(t => t.CodeType == "M").Select(t => t.Pro).SingleOrDefault();
+                }
+                return View(clientInter);
+            }
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> ChangeAccount(CreationClientVM model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(model);
-        //    }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeAccount(CreationClientVM clientVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                clientVM.StatusMessage = "Erreur : Veuillez rensignez toutes les coordonnées correctement";
+                return View(clientVM);
+            }
 
-        //    var user = await _userManager.GetUserAsync(User);
-        //    if (user == null)
-        //    {
-        //        throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-        //    }
+            var user = await _userManager.GetUserAsync(User);
 
-        //    //var changeClient = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
-        //    //if (!changePasswordResult.Succeeded)
-        //    //{
-        //    //    AddErrors(changePasswordResult);
-        //    //    return View(model);
-        //    //}
+            try
+            {
+                //Update Client
+                #region
+                Client clientAncien = await _context.Client.Where(c => c.Email == user.Email).SingleOrDefaultAsync();
 
-        //    model.MAJ = true;
+                clientAncien.Civilite = clientVM.Civilite;
+                clientAncien.Nom = clientVM.Nom.ToUpper();
+                // Le nom et la premiere lettre du prénom en majuscule
+                clientAncien.Prenom = clientVM.Prenom[0].ToString().ToUpper() + clientVM.Prenom.Substring(1);
+                clientAncien.Email = user.Email;
 
-        //    return RedirectToAction("Create","Clients",model);
-        //}
+                clientVM.id = clientAncien.Id;
+                _context.Update(clientAncien);
+                await _context.SaveChangesAsync();
+                #endregion
+
+                //Update Adresse
+                if (clientVM.AdresseVille != null && clientVM.AdresseRue != null && clientVM.AdresseCodePostal != null)
+                {
+                    Adresse adresseAncienne = await _context.Adresse.Where(a => a.IdClient == clientVM.id).SingleOrDefaultAsync();
+
+                    adresseAncienne.IdClient = clientVM.id;
+                    adresseAncienne.Rue = clientVM.AdresseRue;
+                    adresseAncienne.CodePostal = clientVM.AdresseCodePostal;
+                    adresseAncienne.Ville = clientVM.AdresseVille.ToUpper();
+
+                    _context.Update(adresseAncienne);
+                    await _context.SaveChangesAsync();
+                }
+
+                //Update Telephones
+                #region
+                //Si numéro non identique
+                if (clientVM.TelephoneDom != clientVM.TelephonePort)
+                {
+                    //Domicile
+                    if (clientVM.TelephoneDom.Length == 10)
+                    {
+                        string telClient = await _context.Telephone.Where(t => t.IdClient == clientVM.id && t.CodeType == "F").Select(t => t.Numero).SingleOrDefaultAsync();
+                        string telExistDeja = await _context.Telephone.Where(t => t.Numero == clientVM.TelephoneDom).Select(t => t.Numero).SingleOrDefaultAsync();
+                        Telephone telDom = await _context.Telephone.Where(t => t.IdClient == clientVM.id && t.CodeType == "F").SingleOrDefaultAsync();
+
+                        // Si le client n'avait pas de numéro
+                        if (telClient == null)
+                        {
+                            Telephone telNouveau = new Telephone()
+                            {
+                                IdClient = clientVM.id,
+                                CodeType = "F",
+                                Numero = clientVM.TelephoneDom,
+                                Pro = clientVM.ProDom
+                            };
+
+                            _context.Telephone.Add(telNouveau);
+                            await _context.SaveChangesAsync();
+                        }
+                        // si le numéro n'existe pas dans la BDD ET que le client a déja un numéro
+                        else if (telExistDeja == null)
+                        {
+                            _context.Remove(telDom);
+                            await _context.SaveChangesAsync();
+                            telDom.IdClient = clientVM.id;
+                            telDom.Numero = clientVM.TelephoneDom;
+                            telDom.Pro = clientVM.ProDom;
+                            telDom.CodeType = "F";
+
+                            _context.Add(telDom);
+                            await _context.SaveChangesAsync();
+                        }
+                        else if (clientVM.TelephoneDom != telDom.Numero)
+                        {
+                            clientVM.TelephonePort = "";
+                            ViewBag.statutmssg = "Erreur : Numero de telephone Portable déja utilisé..";
+                            return View();
+                        }
+                    }
+
+                    //Portable
+                    if (clientVM.TelephonePort.Length == 10)
+                    {
+                        string telClient = await _context.Telephone.Where(t => t.IdClient == clientVM.id && t.CodeType == "M").Select(t => t.Numero).SingleOrDefaultAsync();
+                        string telExist = await _context.Telephone.Where(t => t.Numero == clientVM.TelephonePort).Select(t => t.Numero).SingleOrDefaultAsync();
+                        Telephone telPort = await _context.Telephone.Where(t => t.IdClient == clientVM.id && t.CodeType == "M").SingleOrDefaultAsync();
+
+
+                        // Si le client n'avait pas de numéro
+                        if (telClient == null)
+                        {
+                            Telephone telNouveau = new Telephone()
+                            {
+                                IdClient = clientVM.id,
+                                CodeType = "M",
+                                Numero = clientVM.TelephonePort,
+                                Pro = clientVM.ProPort
+                            };
+
+                            _context.Telephone.Add(telNouveau);
+                            await _context.SaveChangesAsync();
+                        }
+                        // si le numéro n'existe pas dans la BDD ET que le client a déja un numéro
+                        else if (telExist == null)
+                        {
+                            _context.Remove(telPort);
+                            await _context.SaveChangesAsync();
+
+                            telPort.IdClient = clientVM.id;
+                            telPort.Numero = clientVM.TelephonePort;
+                            telPort.Pro = clientVM.ProPort;
+                            telPort.CodeType = "M";
+
+                            _context.Add(telPort);
+                            await _context.SaveChangesAsync();
+                        }
+                        else if (clientVM.TelephonePort != telPort.Numero)
+                        {
+                            clientVM.TelephonePort = "";
+                            ViewBag.statutmssg = "Erreur : Numero de telephone Portable déja utilisé..";
+                            return View();
+                        }
+                    }
+                }
+                else
+                {
+                    ViewBag.statutmssg = "Erreur : Numeros identiques...";
+                    return View();
+                }
+                #endregion
+            }
+            catch (Exception e)
+            {
+                ViewBag.statutmssg = "Erreur : " + e.Message;
+                return View();
+            }
+
+            ViewBag.statutmssg = "Compte modifié avec succés";
+            return View();
+        }
+
 
 
 
@@ -600,4 +743,5 @@ namespace GrandHotel_WebApplication.Controllers
 
         #endregion
     }
+
 }

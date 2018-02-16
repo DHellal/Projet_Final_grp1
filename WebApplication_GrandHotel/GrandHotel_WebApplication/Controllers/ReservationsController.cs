@@ -9,6 +9,7 @@ using GrandHotel_WebApplication.Data;
 using GrandHotel_WebApplication.Models;
 using System.Data.SqlClient;
 using System.Data;
+using GrandHotel_WebApplication.Extensions;
 
 namespace GrandHotel_WebApplication.Controllers
 {
@@ -40,24 +41,27 @@ namespace GrandHotel_WebApplication.Controllers
                 .Where(m => m.NumChambre == id && m.CodeTarifNavigation.DateDebut >= date)
                 .FirstOrDefaultAsync();
             chambreVM.tarifChambre.TarifTotal = prix;
-            ViewBag.Nbnuit = nbnuit;
-            ViewBag.DetailNbPersonnes = nbpersonne;
-            ViewBag.DetailJour = jour;
-            ViewBag.HeureArrivee = heure;
-            ViewBag.Travail = travail;
+
+            var reservation = new Reservation();
+            reservation.Jour = jour;
+            reservation.NbPersonnes = nbpersonne;
+            reservation.NumChambre = id;
+            reservation.Travail = travail;
+            reservation.HeureArrivee = heure;
+            HttpContext.Session.SetObjectAsJson("Test", reservation);
+
             return View(chambreVM);
         }
-        
+
 
         //GET: Reservations/Create
-      //  [Route("[Controller]/[Action]")]
-       // [Route("reservations/{Jour}/{NbNuit}/{NbPersonnes}")]
         public async Task<IActionResult> VerifDisponibilite(DateTime Jour, int NbNuit, byte NbPersonnes, byte HeureArrivee, bool? Travail)
         {
             var numeroChambre = _context.Chambre.Select(m => m.Numero).ToList();
-
+            
             ReservationVM chambreVM = new ReservationVM();
             var numeroChambreOccupe = new List<int>();
+            
 
             if (ModelState.IsValid)
             {
@@ -98,17 +102,19 @@ namespace GrandHotel_WebApplication.Controllers
                     chambreVM.TarifChambre = await _context.TarifChambre
                         .Include(t => t.NumChambreNavigation)
                         .Include(t => t.CodeTarifNavigation)
-                        .Where(x => !numeroChambreOccupe.Contains(x.NumChambre) && x.CodeTarifNavigation.DateDebut >= date)
+                        .Where(x => !numeroChambreOccupe.Contains(x.NumChambre) && x.CodeTarifNavigation.DateDebut>=date )
                         .ToListAsync();
                 }
-
+               
             }
             ViewBag.Nbnuit = NbNuit;
             ViewBag.NbPersonnes = NbPersonnes;
-            ViewBag.Jour = Jour;
+            ViewBag.Jour = Jour.Day;
+            ViewBag.Mois = Jour.Month;
+            ViewBag.Annee = Jour.Year;
             ViewBag.HeureArrivee = HeureArrivee;
             ViewBag.Travail = Travail;
-            return View(chambreVM);
+            return View(chambreVM);  
         }
 
         // POST: Reservations/Create
@@ -224,7 +230,7 @@ namespace GrandHotel_WebApplication.Controllers
             return _context.Reservation.Any(e => e.NumChambre == id);
         }
 
-
+    
     }
 }
-
+   

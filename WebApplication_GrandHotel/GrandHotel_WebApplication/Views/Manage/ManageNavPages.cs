@@ -15,6 +15,8 @@ namespace GrandHotel_WebApplication.Views.Manage
 
         public static string ChangePassword => "ChangePassword";
 
+        public static string ChangeAccount => "ChangeAccount";
+
         public static string ExternalLogins => "ExternalLogins";
 
         public static string TwoFactorAuthentication => "TwoFactorAuthentication";
@@ -22,6 +24,8 @@ namespace GrandHotel_WebApplication.Views.Manage
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 
         public static string ChangePasswordNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangePassword);
+
+        public static string ChangeAccountNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangeAccount);
 
         public static string ExternalLoginsNavClass(ViewContext viewContext) => PageNavClass(viewContext, ExternalLogins);
 

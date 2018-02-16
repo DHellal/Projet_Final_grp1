@@ -33,6 +33,13 @@ namespace GrandHotel_WebApplication.Controllers
         [Route("reservations/{id}/{prix}")]
         public async Task<IActionResult> Details(short id, decimal prix, DateTime jour, byte nbpersonne, bool? travail, int nbnuit, byte heure)
         {
+            ViewBag.DetailJour = jour.Day;
+            ViewBag.DetailMois = jour.Month;
+            ViewBag.DetailAnnee = jour.Year;
+
+            ViewBag.DetailNbPersonne = nbpersonne;
+            ViewBag.DetailNbnuit = nbnuit;
+
             DateTime date = new DateTime(DateTime.Now.Year, 01, 01);
             ReservationVM chambreVM = new ReservationVM();
             chambreVM.tarifChambre = await _context
@@ -42,26 +49,30 @@ namespace GrandHotel_WebApplication.Controllers
                 .FirstOrDefaultAsync();
             chambreVM.tarifChambre.TarifTotal = prix;
 
-            var reservation = new Reservation();
-            reservation.Jour = jour;
-            reservation.NbPersonnes = nbpersonne;
-            reservation.NumChambre = id;
-            reservation.Travail = travail;
-            reservation.HeureArrivee = heure;
-            HttpContext.Session.SetObjectAsJson("Test", reservation);
+            //var reservation = new Reservation();
+            //reservation.Jour = jour;
+            //reservation.NbPersonnes = nbpersonne;
+            //reservation.NumChambre = id;
+            //reservation.Travail = travail;
+            //reservation.HeureArrivee = heure;
+            //HttpContext.Session.SetObjectAsJson("Test", reservation);
 
-
-            ViewBag.DetailJour = jour;
-            ViewBag.NbPersonne = nbpersonne;
-            ViewBag.Nbnuit = nbnuit;
             return View(chambreVM);
         }
 
 
         //GET: Reservations/Create
-        
+
         public async Task<IActionResult> VerifDisponibilite(DateTime Jour, int NbNuit, byte NbPersonnes, byte HeureArrivee, bool? Travail)
         {
+            ViewBag.Nbnuit = NbNuit;
+            ViewBag.NbPersonnes = NbPersonnes;
+            ViewBag.Jour = Jour.Day;
+            ViewBag.Mois = Jour.Month;
+            ViewBag.Annee = Jour.Year;
+            ViewBag.HeureArrivee = HeureArrivee;
+            ViewBag.Travail = Travail;
+
             var numeroChambre = _context.Chambre.Select(m => m.Numero).ToList();
 
             DateTime j = Jour;
@@ -115,20 +126,7 @@ namespace GrandHotel_WebApplication.Controllers
 
             }
 
-            ViewBag.J = j;
-            ViewBag.Nbnuit = NbNuit;
-            //chambreVM.Jour = Jour;
-            //chambreVM.NbNuit = NbNuit;
-            //chambreVM.NbPersonnes = NbPersonnes;
-            //chambreVM.HeureArrivee = HeureArrivee;
-            //chambreVM.Travail=Travail;
-            ViewBag.Nbnuit = NbNuit;
-            ViewBag.NbPersonnes = NbPersonnes;
-            ViewBag.Jour = Jour.Day;
-            ViewBag.Mois = Jour.Month;
-            ViewBag.Annee = Jour.Year;
-            ViewBag.HeureArrivee = HeureArrivee;
-            ViewBag.Travail = Travail;
+
             return View(chambreVM);
         }
 
@@ -141,9 +139,9 @@ namespace GrandHotel_WebApplication.Controllers
         {
             var myComplexObject = HttpContext.Session.GetObjectFromJson<Reservation>("Test");
             _context.Add(myComplexObject);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-           
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+
             return View();
         }
 

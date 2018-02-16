@@ -112,6 +112,6 @@
 
 
 
-    <a asp-action="VerifDisponibilite" asp-route-Jour="@ViewBag.DetailJour" asp-route-Nbnuit="@ViewBag.Nbnuit" asp-route-Nbpersonne="@ViewBag.NbPersonne">Retour</a>
+    <a asp-action="VerifDisponibilite" asp-route-Jour="@(new DateTime(ViewBag.DetailAnnee, ViewBag.DetailMois, ViewBag.DetailJour).ToString("yyyy-MM-dd"))" asp-route-Nbnuit="@ViewBag.DetailNbnuit" asp-route-Nbpersonne="@ViewBag.DetailNbPersonne">Retour</a>
 
 </div>

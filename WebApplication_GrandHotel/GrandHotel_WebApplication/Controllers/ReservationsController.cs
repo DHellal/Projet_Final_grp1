@@ -50,6 +50,10 @@ namespace GrandHotel_WebApplication.Controllers
             reservation.HeureArrivee = heure;
             HttpContext.Session.SetObjectAsJson("Test", reservation);
 
+
+            ViewBag.DetailJour = jour;
+            ViewBag.NbPersonne = nbpersonne;
+            ViewBag.Nbnuit = nbnuit;
             return View(chambreVM);
         }
 
@@ -58,10 +62,12 @@ namespace GrandHotel_WebApplication.Controllers
         public async Task<IActionResult> VerifDisponibilite(DateTime Jour, int NbNuit, byte NbPersonnes, byte HeureArrivee, bool? Travail)
         {
             var numeroChambre = _context.Chambre.Select(m => m.Numero).ToList();
-            
+
+            DateTime j = Jour;
+
             ReservationVM chambreVM = new ReservationVM();
             var numeroChambreOccupe = new List<int>();
-            
+
 
             if (ModelState.IsValid)
             {
@@ -102,11 +108,13 @@ namespace GrandHotel_WebApplication.Controllers
                     chambreVM.TarifChambre = await _context.TarifChambre
                         .Include(t => t.NumChambreNavigation)
                         .Include(t => t.CodeTarifNavigation)
-                        .Where(x => !numeroChambreOccupe.Contains(x.NumChambre) && x.CodeTarifNavigation.DateDebut>=date )
+                        .Where(x => !numeroChambreOccupe.Contains(x.NumChambre) && x.CodeTarifNavigation.DateDebut >= date)
                         .ToListAsync();
                 }
-               
+
             }
+
+            ViewBag.J = j;
             ViewBag.Nbnuit = NbNuit;
             ViewBag.NbPersonnes = NbPersonnes;
             ViewBag.Jour = Jour.Day;
@@ -114,7 +122,7 @@ namespace GrandHotel_WebApplication.Controllers
             ViewBag.Annee = Jour.Year;
             ViewBag.HeureArrivee = HeureArrivee;
             ViewBag.Travail = Travail;
-            return View(chambreVM);  
+            return View(chambreVM);
         }
 
         // POST: Reservations/Create
@@ -230,7 +238,7 @@ namespace GrandHotel_WebApplication.Controllers
             return _context.Reservation.Any(e => e.NumChambre == id);
         }
 
-    
+
     }
 }
-   
+

@@ -7,6 +7,7 @@
 
 <h2>@ViewData["Title"]</h2>
 <hr />
+<h3 class="text-danger">@Html.DisplayFor(Model => Model.StatusMessage)</h3>
 <div class="row">
     <div class="col-md-9 col-sm-9">
         <form asp-controller="Clients" asp-action="Create" method="post">

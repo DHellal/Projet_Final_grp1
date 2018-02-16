@@ -473,9 +473,13 @@ namespace GrandHotel_WebApplication.Controllers
         public async Task<IActionResult> ChangeAccount()
         {
             var user = await _userManager.GetUserAsync(User);
+
+            CreationClientVM clientVM = new CreationClientVM();
+
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                clientVM.StatusMessage = "Pas de client avec votre Email.. ";
+                return View(clientVM);
             }
 
             var hasPassword = await _userManager.HasPasswordAsync(user);
@@ -487,7 +491,7 @@ namespace GrandHotel_WebApplication.Controllers
             var hasEmail = await _userManager.GetEmailAsync(user);
             if (hasEmail == null)
             {
-                return RedirectToPage("Index", "Home");
+                return RedirectToAction("Register", "Account");
             }
 
 
@@ -504,9 +508,9 @@ namespace GrandHotel_WebApplication.Controllers
 
                              }).SingleOrDefault();
 
-            
 
-            CreationClientVM clientVM = new CreationClientVM()
+
+            CreationClientVM clientInter = new CreationClientVM()
             {
                 id = client.Id,
                 Nom = client.Nom,
@@ -519,13 +523,14 @@ namespace GrandHotel_WebApplication.Controllers
                 TelephonePort = client.Telephone.Where(t => t.CodeType == "M").Select(t => t.Numero).SingleOrDefault(),
                 ProPort = client.Telephone.Where(t => t.CodeType == "M").Select(t => t.Pro).SingleOrDefault(),
                 ProDom = client.Telephone.Where(t => t.CodeType == "F").Select(t => t.Pro).SingleOrDefault(),
+                StatusMessage = "Bonjour"
                 
                 
             };
 
             
 
-            return View(clientVM);
+            return View(clientInter);
         }
 
         //[HttpPost]

@@ -233,6 +233,8 @@ namespace GrandHotel_WebApplication.Controllers
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");
+
+                    //Si OK redirect vers création client
                     return RedirectToAction("Create", "Clients");
                 }
                 AddErrors(result);

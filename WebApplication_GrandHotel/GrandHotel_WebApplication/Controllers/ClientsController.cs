@@ -49,7 +49,7 @@ namespace GrandHotel_WebApplication.Controllers
                     Value = lettre
                 });
                 await conn.OpenAsync();
-               
+
                 using (var sdr = await cmd.ExecuteReaderAsync())
                 {
                     while (sdr.Read())
@@ -62,7 +62,7 @@ namespace GrandHotel_WebApplication.Controllers
                         client.Email = (string)sdr["Email"];
                         client.NbReservation = (int)sdr["NbReservation"];
 
-                       req = @"select count(R.IdClient) NbReservationEnCours
+                        req = @"select count(R.IdClient) NbReservationEnCours
                            from Reservation R
                            inner join Client C on C.Id = R.IdClient
                            where R.Jour>=GETDATE() And C.Id=@Id";
@@ -73,7 +73,7 @@ namespace GrandHotel_WebApplication.Controllers
                             ParameterName = "@Id",
                             Value = client.Id
                         });
-                        client.NbReservationEnCours=(int)cmd.ExecuteScalar();
+                        client.NbReservationEnCours = (int)cmd.ExecuteScalar();
                         clients.Add(client);
                     }
                 }
@@ -130,13 +130,14 @@ namespace GrandHotel_WebApplication.Controllers
             {
                 return NotFound();
             }
-           
+
             return View(client);
         }
 
         // GET: Clients/Create
         public IActionResult Create()
         {
+            ModelState.Clear();
             return View();
         }
 
@@ -150,16 +151,31 @@ namespace GrandHotel_WebApplication.Controllers
 
             if (ModelState.IsValid)
             {
+                //Verification
+                #region
                 var user = await _userManager.GetUserAsync(User);
+                string teldomi = await _context.Telephone.Where(t => t.Numero == clientVM.TelephoneDom).Select(t => t.Numero).SingleOrDefaultAsync();
+                string telport = await _context.Telephone.Where(t => t.Numero == clientVM.TelephonePort).Select(t => t.Numero).SingleOrDefaultAsync();
+
+                if (teldomi != null)
+                {
+                    clientVM.StatusMessage = "Numéro de telephone déja existant";
+                    return View(clientVM);
+                }
+
+                if(telport != null)
+                {
+                    clientVM.StatusMessage = "Numéro de telephone déja existant";
+                    return View(clientVM);
+                }
 
                 //Test si email unique
-                #region
+                
                 Client clientAncien = _context.Client.Where(c => c.Email == user.Email).FirstOrDefault();
-
                 if (clientAncien != null)
                 {
-                    clientVM.StatusMessage = "Erreur :Adresse Mail deja utilisée pour un compte...";
-                    return RedirectToAction("ChangeAccount", "Manage");
+                    clientVM.StatusMessage = "Erreur : Adresse Mail deja utilisée pour un compte...";
+                    return View(clientVM);
                 }
                 #endregion
 
@@ -202,8 +218,6 @@ namespace GrandHotel_WebApplication.Controllers
                 #region
                 if (clientVM.TelephoneDom.Length == 10)
                 {
-                    string tel = await _context.Telephone.Where(t => t.Numero == clientVM.TelephoneDom).Select(t => t.Numero).SingleOrDefaultAsync();
-
                     Telephone telDom = new Telephone()
                     {
                         IdClient = clientVM.id,
@@ -212,16 +226,12 @@ namespace GrandHotel_WebApplication.Controllers
                         Pro = clientVM.ProDom
                     };
 
-                    if (tel == null)
+                    if (teldomi == null)
                     {
                         _context.Add(telDom);
                         await _context.SaveChangesAsync();
                     }
-                    else
-                    {
-                        clientVM.StatusMessage = "Numéro de telephone déja existant";
-                        return View(clientVM);
-                    }
+
                 };
                 #endregion
 
@@ -229,7 +239,7 @@ namespace GrandHotel_WebApplication.Controllers
                 #region
                 if (clientVM.TelephonePort.Length == 10)
                 {
-                    string tel = await _context.Telephone.Where(t => t.Numero == clientVM.TelephonePort).Select(t => t.Numero).SingleOrDefaultAsync();
+
 
                     Telephone telPort = new Telephone()
                     {
@@ -239,23 +249,18 @@ namespace GrandHotel_WebApplication.Controllers
                         Pro = clientVM.ProPort
                     };
 
-                    if (tel == null)
+                    if (telport == null)
                     {
                         _context.Add(telPort);
                         await _context.SaveChangesAsync();
                     }
 
-                    else
-                    {
-                        clientVM.StatusMessage = "Numéro de telephone déja existant";
-                        return View(clientVM);
-                    }
-
                 };
                 #endregion
 
-                //Si réussi, retourne à l'accueil
-                return RedirectToAction(nameof(Index));
+                //Si réussi, redirect vers change Account
+                clientVM.StatusMessage = "Bienvenue";
+                return RedirectToAction("ChangeAccount", "Manage", clientVM);
             }
             return View(clientVM);
         }
@@ -290,6 +295,7 @@ namespace GrandHotel_WebApplication.Controllers
                     {
                         Civilite = clientVM.Civilite,
                         Nom = clientVM.Nom.ToUpper(),
+                        // Le nom et la premiere lettre du prénom en majuscule
                         Prenom = clientVM.Prenom[0].ToString().ToUpper() + clientVM.Prenom.Substring(1),
                         Email = user.Email,
                         CarteFidelite = false
@@ -344,7 +350,7 @@ namespace GrandHotel_WebApplication.Controllers
                         {
                             clientVM.TelephonePort = "";
                             clientVM.StatusMessage = "Erreur : Numero de telephone Portable déja utilisé..";
-                            return RedirectToAction("Create", "Manage", clientVM); // qsdsssssssssssssssssssssssssssssssssssssssss
+                            return RedirectToAction("ChangeAccount", "Manage", clientVM);
                         }
                     }
 
@@ -377,19 +383,26 @@ namespace GrandHotel_WebApplication.Controllers
                         {
                             clientVM.TelephonePort = "";
                             clientVM.StatusMessage = "Erreur : Numero de telephone Portable déja utilisé..";
-                            return RedirectToAction("Create", "Manage", clientVM); // qsdsssssssssssssssssssssssssssssssssssssssss
+                            return RedirectToAction("ChangeAccount", "Manage", clientVM);
                         }
                     }
 
 
                 }
-                finally
+                catch (Exception e)
                 {
-                    RedirectToAction("Create", "Manage", clientVM); // qsdsssssssssssssssssssssssssssssssssssssssss
-
+                    clientVM.StatusMessage = "Erreur : " + e.Message;
+                    return RedirectToAction("ChangeAccount", "Manage", clientVM);
                 }
+
+
+                clientVM.StatusMessage = "Compte modifié avec succés";
+                RedirectToAction("ChangeAccount", "Manage", clientVM);
+
+
             }
-            return RedirectToAction("Create", "Manage", clientVM); // qsdsssssssssssssssssssssssssssssssssssssssss
+            clientVM.StatusMessage = "Erreur dans le saisie des informations";
+            return RedirectToAction("ChangeAccount", "Manage", clientVM);
 
         }
 

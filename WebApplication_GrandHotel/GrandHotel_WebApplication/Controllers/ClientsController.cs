@@ -230,7 +230,6 @@ namespace GrandHotel_WebApplication.Controllers
                         _context.Add(telDom);
                         await _context.SaveChangesAsync();
                     }
-
                 };
                 #endregion
 
@@ -238,8 +237,6 @@ namespace GrandHotel_WebApplication.Controllers
                 #region
                 if (clientVM.TelephonePort.Length == 10)
                 {
-
-
                     Telephone telPort = new Telephone()
                     {
                         IdClient = clientVM.id,
@@ -253,13 +250,17 @@ namespace GrandHotel_WebApplication.Controllers
                         _context.Add(telPort);
                         await _context.SaveChangesAsync();
                     }
-
                 };
                 #endregion
 
-                //Si réussi, redirect vers change Account
+                //Si réussi, redirect vers change Account, sauf si viewBag.reservation existe, dans ce cas creation de la réservation
+                if (ViewBag.guid == null || ViewBag.guid == "")
+                    return RedirectToAction("Create", "Reservation");
+                else
+                {
                 clientVM.StatusMessage = "Bienvenue";
                 return RedirectToAction("ChangeAccount", "Manage", clientVM);
+                }
             }
             return View(clientVM);
         }

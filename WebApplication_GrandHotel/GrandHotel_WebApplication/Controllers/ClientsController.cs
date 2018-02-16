@@ -230,7 +230,6 @@ namespace GrandHotel_WebApplication.Controllers
                         _context.Add(telDom);
                         await _context.SaveChangesAsync();
                     }
-
                 };
                 #endregion
 
@@ -238,8 +237,6 @@ namespace GrandHotel_WebApplication.Controllers
                 #region
                 if (clientVM.TelephonePort.Length == 10)
                 {
-
-
                     Telephone telPort = new Telephone()
                     {
                         IdClient = clientVM.id,
@@ -253,7 +250,6 @@ namespace GrandHotel_WebApplication.Controllers
                         _context.Add(telPort);
                         await _context.SaveChangesAsync();
                     }
-
                 };
                 #endregion
 

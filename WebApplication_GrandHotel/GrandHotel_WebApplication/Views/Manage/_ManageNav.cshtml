@@ -7,11 +7,11 @@
 <ul class="nav nav-pills nav-stacked">
     @*<li class="@ManageNavPages.IndexNavClass(ViewContext)"><a asp-action="Index">Profil</a></li>*@
     <li class="@ManageNavPages.ChangePasswordNavClass(ViewContext)"><a asp-action="ChangePassword">Mot de passe</a></li>
-    <li class=" "><a asp-action="ChangeAccount">Modifier le compte</a></li>
+    <li class="@ManageNavPages.ChangeAccountNavClass(ViewContext)"><a asp-action="ChangeAccount">Modifier le compte</a></li>
     @if (hasExternalLogins)
     {
         <li class="@ManageNavPages.ExternalLoginsNavClass(ViewContext)"><a asp-action="ExternalLogins">External logins</a></li>
     }
-    <li class="@ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)"><a asp-action="TwoFactorAuthentication">Two-factor authentication</a></li>
+    <li class="@ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)"><a asp-action="TwoFactorAuthentication">Authentification à 2 facteurs</a></li>
 </ul>
 

@@ -9,6 +9,7 @@ using GrandHotel_WebApplication.Data;
 using GrandHotel_WebApplication.Models;
 using System.Data.SqlClient;
 using System.Data;
+using GrandHotel_WebApplication.Extensions;
 
 namespace GrandHotel_WebApplication.Controllers
 {
@@ -40,6 +41,15 @@ namespace GrandHotel_WebApplication.Controllers
                 .Where(m => m.NumChambre == id && m.CodeTarifNavigation.DateDebut >= date)
                 .FirstOrDefaultAsync();
             chambreVM.tarifChambre.TarifTotal = prix;
+
+            var reservation = new Reservation();
+            reservation.Jour = jour;
+            reservation.NbPersonnes = nbpersonne;
+            reservation.NumChambre = id;
+            reservation.Travail = travail;
+            reservation.HeureArrivee = heure;
+            HttpContext.Session.SetObjectAsJson("Test", reservation);
+
             return View(chambreVM);
         }
 
@@ -99,7 +109,9 @@ namespace GrandHotel_WebApplication.Controllers
             }
             ViewBag.Nbnuit = NbNuit;
             ViewBag.NbPersonnes = NbPersonnes;
-            ViewBag.Jour = Jour;
+            ViewBag.Jour = Jour.Day;
+            ViewBag.Mois = Jour.Month;
+            ViewBag.Annee = Jour.Year;
             ViewBag.HeureArrivee = HeureArrivee;
             ViewBag.Travail = Travail;
             return View(chambreVM);  

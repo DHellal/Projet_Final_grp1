@@ -8,7 +8,7 @@
 <h2>@ViewData["Title"]</h2>
 <div class="row">
     @Html.Partial("_StatusMessage", statut)
-    <div class="col-md-6">
+    <div class="col-md-9">
         <form asp-controller="Manage" asp-action="ChangeAccount" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row form-group col-md-2">

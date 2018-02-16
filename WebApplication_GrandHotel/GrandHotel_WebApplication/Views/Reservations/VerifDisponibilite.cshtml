@@ -1,68 +1,69 @@
 ﻿@*@model IEnumerable<GrandHotel_WebApplication.Models.Chambre>*@
 @model ReservationVM
 
-@{
-    ViewData["Title"] = "Chambres Disponibles";
-}
+    <br /><br />
+    @{
+        ViewData["Title"] = "Chambres Disponibles";
+    }
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.TarifChambre.First().NumChambre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarifChambre.First().NumChambreNavigation.Etage)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarifChambre.First().NumChambreNavigation.NbLits)
-            </th>
-
-            
-            <th>
-                @Html.DisplayNameFor(model => model.TarifChambre.First().CodeTarifNavigation.Prix)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarifChambre.First().TarifTotal)
-            </th>
-
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.TarifChambre)
-        {
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumChambreNavigation.Numero)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumChambreNavigation.Etage)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumChambreNavigation.NbLits)
-                </td>
-               
-                <td>
-                    @Html.DisplayFor(modelItem => item.CodeTarifNavigation.Prix)
-                </td>
-                <td>
-                    @{
-                        decimal nbnuit = ViewBag.Nbnuit;
-                        decimal prix = item.CodeTarifNavigation.Prix;
-                        prix = prix * nbnuit;
-                    }
-                    @prix
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.NumChambreNavigation.Numero" asp-route-prix="@prix.ToString().Replace(",", ".")" 
-                      asp-route-nbnuit="@ViewBag.Nbnuit" asp-route-Nbpersonne="@ViewBag.NbPersonnes" 
-                       asp-route-jour="@ViewBag.Jour", asp-route-heure="@ViewBag.HeureArrivee",
-                      asp-route-travail="@ViewBag.Travail" >Détails</a>
-                </td>
-            </tr>
-        }
+                <th>
+                    @Html.DisplayNameFor(model => model.TarifChambre.First().NumChambre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TarifChambre.First().NumChambreNavigation.Etage)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TarifChambre.First().NumChambreNavigation.NbLits)
+                </th>
 
-    </tbody>
-</table>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.TarifChambre.First().CodeTarifNavigation.Prix)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TarifChambre.First().TarifTotal)
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.TarifChambre)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumChambreNavigation.Numero)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumChambreNavigation.Etage)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumChambreNavigation.NbLits)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CodeTarifNavigation.Prix)
+                    </td>
+                    <td>
+                        @{
+                            decimal nbnuit = ViewBag.Nbnuit;
+                            decimal prix = item.CodeTarifNavigation.Prix;
+                            prix = prix * nbnuit;
+                        }
+                        @prix
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.NumChambreNavigation.Numero" asp-route-prix="@prix.ToString().Replace(",", ".")"
+                           asp-route-nbnuit="@ViewBag.Nbnuit" asp-route-Nbpersonne="@ViewBag.NbPersonnes"
+                           asp-route-jour="@ViewBag.Jour" , asp-route-heure="@ViewBag.HeureArrivee" ,
+                           asp-route-travail="@ViewBag.Travail">Détails</a>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>

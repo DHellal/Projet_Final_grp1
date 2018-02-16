@@ -34,11 +34,12 @@ namespace GrandHotel_WebApplication.Controllers
         {
             DateTime date = new DateTime(DateTime.Now.Year, 01, 01);
             ReservationVM chambreVM = new ReservationVM();
-            chambreVM.ChambreSelectionne = await _context
+            chambreVM.tarifChambre = await _context
                 .TarifChambre.Include(m => m.CodeTarifNavigation)
+                .Include(m => m.NumChambreNavigation)
                 .Where(m => m.NumChambre == id && m.CodeTarifNavigation.DateDebut >= date)
-                .SingleOrDefaultAsync();
-            chambreVM.ChambreSelectionne.TarifTotal = prix;
+                .FirstOrDefaultAsync();
+            chambreVM.tarifChambre.TarifTotal = prix;
             return View(chambreVM);
         }
 

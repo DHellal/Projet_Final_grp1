@@ -55,6 +55,7 @@ namespace GrandHotel_WebApplication.Controllers
 
 
         //GET: Reservations/Create
+        
         public async Task<IActionResult> VerifDisponibilite(DateTime Jour, int NbNuit, byte NbPersonnes, byte HeureArrivee, bool? Travail)
         {
             var numeroChambre = _context.Chambre.Select(m => m.Numero).ToList();
@@ -107,6 +108,12 @@ namespace GrandHotel_WebApplication.Controllers
                 }
                
             }
+            ViewBag.Nbnuit = NbNuit;
+            //chambreVM.Jour = Jour;
+            //chambreVM.NbNuit = NbNuit;
+            //chambreVM.NbPersonnes = NbPersonnes;
+            //chambreVM.HeureArrivee = HeureArrivee;
+            //chambreVM.Travail=Travail;
             ViewBag.Nbnuit = NbNuit;
             ViewBag.NbPersonnes = NbPersonnes;
             ViewBag.Jour = Jour.Day;

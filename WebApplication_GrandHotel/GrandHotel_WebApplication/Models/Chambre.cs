@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GrandHotel_WebApplication.Models
@@ -20,8 +21,10 @@ namespace GrandHotel_WebApplication.Models
         public byte NbLits { get; set; }
         public short? NumTel { get; set; }
 
+        [Display(Name = "Prix")]
         [NotMapped]
         public decimal Tarifc { get; set; }
+
 
         public ICollection<Reservation> Reservation { get; set; }
         public ICollection<TarifChambre> TarifChambre { get; set; }

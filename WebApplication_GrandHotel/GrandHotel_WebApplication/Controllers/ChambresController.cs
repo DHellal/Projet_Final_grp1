@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GrandHotel_WebApplication.Data;
 using GrandHotel_WebApplication.Models;
 using System.Data.SqlClient;
+using Microsoft.AspNetCore.Authorization;
 //using System.Data;
 
 namespace GrandHotel_WebApplication.Controllers
@@ -20,8 +21,9 @@ namespace GrandHotel_WebApplication.Controllers
         {
             _context = context;
         }
-
+        #region Auteur : Lydia
         // GET: Chambres
+        //[Authorize]
         public async Task<IActionResult> Index(string statusChambre)
         {
             var vmChambre = new ChambreVM();
@@ -57,8 +59,9 @@ namespace GrandHotel_WebApplication.Controllers
             return View(vmChambre);
 
         }
-
+        #endregion
         // GET: Chambres/Details/5
+        //[Authorize]
         public async Task<IActionResult> Details(short? id)
         {
             if (id == null)
@@ -77,6 +80,7 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: Chambres/Create
+        //[Authorize]
         public IActionResult Create()
         {
             return View();
@@ -99,6 +103,7 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: Chambres/Edit/5
+        //[Authorize]
         public async Task<IActionResult> Edit(short? id)
         {
             if (id == null)
@@ -150,6 +155,7 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: Chambres/Delete/5
+        //[Authorize]
         public async Task<IActionResult> Delete(short? id)
         {
             if (id == null)

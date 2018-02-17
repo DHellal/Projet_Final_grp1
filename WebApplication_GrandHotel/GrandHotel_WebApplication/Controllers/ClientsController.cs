@@ -231,7 +231,7 @@ namespace GrandHotel_WebApplication.Controllers
                 #endregion
 
                 //Si réussi, redirect vers change Account
-                if (ViewBag.guid == null || ViewBag.guid == "")
+                if (ViewBag.guid != null && ViewBag.guid != "")
                    return RedirectToAction("Creates", "Reservation");
                 else
               {

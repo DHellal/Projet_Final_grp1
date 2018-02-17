@@ -168,9 +168,12 @@ namespace GrandHotel_WebApplication.Controllers
             {                
                 reservations.Jour=reservations.Jour.AddDays(i);
                 _context.Add(reservations);
+                //j'enregistre la reservation 
                 await _context.SaveChangesAsync();
             }
-            //j'enregistre la reservation            
+            //je reinitialise la date d'arrivée pour pouvoir afficher la bonne date dans ma vue
+            reservations.Jour = reservations.Jour.AddDays(-(duree-1));
+                      
             return View(reservations);
             
         }

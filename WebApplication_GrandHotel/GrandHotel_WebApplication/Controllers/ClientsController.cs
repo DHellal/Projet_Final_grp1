@@ -12,6 +12,7 @@ using System.Data;
 using GrandHotel_WebApplication.Models.AccountViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using GrandHotel_WebApplication.Extensions;
 
 namespace GrandHotel_WebApplication.Controllers
 {
@@ -136,14 +137,14 @@ namespace GrandHotel_WebApplication.Controllers
                     return View(clientVM);
                 }
 
-                if(telport != null)
+                if (telport != null)
                 {
                     clientVM.StatusMessage = "Numéro de telephone déja existant";
                     return View(clientVM);
                 }
 
                 //Test si email unique
-                
+
                 Client clientAncien = _context.Client.Where(c => c.Email == user.Email).FirstOrDefault();
                 if (clientAncien != null)
                 {
@@ -230,20 +231,20 @@ namespace GrandHotel_WebApplication.Controllers
 
                 };
                 #endregion
-                
+
                 var reservations = HttpContext.Session.GetObjectFromJson<Reservation>(SessionKeyReservationVM);
 
                 //Si réussi, redirect vers change Account
                 if (reservations != null)
-                   return RedirectToAction("Creates", "Reservation");
+                    return RedirectToAction("Creates", "Reservation");
                 else
-              {
-                clientVM.StatusMessage = "Bienvenue";
-                return RedirectToAction("ChangeAccount", "Manage", clientVM);
-              }
+                {
+                    clientVM.StatusMessage = "Bienvenue";
+                    return RedirectToAction("ChangeAccount", "Manage", clientVM);
+                }               
+            }
             return View(clientVM);
         }
-
 
 
         // GET: Clients/Edit/5

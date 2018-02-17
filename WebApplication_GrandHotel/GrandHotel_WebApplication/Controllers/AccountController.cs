@@ -24,6 +24,7 @@ namespace GrandHotel_WebApplication.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private const string SessionKeyReservationVM = "_ReservationVM";
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -62,15 +63,19 @@ namespace GrandHotel_WebApplication.Controllers
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
+               
+               
+               if (result.Succeeded)
                 {
                 
                 //chercher si client a un id d'abord..
                 var user = await _userManager.GetUserAsync(User);
                 Client DejaClient = _context.Client.Where(c => c.Email == user.Email).FirstOrDefault();
                 
+                var reservations = HttpContext.Session.GetObjectFromJson<Reservation>(SessionKeyReservationVM);
+                
                 //S'il ya une reservation en cours et qu'il a deja un compte dans la BDD, redirect vers sa reservation
-                                if (ViewBag.guid != null && ViewBag.guid != "" && DejaClient != null)
+                                if (reservations != && DejaClient != null)
                    return RedirectToAction("Creates", "Reservation");
                    
                    // Si pas encore de compte client, demande de saisir coordonnées

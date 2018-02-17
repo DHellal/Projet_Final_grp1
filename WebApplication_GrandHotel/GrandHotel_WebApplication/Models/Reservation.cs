@@ -26,7 +26,9 @@ namespace GrandHotel_WebApplication.Models
         [Display(Name = "Nombre de nuit")]
         [Required(ErrorMessage = "Saississez le nombre de nuit")]
         public int NbNuit { get; set; }
-
+        [NotMapped]
+        [Display(Name = "Prix total de la réservation")]
+        public decimal PrixTotal { get; set; }
         public Client IdClientNavigation { get; set; }
         public Calendrier JourNavigation { get; set; }
         public Chambre NumChambreNavigation { get; set; }

@@ -231,6 +231,10 @@ namespace GrandHotel_WebApplication.Controllers
                 #endregion
 
                 //Si réussi, redirect vers change Account
+                if (ViewBag.guid == null)
+                {
+                    return RedirectToAction("Creates", "Reservations");
+                }
                 clientVM.StatusMessage = "Bienvenue";
                 return RedirectToAction("ChangeAccount", "Manage", clientVM);
             }

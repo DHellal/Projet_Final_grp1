@@ -1,42 +1,65 @@
 ﻿@model Reservation
 
 
-    
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.NumChambre)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.NumChambre)
-        </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Jour)
-        </dt>
+<dl class="dl-horizontal">
+    <dt>
+        @Html.DisplayNameFor(model => model.NumChambre)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.NumChambre)
+    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Jour)
-        </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.Jour)
+    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.NbPersonnes)
-        </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Jour)
+    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.NbPersonnes)
-        </dd>
-           
+    <dt>
+        @Html.DisplayNameFor(model => model.NbPersonnes)
+    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.HeureArrivee)
+    <dd>
+        @Html.DisplayFor(model => model.NbPersonnes)
+    </dd>
 
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.HeureArrivee)
-        </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.HeureArrivee)
+
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.HeureArrivee) h
+    </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.NbNuit)
+
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.NbNuit)
+    </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.PrixTotal)
+
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.PrixTotal) euros
+    </dd>
 
 </dl>
+
+<br /><br /><br /><br />
+
+<h3>Merci d'avoir Choisi Grand Hotel</h3>
+
+<br /><br /><br /><br />
+
 <a asp-action="Index">Quitter</a>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

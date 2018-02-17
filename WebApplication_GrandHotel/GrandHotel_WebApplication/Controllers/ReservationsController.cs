@@ -11,6 +11,7 @@ using System.Data.SqlClient;
 using System.Data;
 using GrandHotel_WebApplication.Extensions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace GrandHotel_WebApplication.Controllers
 {
@@ -20,7 +21,8 @@ namespace GrandHotel_WebApplication.Controllers
     {
         private readonly GrandHotelContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-
+        private const string SessionKeyReservationVM = "_ReservationVM";
+        
         public ReservationsController(GrandHotelContext context, UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
@@ -55,9 +57,9 @@ namespace GrandHotel_WebApplication.Controllers
                 .FirstOrDefaultAsync();
             chambreVM.tarifChambre.TarifTotal = prix;
             //je crée un guid pour reconnaitre la session de chaque client au cas ou l'on a plusieurs client qui reserve en meme temps
-            Guid g = Guid.NewGuid();
-            var guid = g.ToString();
-            ViewBag.guid = guid;
+            //Guid g = Guid.NewGuid();
+            //var guid = g.ToString();
+            //ViewBag.guid = guid;
             //j'enregistre les information de ma reservation dans la session
             var reservation = new Reservation();
             
@@ -66,8 +68,10 @@ namespace GrandHotel_WebApplication.Controllers
             reservation.NumChambre = id;
             reservation.Travail = travail;
             reservation.HeureArrivee = heure;
-            HttpContext.Session.SetObjectAsJson(guid, reservation);
-           
+            reservation.NbNuit = nbnuit;
+            reservation.PrixTotal = prix;
+            HttpContext.Session.SetObjectAsJson(SessionKeyReservationVM, reservation);
+            
             return View(chambreVM);
         }
 
@@ -146,27 +150,27 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
        
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
         public async Task<IActionResult> Creates()
         {
-            string guid = ViewBag.guid;
+            
             //je recupere l'email l'email de l'utilisateur
             var user = await _userManager.GetUserAsync(User);
             var email = user.Email;
             //je recupere l'id du client avec l'email
             var id = _context.Client.Where(c => c.Email == email).Select(c => c.Id).FirstOrDefault();
             //je recupere mon objet reservation de ma session
-            var reservations = HttpContext.Session.GetObjectFromJson<Reservation>(guid);
+            var reservations = HttpContext.Session.GetObjectFromJson<Reservation>(SessionKeyReservationVM);
             reservations.IdClient = id;
-            var duree = ViewBag.NBnuit;
+            var duree = reservations.NbNuit;
             //je fais une boucle pour enregistrer la reservion sur la durée du sejour
-            for (int i = 1; i <= duree; i++)
-            {
+            for (int i = 0; i < duree; i++)
+            {                
+                reservations.Jour=reservations.Jour.AddDays(i);
                 _context.Add(reservations);
-                //j'enregistre la reservation
                 await _context.SaveChangesAsync();
             }
+            //j'enregistre la reservation            
             return View(reservations);
             
         }

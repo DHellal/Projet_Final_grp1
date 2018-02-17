@@ -20,6 +20,7 @@ namespace GrandHotel_WebApplication.Controllers
     {
         private readonly GrandHotelContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private const string SessionKeyReservationVM = "_ReservationVM";
 
         public ClientsController(GrandHotelContext context, UserManager<ApplicationUser> userManager)
         {
@@ -229,9 +230,11 @@ namespace GrandHotel_WebApplication.Controllers
 
                 };
                 #endregion
+                
+                var reservations = HttpContext.Session.GetObjectFromJson<Reservation>(SessionKeyReservationVM);
 
                 //Si réussi, redirect vers change Account
-                if (ViewBag.guid != null && ViewBag.guid != "")
+                if (reservations != null)
                    return RedirectToAction("Creates", "Reservation");
                 else
               {

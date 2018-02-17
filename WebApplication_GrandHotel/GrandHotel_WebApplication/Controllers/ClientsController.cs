@@ -231,13 +231,13 @@ namespace GrandHotel_WebApplication.Controllers
                 #endregion
 
                 //Si réussi, redirect vers change Account
-                if (ViewBag.guid == null)
-                {
-                    return RedirectToAction("Creates", "Reservations");
-                }
+                if (ViewBag.guid == null || ViewBag.guid == "")
+                   return RedirectToAction("Creates", "Reservation");
+                else
+              {
                 clientVM.StatusMessage = "Bienvenue";
                 return RedirectToAction("ChangeAccount", "Manage", clientVM);
-            }
+              }
             return View(clientVM);
         }
 

@@ -64,6 +64,20 @@ namespace GrandHotel_WebApplication.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                
+                //chercher si client a un id d'abord..
+                var user = await _userManager.GetUserAsync(User);
+                Client DejaClient = _context.Client.Where(c => c.Email == user.Email).FirstOrDefault();
+                
+                //S'il ya une reservation en cours et qu'il a deja un compte dans la BDD, redirect vers sa reservation
+                                if (ViewBag.guid != null && ViewBag.guid != "" && DejaClient != null)
+                   return RedirectToAction("Creates", "Reservation");
+                   
+                   // Si pas encore de compte client, demande de saisir coordonnées
+                   else if (DejaClient == null)
+                   return RedirectToAction("Create", "Clients");
+
+                
                     _logger.LogInformation("Client connecté");
                     return RedirectToLocal(returnUrl);
                 }

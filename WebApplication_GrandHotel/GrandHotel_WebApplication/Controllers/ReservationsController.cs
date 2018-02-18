@@ -138,9 +138,10 @@ namespace GrandHotel_WebApplication.Controllers
                         //j'incremente le jour saisie par le client jusqu'au nombre de nuit saisie
                         Jour = Jour.AddDays(1);
                     }
+                    var chambretotal = _context.TarifChambre.Include(n=> n.NumChambreNavigation).Where(n=>n.NumChambreNavigation.NbLits>=NbPersonnes);
                     //je deduis dela liste total des chambres les chambres occupées et j'inclus le prix
                     DateTime date = new DateTime(DateTime.Now.Year, 01, 01);
-                    chambreVM.TarifChambre = await _context.TarifChambre
+                    chambreVM.TarifChambre = await chambretotal
                         .Include(t => t.NumChambreNavigation)
                         .Include(t => t.CodeTarifNavigation)
                         .Where(x => !numeroChambreOccupe.Contains(x.NumChambre) && x.CodeTarifNavigation.DateDebut >= date)
@@ -179,7 +180,7 @@ namespace GrandHotel_WebApplication.Controllers
             }
             //je reinitialise la date d'arrivée pour pouvoir afficher la bonne date dans ma vue
             reservations.Jour = reservations.Jour.AddDays(-(duree-1));
-            //je vide ma session pour q'un client puisse accée
+            //je vide ma session pour q'un client puisse accéder
             HttpContext.Session.Remove(SessionKeyReservationVM);
             return View(reservations);
             

@@ -66,14 +66,19 @@
                 @Html.DisplayFor(modelItem => item.NbReservationEnCours)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" asp-route-status="@ViewBag.stat">Editer</a> |
-                <a asp-action="Details" asp-route-id="@item.Id" asp-route-status="@ViewBag.stat">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id" asp-route-status="@ViewBag.stat">Supprimer</a>
+                @*<a asp-action="Edit" asp-route-id="@item.Id" asp-route-status="@ViewBag.stat">Editer</a> |*@
+                <a asp-action="Details" asp-route-id="@item.Id" asp-route-status="@ViewBag.stat">
+                    <span class="glyphicon glyphicon-list-alt"></span> Details</a> 
+                @*<a asp-action="Delete" asp-route-id="@item.Id" asp-route-status="@ViewBag.stat">Supprimer</a>*@
             </td>
         </tr>
         }
     </tbody>
 </table>
-<p>
+@*<p>
     <a asp-action="Create">Ajouter un nouveau client</a>
-</p>
+</p>*@
+
+<div>
+    <a asp-controller="Home"  asp-action="Index">Retour</a>
+</div>

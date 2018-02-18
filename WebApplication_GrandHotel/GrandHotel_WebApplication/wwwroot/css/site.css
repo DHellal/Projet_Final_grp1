@@ -1,7 +1,7 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
-   
+    /*background-color: whitesmoke;*/
 }
 
 /* Wrapping element */
@@ -18,7 +18,7 @@
 }
 
 /* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"] {
+.carousel-inner .item img[src$=".jpg"] {
     width: 100%;
 }
 
@@ -34,3 +34,8 @@
         display: none;
     }
 }
+/*Centrer les titres: Lydia*/
+h2{
+    text-align:center;
+    /*background-color: lightcyan;*/
+ }

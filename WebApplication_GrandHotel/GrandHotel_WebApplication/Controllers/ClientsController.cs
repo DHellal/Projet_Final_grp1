@@ -265,137 +265,169 @@ namespace GrandHotel_WebApplication.Controllers
             //return View();
         }
 
-        // POST: Clients/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(CreationClientVM clientVM)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Civilite,Nom,Prenom,Email,CarteFidelite,Societe")] Client client)
         {
-
-            var user = await _userManager.GetUserAsync(User);
-
+            if (id != client.Id)
+            {
+                return NotFound();
+            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    Client clientAncien = _context.Client.Where(c => c.Email == user.Email).FirstOrDefault();
-
-                    Client client = new Client
-                    {
-                        Civilite = clientVM.Civilite,
-                        Nom = clientVM.Nom.ToUpper(),
-                        // Le nom et la premiere lettre du prénom en majuscule
-                        Prenom = clientVM.Prenom[0].ToString().ToUpper() + clientVM.Prenom.Substring(1),
-                        Email = user.Email,
-                        CarteFidelite = false
-                    };
-
-                    clientVM.id = clientAncien.Id;
                     _context.Update(client);
                     await _context.SaveChangesAsync();
-
-
-                    if (clientVM.AdresseVille != null && clientVM.AdresseRue != null && clientVM.AdresseCodePostal != null)
-                    {
-
-                        Adresse Adresse = new Adresse()
-                        {
-                            IdClient = clientVM.id,
-                            Rue = clientVM.AdresseRue,
-                            CodePostal = clientVM.AdresseCodePostal,
-                            Ville = clientVM.AdresseVille.ToUpper()
-                        };
-                        _context.Update(Adresse);
-                        await _context.SaveChangesAsync();
-
-                    }
-
-
-                    if (clientVM.TelephoneDom.Length == 10)
-                    {
-                        string telClient = await _context.Telephone.Where(t => t.IdClient == clientVM.id).Select(t => t.Numero).SingleOrDefaultAsync();
-                        string telExist = await _context.Telephone.Where(t => t.Numero == clientVM.TelephoneDom).Select(t => t.Numero).SingleOrDefaultAsync();
-
-                        Telephone telDom = new Telephone()
-                        {
-                            IdClient = clientVM.id,
-                            CodeType = "F",
-                            Numero = clientVM.TelephoneDom,
-                            Pro = clientVM.ProDom
-                        };
-
-                        // Si le client n'avait pas de numéro
-                        if (telClient == null)
-                        {
-                            _context.Telephone.Add(telDom);
-                            await _context.SaveChangesAsync();
-                        }
-                        else if (telExist == null)
-                        {
-                            _context.Update(telDom);
-                            await _context.SaveChangesAsync();
-                        }
-                        else
-                        {
-                            clientVM.TelephonePort = "";
-                            clientVM.StatusMessage = "Erreur : Numero de telephone Portable déja utilisé..";
-                            return RedirectToAction("ChangeAccount", "Manage", clientVM);
-                        }
-                    }
-
-
-                    if (clientVM.TelephonePort.Length == 10)
-                    {
-                        string telClient = await _context.Telephone.Where(t => t.IdClient == clientVM.id).Select(t => t.Numero).SingleOrDefaultAsync();
-                        string telExist = await _context.Telephone.Where(t => t.Numero == clientVM.TelephonePort).Select(t => t.Numero).SingleOrDefaultAsync();
-
-                        Telephone telPort = new Telephone()
-                        {
-                            IdClient = clientVM.id,
-                            CodeType = "M",
-                            Numero = clientVM.TelephonePort,
-                            Pro = clientVM.ProPort
-                        };
-
-                        // Si le client n'avait pas de numéro
-                        if (telClient == null)
-                        {
-                            _context.Telephone.Add(telPort);
-                            await _context.SaveChangesAsync();
-                        }
-                        else if (telExist == null)
-                        {
-                            _context.Update(telPort);
-                            await _context.SaveChangesAsync();
-                        }
-                        else
-                        {
-                            clientVM.TelephonePort = "";
-                            clientVM.StatusMessage = "Erreur : Numero de telephone Portable déja utilisé..";
-                            return RedirectToAction("ChangeAccount", "Manage", clientVM);
-                        }
-                    }
-
-
                 }
-                catch (Exception e)
+                catch (DbUpdateConcurrencyException)
                 {
-                    clientVM.StatusMessage = "Erreur : " + e.Message;
-                    return RedirectToAction("ChangeAccount", "Manage", clientVM);
+                    if (!ClientExists(client.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
-
-
-                clientVM.StatusMessage = "Compte modifié avec succés";
-                RedirectToAction("ChangeAccount", "Manage", clientVM);
-
-
+                return RedirectToAction(nameof(Index));
             }
-            clientVM.StatusMessage = "Erreur dans le saisie des informations";
-            return RedirectToAction("ChangeAccount", "Manage", clientVM);
-
+            return View(client);
         }
+
+        // POST: Clients/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(CreationClientVM clientVM)
+        //{
+
+        //    var user = await _userManager.GetUserAsync(User);
+
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            Client clientAncien = _context.Client.Where(c => c.Email == user.Email).FirstOrDefault();
+
+        //            Client client = new Client
+        //            {
+        //                Civilite = clientVM.Civilite,
+        //                Nom = clientVM.Nom.ToUpper(),
+        //                // Le nom et la premiere lettre du prénom en majuscule
+        //                Prenom = clientVM.Prenom[0].ToString().ToUpper() + clientVM.Prenom.Substring(1),
+        //                Email = user.Email,
+        //                CarteFidelite = false
+        //            };
+
+        //            clientVM.id = clientAncien.Id;
+        //            _context.Update(client);
+        //            await _context.SaveChangesAsync();
+
+
+        //            if (clientVM.AdresseVille != null && clientVM.AdresseRue != null && clientVM.AdresseCodePostal != null)
+        //            {
+
+        //                Adresse Adresse = new Adresse()
+        //                {
+        //                    IdClient = clientVM.id,
+        //                    Rue = clientVM.AdresseRue,
+        //                    CodePostal = clientVM.AdresseCodePostal,
+        //                    Ville = clientVM.AdresseVille.ToUpper()
+        //                };
+        //                _context.Update(Adresse);
+        //                await _context.SaveChangesAsync();
+
+        //            }
+
+
+        //            if (clientVM.TelephoneDom.Length == 10)
+        //            {
+        //                string telClient = await _context.Telephone.Where(t => t.IdClient == clientVM.id).Select(t => t.Numero).SingleOrDefaultAsync();
+        //                string telExist = await _context.Telephone.Where(t => t.Numero == clientVM.TelephoneDom).Select(t => t.Numero).SingleOrDefaultAsync();
+
+        //                Telephone telDom = new Telephone()
+        //                {
+        //                    IdClient = clientVM.id,
+        //                    CodeType = "F",
+        //                    Numero = clientVM.TelephoneDom,
+        //                    Pro = clientVM.ProDom
+        //                };
+
+        //                // Si le client n'avait pas de numéro
+        //                if (telClient == null)
+        //                {
+        //                    _context.Telephone.Add(telDom);
+        //                    await _context.SaveChangesAsync();
+        //                }
+        //                else if (telExist == null)
+        //                {
+        //                    _context.Update(telDom);
+        //                    await _context.SaveChangesAsync();
+        //                }
+        //                else
+        //                {
+        //                    clientVM.TelephonePort = "";
+        //                    clientVM.StatusMessage = "Erreur : Numero de telephone Portable déja utilisé..";
+        //                    return RedirectToAction("ChangeAccount", "Manage", clientVM);
+        //                }
+        //            }
+
+
+        //            if (clientVM.TelephonePort.Length == 10)
+        //            {
+        //                string telClient = await _context.Telephone.Where(t => t.IdClient == clientVM.id).Select(t => t.Numero).SingleOrDefaultAsync();
+        //                string telExist = await _context.Telephone.Where(t => t.Numero == clientVM.TelephonePort).Select(t => t.Numero).SingleOrDefaultAsync();
+
+        //                Telephone telPort = new Telephone()
+        //                {
+        //                    IdClient = clientVM.id,
+        //                    CodeType = "M",
+        //                    Numero = clientVM.TelephonePort,
+        //                    Pro = clientVM.ProPort
+        //                };
+
+        //                // Si le client n'avait pas de numéro
+        //                if (telClient == null)
+        //                {
+        //                    _context.Telephone.Add(telPort);
+        //                    await _context.SaveChangesAsync();
+        //                }
+        //                else if (telExist == null)
+        //                {
+        //                    _context.Update(telPort);
+        //                    await _context.SaveChangesAsync();
+        //                }
+        //                else
+        //                {
+        //                    clientVM.TelephonePort = "";
+        //                    clientVM.StatusMessage = "Erreur : Numero de telephone Portable déja utilisé..";
+        //                    return RedirectToAction("ChangeAccount", "Manage", clientVM);
+        //                }
+        //            }
+
+
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            clientVM.StatusMessage = "Erreur : " + e.Message;
+        //            return RedirectToAction("ChangeAccount", "Manage", clientVM);
+        //        }
+
+
+        //        clientVM.StatusMessage = "Compte modifié avec succés";
+        //        RedirectToAction("ChangeAccount", "Manage", clientVM);
+
+
+        //    }
+        //    clientVM.StatusMessage = "Erreur dans le saisie des informations";
+        //    return RedirectToAction("ChangeAccount", "Manage", clientVM);
+
+        //}
 
 
 

@@ -10,7 +10,7 @@ namespace GrandHotel_WebApplication.Models
         public short NumChambre { get; set; }
 
         [DataType(DataType.Date)]
-        [Display(Name = "Date de début de séjour")]
+        [Display(Name = "Date d'arrivée")]
         [Required(ErrorMessage = "Saississez la date de début de séjour")]
         public DateTime Jour { get; set; }
 
@@ -44,5 +44,9 @@ namespace GrandHotel_WebApplication.Models
 
         public Chambre NumChambreNavigation { get; set; }
 
+        public static implicit operator Reservation(ReservationVM v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

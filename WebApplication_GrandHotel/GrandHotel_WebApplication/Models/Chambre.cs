@@ -19,7 +19,7 @@ namespace GrandHotel_WebApplication.Models
         public bool Bain { get; set; }
         public bool? Douche { get; set; }
         public bool? Wc { get; set; }
-        [Display(Name = "Nombre de lit")]      
+        [Display(Name = "Nombre de lits")]      
         public byte NbLits { get; set; }
         [Display(Name = "Numero de téléphone")]
         public short? NumTel { get; set; }

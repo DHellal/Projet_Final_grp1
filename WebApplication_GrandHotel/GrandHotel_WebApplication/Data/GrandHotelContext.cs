@@ -24,7 +24,7 @@ namespace GrandHotel_WebApplication.Data
 
         public GrandHotelContext(DbContextOptions<GrandHotelContext> options): base(options)
         {
-
+       
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

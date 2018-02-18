@@ -175,18 +175,12 @@ namespace GrandHotel_WebApplication.Controllers
             }
             //je reinitialise la date d'arrivée pour pouvoir afficher la bonne date dans ma vue
             reservations.Jour = reservations.Jour.AddDays(-(duree-1));
-                      
+            //je retire mon objet reservation de ma session pour empecher la redirection quand un client veut se connecter à son compte
+            HttpContext.Session.Remove(SessionKeyReservationVM);
+
             return View(reservations);
             
         }
-
-       
-
-        private bool ReservationExists(short id)
-        {
-            return _context.Reservation.Any(e => e.NumChambre == id);
-        }
-
     
     }
 }

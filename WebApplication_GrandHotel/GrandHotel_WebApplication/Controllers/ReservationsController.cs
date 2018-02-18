@@ -19,6 +19,7 @@ namespace GrandHotel_WebApplication.Controllers
 
     public class ReservationsController : Controller
     {
+       
         private readonly GrandHotelContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private const string SessionKeyReservationVM = "_ReservationVM";
@@ -27,7 +28,10 @@ namespace GrandHotel_WebApplication.Controllers
         {
             _userManager = userManager;
             _context = context;
+           
         }
+
+       
 
         //J'affiche le formulaire qui permet à l'utilisateur de saisir les carractéristiques de sa reservation
         public IActionResult Index()
@@ -175,7 +179,8 @@ namespace GrandHotel_WebApplication.Controllers
             }
             //je reinitialise la date d'arrivée pour pouvoir afficher la bonne date dans ma vue
             reservations.Jour = reservations.Jour.AddDays(-(duree-1));
-                      
+            //je vide ma session pour q'un client puisse accée
+            HttpContext.Session.Remove(SessionKeyReservationVM);
             return View(reservations);
             
         }

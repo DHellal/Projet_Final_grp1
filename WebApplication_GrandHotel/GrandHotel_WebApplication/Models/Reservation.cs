@@ -44,5 +44,9 @@ namespace GrandHotel_WebApplication.Models
 
         public Chambre NumChambreNavigation { get; set; }
 
+        public static implicit operator Reservation(ReservationVM v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

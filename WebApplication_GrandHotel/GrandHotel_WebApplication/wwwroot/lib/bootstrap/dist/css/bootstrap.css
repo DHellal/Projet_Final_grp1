@@ -59,7 +59,7 @@ strong {
 dfn {
   font-style: italic;
 }
-h1 {
+h1,h2 {
   margin: .67em 0;
   font-size: 2em;
 }
@@ -187,6 +187,9 @@ td,
 th {
   padding: 0;
 }
+tr:nth-child(even) {
+    background-color: lightcyan;
+}
 /*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */
 @media print {
   *,
@@ -250,6 +253,7 @@ th {
   }
   .table {
     border-collapse: collapse !important;
+    
   }
   .table td,
   .table th {

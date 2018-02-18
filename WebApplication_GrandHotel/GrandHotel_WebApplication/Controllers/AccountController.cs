@@ -73,14 +73,14 @@ namespace GrandHotel_WebApplication.Controllers
                if (result.Succeeded)
                 {
                 //chercher si client a un id d'abord..
-                var user = await _userManager.GetUserAsync(User);
-                Client DejaClient = _context.Client.Where(c => c.Email == user.Email).FirstOrDefault();
+                //var user = await _userManager.GetUserAsync(User);
+                Client DejaClient = _context.Client.Where(c => c.Email == model.Email).FirstOrDefault();
                 
                 var reservations = HttpContext.Session.GetObjectFromJson<Reservation>(SessionKeyReservationVM);
                 
                 //S'il ya une reservation en cours et qu'il a deja un compte dans la BDD, redirect vers sa reservation
                                 if (reservations != null && DejaClient != null)
-                   return RedirectToAction("Creates", "Reservation");
+                   return RedirectToAction("Creates", "Reservations");
                    
                    // Si pas encore de compte client, demande de saisir coordonnées
                    else if (DejaClient == null)

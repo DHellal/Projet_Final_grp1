@@ -23,7 +23,7 @@
 </form>
 <br />
 <br />
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>
@@ -58,9 +58,10 @@
                 @Html.DisplayFor(modelItem => item.Tarifc)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Numero" asp-route-status="@ViewBag.stat">Editer</a> |
-                <a asp-action="Details" asp-route-id="@item.Numero" asp-route-status="@ViewBag.stat">Détails</a> |
-                <a asp-action="Delete" asp-route-id="@item.Numero" asp-route-status="@ViewBag.stat">Supprimer</a>
+                @*<a asp-action="Edit" asp-route-id="@item.Numero" asp-route-status="@ViewBag.stat">Editer</a> |*@
+                <a asp-action="Details" asp-route-id="@item.Numero" asp-route-status="@ViewBag.stat">
+                    <span class="glyphicon glyphicon-list-alt"></span> Détails</a> 
+                @*<a asp-action="Delete" asp-route-id="@item.Numero" asp-route-status="@ViewBag.stat">Supprimer</a>*@
             </td>
         </tr>
         }
@@ -70,3 +71,7 @@
 @*<p>
     <a asp-action="Create">Ajouter une chambre</a>
 </p>*@
+
+<div>
+    <a asp-controller="Home" asp-action="Index">Retour</a>
+</div>

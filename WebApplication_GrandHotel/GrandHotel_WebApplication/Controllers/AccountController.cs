@@ -80,7 +80,7 @@ namespace GrandHotel_WebApplication.Controllers
                 
                 //S'il ya une reservation en cours et qu'il a deja un compte dans la BDD, redirect vers sa reservation
                                 if (reservations != null && DejaClient != null)
-                   return RedirectToAction("Creates", "Reservation");
+                   return RedirectToAction("Creates", "Reservations");
                    
                    // Si pas encore de compte client, demande de saisir coordonnées
                    else if (DejaClient == null)

@@ -31,26 +31,32 @@ namespace GrandHotel_WebApplication.Controllers
             if (string.IsNullOrWhiteSpace(statusChambre)) statusChambre = "";
 
             ViewBag.stat = statusChambre;
-            /*Requete sql qui affiche toutes les chambres ainsi que leur tarif reviser au 1er janvier de l'année en cours
+            /*Requete sql qui recupère toutes les chambres ainsi que leur tarif reviser au 1er janvier de l'année en cours
              La requette est placé dans une vue dans la base GrandHotel*/
 
             string req = @"select Numero, Etage, NbLits,  Prix from vwChambresTarif";
-            /*Requete sql qui affiche toutes les chambres ainsi que leur tarif reviser au 1er janvier de l'année en cours
-            La requette est placé dans une vue dans la base GrandHotel*/
 
+            /*Requete sql qui recupère toutes les chambres occupées. La requette est placé dans une vue dans la base GrandHotel*/
             if (statusChambre == "Occupe") req = @"select Numero, Etage, NbLits,  Prix from vwChambresOccupeesTarif";
 
+            /*Requete sql qui recupère toutes les chambres Livre. La requette est placé dans une vue dans la base GrandHotel*/
             else if (statusChambre == "NonOccupe")  req = @"select Numero, Etage, NbLits,  Prix from vwChambresLibreTarif";
-            
+
+            /*recupperation de la chaine de connexion dans une instruction using*/
             using (var conn = (SqlConnection)_context.Database.GetDbConnection())
             {
+                /*Création de la commande et ajout de la code SQL et de la connexion*/
                 var cmd = new SqlCommand(req, conn);
+
+                /*Ouverture de la connexion*/
                 await conn.OpenAsync();
 
+                /*Lecture des lignes de résultat une par une*/
                 using (var sdr = await cmd.ExecuteReaderAsync())
                 {
                     while (sdr.Read())
                     {
+                        /*L'enregistrement est placé dans un objet l'entité Chambre et l'objet est ajouté à la liste chambres*/
                         var chambre = new Chambre();
                         chambre.Numero = (short)sdr["Numero"];
                         chambre.Etage= (byte)sdr["Etage"];
@@ -61,7 +67,7 @@ namespace GrandHotel_WebApplication.Controllers
                 }
 
             }
-           
+            /*L'instruction using appelle la méthode dispose de */
             vmChambre.Chambre = chambres;
 
             return View(vmChambre);

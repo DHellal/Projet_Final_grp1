@@ -13,6 +13,8 @@ using Microsoft.Extensions.Options;
 using GrandHotel_WebApplication.Models;
 using GrandHotel_WebApplication.Models.AccountViewModels;
 using GrandHotel_WebApplication.Services;
+using GrandHotel_WebApplication.Extensions;
+using GrandHotel_WebApplication.Data;
 
 namespace GrandHotel_WebApplication.Controllers
 {
@@ -24,17 +26,21 @@ namespace GrandHotel_WebApplication.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private const string SessionKeyReservationVM = "_ReservationVM";
+        private readonly GrandHotelContext _context;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            GrandHotelContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _context = context;
         }
 
         [TempData]
@@ -62,8 +68,25 @@ namespace GrandHotel_WebApplication.Controllers
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
+               
+               
+               if (result.Succeeded)
                 {
+                //chercher si client a un id d'abord..
+                //var user = await _userManager.GetUserAsync(User);
+                Client DejaClient = _context.Client.Where(c => c.Email == model.Email).FirstOrDefault();
+                
+                var reservations = HttpContext.Session.GetObjectFromJson<Reservation>(SessionKeyReservationVM);
+                
+                //S'il ya une reservation en cours et qu'il a deja un compte dans la BDD, redirect vers sa reservation
+                                if (reservations != null && DejaClient != null)
+                   return RedirectToAction("Creates", "Reservations");
+                   
+                   // Si pas encore de compte client, demande de saisir coordonnées
+                   else if (DejaClient == null)
+                   return RedirectToAction("Create", "Clients");
+
+                
                     _logger.LogInformation("Client connecté");
                     return RedirectToLocal(returnUrl);
                 }

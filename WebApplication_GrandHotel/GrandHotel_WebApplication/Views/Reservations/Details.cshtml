@@ -30,19 +30,19 @@
         </dt>
 
         @{
-            bool b = Model.tarifChambre.NumChambreNavigation.Bain;
-            if (b == true)
-            {
-                <dd>
-                    oui
-                </dd>
-            }
-            else
-            {
-                <dd>
-                    Non
-                </dd>
-            }
+        bool b = Model.tarifChambre.NumChambreNavigation.Bain;
+        if (b == true)
+        {
+        <dd>
+            oui
+        </dd>
+        }
+        else
+        {
+        <dd>
+            Non
+        </dd>
+        }
 
         }
 
@@ -52,19 +52,19 @@
         </dt>
 
         @{
-            bool? c = Model.tarifChambre.NumChambreNavigation.Douche;
-            if (c == true)
-            {
-                <dd>
-                    oui
-                </dd>
-            }
-            else
-            {
-                <dd>
-                    Non
-                </dd>
-            }
+        bool? c = Model.tarifChambre.NumChambreNavigation.Douche;
+        if (c == true)
+        {
+        <dd>
+            oui
+        </dd>
+        }
+        else
+        {
+        <dd>
+            Non
+        </dd>
+        }
 
         }
 
@@ -75,19 +75,19 @@
 
         </dt>
         @{
-            bool? d = Model.tarifChambre.NumChambreNavigation.Wc;
-            if (d == true)
-            {
-                <dd>
-                    oui
-                </dd>
-            }
-            else
-            {
-                <dd>
-                    Non
-                </dd>
-            }
+        bool? d = Model.tarifChambre.NumChambreNavigation.Wc;
+        if (d == true)
+        {
+        <dd>
+            oui
+        </dd>
+        }
+        else
+        {
+        <dd>
+            Non
+        </dd>
+        }
 
         }
 
@@ -112,7 +112,7 @@
 
 
 
-    <a asp-action="VerifDisponibilite" asp-route-jour="@(new DateTime(ViewBag.DetailAnnee, ViewBag.DetailMois, ViewBag.DetailJour).ToString(" yyyy-MM-dd"))"
-       asp-route-nbnuit="@ViewBag.DetailNbnuit" asp-route-NbPersonnes="@ViewBag.DetailNbPersonne">Retour</a>
+    <a asp-action="VerifDisponibilite" asp-route-Jour="@(new DateTime(ViewBag.DetailAnnee, ViewBag.DetailMois, ViewBag.DetailJour).ToString(" yyyy-MM-dd"))"
+       asp-route-NbNuit="@ViewBag.DetailNbnuit" asp-route-NbPersonnes="@ViewBag.DetailNbPersonne">Retour</a>
 
 </div>

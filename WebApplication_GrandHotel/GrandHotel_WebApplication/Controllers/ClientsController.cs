@@ -12,6 +12,7 @@ using System.Data;
 using GrandHotel_WebApplication.Models.AccountViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using GrandHotel_WebApplication.Extensions;
 
 namespace GrandHotel_WebApplication.Controllers
 {
@@ -20,6 +21,7 @@ namespace GrandHotel_WebApplication.Controllers
     {
         private readonly GrandHotelContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private const string SessionKeyReservationVM = "_ReservationVM";
 
         public ClientsController(GrandHotelContext context, UserManager<ApplicationUser> userManager)
         {
@@ -135,14 +137,14 @@ namespace GrandHotel_WebApplication.Controllers
                     return View(clientVM);
                 }
 
-                if(telport != null)
+                if (telport != null)
                 {
                     clientVM.StatusMessage = "Numéro de telephone déja existant";
                     return View(clientVM);
                 }
 
                 //Test si email unique
-                
+
                 Client clientAncien = _context.Client.Where(c => c.Email == user.Email).FirstOrDefault();
                 if (clientAncien != null)
                 {
@@ -230,13 +232,19 @@ namespace GrandHotel_WebApplication.Controllers
                 };
                 #endregion
 
+                var reservations = HttpContext.Session.GetObjectFromJson<Reservation>(SessionKeyReservationVM);
+
                 //Si réussi, redirect vers change Account
-                clientVM.StatusMessage = "Bienvenue";
-                return RedirectToAction("ChangeAccount", "Manage", clientVM);
+                if (reservations != null)
+                    return RedirectToAction("Creates", "Reservations");
+                else
+                {
+                    clientVM.StatusMessage = "Bienvenue";
+                    return RedirectToAction("ChangeAccount", "Manage", clientVM);
+                }               
             }
             return View(clientVM);
         }
-
 
 
         // GET: Clients/Edit/5

@@ -73,8 +73,8 @@ namespace GrandHotel_WebApplication.Controllers
                if (result.Succeeded)
                 {
                 //chercher si client a un id d'abord..
-                var user = await _userManager.GetUserAsync(User);
-                Client DejaClient = _context.Client.Where(c => c.Email == user.Email).FirstOrDefault();
+                //var user = await _userManager.GetUserAsync(User);
+                Client DejaClient = _context.Client.Where(c => c.Email == model.Email).FirstOrDefault();
                 
                 var reservations = HttpContext.Session.GetObjectFromJson<Reservation>(SessionKeyReservationVM);
                 

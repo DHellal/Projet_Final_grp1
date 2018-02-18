@@ -51,7 +51,7 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: api/ClientsAPI/5
-        [HttpGet("{Nom}")]
+        [HttpGet("FiltreNom")]
         public async Task<IActionResult> GetClientNom([FromRoute] string Nom)
         {
             if (Nom.Length <3)
@@ -69,40 +69,42 @@ namespace GrandHotel_WebApplication.Controllers
             return Ok(clients);
         }
 
-        // PUT: api/ClientsAPI/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutClient([FromRoute] int id, [FromBody] Client client)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //// PUT: api/ClientsAPI/5
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutClient([FromRoute] int id, [FromBody] Client client)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            if (id != client.Id)
-            {
-                return BadRequest();
-            }
+        //    if (id != client.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _context.Entry(client).State = EntityState.Modified;
+        //    _context.Entry(client).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ClientExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!ClientExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
+
+
 
         // POST: api/ClientsAPI
         [HttpPost]
@@ -120,10 +122,14 @@ namespace GrandHotel_WebApplication.Controllers
             _context.Client.Add(client);
             await _context.SaveChangesAsync();
 
-            return Ok();
-            }
+             int id =  await _context.Client.OrderBy(c=> c.Id).Select(c=> c.Id).LastOrDefaultAsync();
 
-            return BadRequest();
+                string idClient = "Client créé à l'id" +id.ToString();
+
+            return Ok(idClient);
+            }
+            object mail = "Email deja prise...";
+            return BadRequest( error: mail);
 
         }
 

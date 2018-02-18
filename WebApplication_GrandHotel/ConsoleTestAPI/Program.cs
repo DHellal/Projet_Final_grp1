@@ -37,18 +37,20 @@ namespace ConsoleTestAPI
                     Civilite = "M",
                     Nom = "Durant",
                     Prenom = "Eric",
-                    Email = "azerty@azert",
+                    Email = "azersuyty@azttyerty",
                     CarteFidelite = false
                 };
 
-                var url = await CreateClientAsync(cli);
-                Console.WriteLine($"Client créé à l'url {url}");
+                var reponse = await CreateClientAsync(cli);
+                Console.WriteLine($"{reponse}");
 
                 // Get Client selon id
-                int id = 0;
+                string id = Console.ReadLine();
+
                 cli = await GetClientAsync(id);
                 ShowClient(cli);
 
+                Console.Read();
                 //// Update the emp
                 //Console.WriteLine("Mise à jour ...");
                 //await UpdateClientAsync(cli);
@@ -58,8 +60,16 @@ namespace ConsoleTestAPI
                 //ShowClient(cli);
 
                 // Delete the emp
-                var statusCode = await DeleteClientAsync(cli.Id);
+                var statusCode = await DeleteClientAsync(id);
                 Console.WriteLine($"Client supprimé (statut HTTP = {(int)statusCode})");
+                Console.Read();
+
+                string Nom = Console.ReadLine();
+                var clis = await GetClientNomAsync(Nom);
+                foreach(var c in clis)
+                ShowClient(cli);
+
+                Console.Read();
 
             }
             catch (Exception e)
@@ -82,22 +92,38 @@ namespace ConsoleTestAPI
 
         static void ShowClient(Client cli)
         {
-            Console.WriteLine($"{cli.Civilite} {cli.Nom} {cli.Prenom}, Email : { cli.Email} \n Adresse { cli.Adresse.Rue} {cli.Adresse.CodePostal} {cli.Adresse.Ville} \n Telephone : {cli.Telephone[0].Numero}  ");
+            if(cli.Adresse == null)
+            {
+                cli.Adresse = new Adresse();
+                cli.Adresse.CodePostal = "Non resigné";
+                cli.Adresse.Rue = "";
+                cli.Adresse.Ville = "";
+            }
+            if (cli.Telephone == null)
+            {
+                cli.Telephone = new List<Telephone>();
+                cli.Telephone.Add(new Telephone());
+                cli.Telephone[0].Numero = "Non renseigné";
+            }
+                
+
+                Console.WriteLine($"{cli.Civilite} {cli.Nom} {cli.Prenom}, Email : { cli.Email} \n Adresse { cli.Adresse.Rue} {cli.Adresse.CodePostal} {cli.Adresse.Ville} \n Telephone : {cli.Telephone[0].Numero}  ");
         }
 
         //Post nouveau client
-        static async Task<Uri> CreateClientAsync(Client cli)
+        static async Task<string> CreateClientAsync(Client cli)
         {
             HttpResponseMessage response = await client.PostAsJsonAsync(
                 "api/ClientsAPI", cli);
             response.EnsureSuccessStatusCode();
 
-            // retourne l'uri de la ressource créée
-            return response.Headers.Location;
-        }
+            
 
+            // retourne l'uri de la ressource créée
+            return response.Content.ToString();
+        }
         //Get Client selon id
-        static async Task<Client> GetClientAsync(int id)
+        static async Task<Client> GetClientAsync(string id)
         {
             Client cli = null;
             HttpResponseMessage response = await client.GetAsync("api/ClientsAPI/" + id);
@@ -138,7 +164,7 @@ namespace ConsoleTestAPI
         //    return cli;
         //}
 
-        static async Task<HttpStatusCode> DeleteClientAsync(int id)
+        static async Task<HttpStatusCode> DeleteClientAsync(string id)
         {
             HttpResponseMessage response = await client.DeleteAsync(
                 $"api/ClientsAPI/{id}");

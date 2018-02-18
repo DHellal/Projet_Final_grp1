@@ -122,10 +122,14 @@ namespace GrandHotel_WebApplication.Controllers
             _context.Client.Add(client);
             await _context.SaveChangesAsync();
 
-            return Ok();
+             int id =  await _context.Client.OrderBy(c=> c.Id).Select(c=> c.Id).LastOrDefaultAsync();
+
+                string idClient = "Client créé à l'id" +id.ToString();
+
+            return Ok(idClient);
             }
-            string mail = "Email deja prise...";
-            return BadRequest(mail);
+            object mail = "Email deja prise...";
+            return BadRequest( error: mail);
 
         }
 

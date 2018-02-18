@@ -142,10 +142,12 @@ namespace GrandHotel_WebApplication.Controllers
                         .Where(x => !numeroChambreOccupe.Contains(x.NumChambre) && x.CodeTarifNavigation.DateDebut >= date)
                         .ToListAsync();
                 }
-
             }
 
-
+            if(chambreVM==null)
+            {
+                return View("Indisponible");
+            }
             return View(chambreVM);
         }
 

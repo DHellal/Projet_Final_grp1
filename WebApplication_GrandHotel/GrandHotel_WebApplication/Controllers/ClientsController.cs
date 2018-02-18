@@ -236,7 +236,7 @@ namespace GrandHotel_WebApplication.Controllers
 
                 //Si réussi, redirect vers change Account
                 if (reservations != null)
-                    return RedirectToAction("Creates", "Reservation");
+                    return RedirectToAction("Creates", "Reservations");
                 else
                 {
                     clientVM.StatusMessage = "Bienvenue";

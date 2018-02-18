@@ -1,66 +1,80 @@
 ﻿@model Reservation
 
+<style>
+    dt {
+        margin-left: 300px;
+        margin-right: 20px;
+    }
+</style>
+
+<br /><br />
+<h2><strong>Confirmation de votre réservation</strong></h2>
+<br /><br />
+
+<div class="container-fluid ">
 
 
-<dl class="dl-horizontal">
-    <dt>
-        @Html.DisplayNameFor(model => model.NumChambre)
-    </dt>
-    <dd>
-        @Html.DisplayFor(model => model.NumChambre)
-    </dd>
 
-    <dt>
-        @Html.DisplayNameFor(model => model.Jour)
-    </dt>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.NumChambre) :
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.NumChambre)
+        </dd>
 
-    <dd>
-        @Html.DisplayFor(model => model.Jour)
-    </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Jour) :
+        </dt>
 
-    <dt>
-        @Html.DisplayNameFor(model => model.NbPersonnes)
-    </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Jour)
+        </dd>
 
-    <dd>
-        @Html.DisplayFor(model => model.NbPersonnes)
-    </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NbPersonnes) :
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NbPersonnes)
+        </dd>
 
 
-    <dt>
-        @Html.DisplayNameFor(model => model.HeureArrivee)
+        <dt>
+            @Html.DisplayNameFor(model => model.HeureArrivee) :
 
-    </dt>
+        </dt>
 
-    <dd>
-        @Html.DisplayFor(model => model.HeureArrivee) h
-    </dd>
-    <dt>
-        @Html.DisplayNameFor(model => model.NbNuit)
+        <dd>
+            @Html.DisplayFor(model => model.HeureArrivee) h
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NbNuit) :
 
-    </dt>
+        </dt>
 
-    <dd>
-        @Html.DisplayFor(model => model.NbNuit)
-    </dd>
-    <dt>
-        @Html.DisplayNameFor(model => model.PrixTotal)
+        <dd>
+            @Html.DisplayFor(model => model.NbNuit)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PrixTotal) :
 
-    </dt>
+        </dt>
 
-    <dd>
-        @Html.DisplayFor(model => model.PrixTotal) euros
-    </dd>
+        <dd>
+            @Html.DisplayFor(model => model.PrixTotal) euros
+        </dd>
 
-</dl>
+    </dl>
 
-<br /><br /><br /><br />
-
-<h3>Merci d'avoir Choisi Grand Hotel</h3>
+    <br /><br /><br /><br />
+</div>
+<h3 class=" text-center" style="color:green"><strong>Merci d'avoir Choisi Grand Hotel</strong></h3>
 
 <br /><br /><br /><br />
 
 <a asp-controller="Clients" asp-action="Index">Quitter</a>
+<br /><br /><br /><br /><br />
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

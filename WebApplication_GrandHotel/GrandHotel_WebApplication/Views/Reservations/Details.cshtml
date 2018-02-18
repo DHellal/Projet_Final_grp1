@@ -1,24 +1,31 @@
 ﻿@model ReservationVM
 <br /><br />
-@{
-    ViewData["Title"] = "Details";
-}
 
-<h2>Details</h2>
+<style>
+    dt{
+        margin-left:300px;
+        margin-right: 20px;
+    }
+    
+</style>
 
-<div>
+<h2><strong> Détails de la chambre</strong></h2>
+
+<div class="container-fluid ">
 
     <hr />
+
     <dl class="dl-horizontal">
+
         <dt>
-            @Html.DisplayNameFor(model => model.tarifChambre.NumChambre)
+            @Html.DisplayNameFor(model => model.tarifChambre.NumChambre) :
         </dt>
         <dd>
             @Html.DisplayFor(model => model.tarifChambre.NumChambre)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.tarifChambre.NumChambreNavigation.Etage)
+            @Html.DisplayNameFor(model => model.tarifChambre.NumChambreNavigation.Etage) :
         </dt>
 
         <dd>
@@ -26,93 +33,97 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.tarifChambre.NumChambreNavigation.Bain)
+            @Html.DisplayNameFor(model => model.tarifChambre.NumChambreNavigation.Bain) :
         </dt>
 
         @{
-        bool b = Model.tarifChambre.NumChambreNavigation.Bain;
-        if (b == true)
-        {
-        <dd>
-            oui
-        </dd>
-        }
-        else
-        {
-        <dd>
-            Non
-        </dd>
-        }
+            bool b = Model.tarifChambre.NumChambreNavigation.Bain;
+            if (b == true)
+            {
+                <dd>
+                    oui
+                </dd>
+            }
+            else
+            {
+                <dd>
+                    Non
+                </dd>
+            }
 
         }
 
         <dt>
-            @Html.DisplayNameFor(model => model.tarifChambre.NumChambreNavigation.Douche)
+            @Html.DisplayNameFor(model => model.tarifChambre.NumChambreNavigation.Douche) :
 
         </dt>
 
         @{
-        bool? c = Model.tarifChambre.NumChambreNavigation.Douche;
-        if (c == true)
-        {
-        <dd>
-            oui
-        </dd>
-        }
-        else
-        {
-        <dd>
-            Non
-        </dd>
-        }
+            bool? c = Model.tarifChambre.NumChambreNavigation.Douche;
+            if (c == true)
+            {
+                <dd>
+                    oui
+                </dd>
+            }
+            else
+            {
+                <dd>
+                    Non
+                </dd>
+            }
 
         }
 
         <dt>
 
-            @Html.DisplayNameFor(model => model.tarifChambre.NumChambreNavigation.Wc)
+            @Html.DisplayNameFor(model => model.tarifChambre.NumChambreNavigation.Wc) :
 
 
         </dt>
         @{
-        bool? d = Model.tarifChambre.NumChambreNavigation.Wc;
-        if (d == true)
-        {
-        <dd>
-            oui
-        </dd>
-        }
-        else
-        {
-        <dd>
-            Non
-        </dd>
-        }
+            bool? d = Model.tarifChambre.NumChambreNavigation.Wc;
+            if (d == true)
+            {
+                <dd>
+                    oui
+                </dd>
+            }
+            else
+            {
+                <dd>
+                    Non
+                </dd>
+            }
 
         }
 
         <dt>
-            @Html.DisplayNameFor(model => model.tarifChambre.CodeTarifNavigation.Prix)
+            @Html.DisplayNameFor(model => model.tarifChambre.CodeTarifNavigation.Prix) :
         </dt>
         <dd>
             @Html.DisplayFor(model => model.tarifChambre.CodeTarifNavigation.Prix)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.tarifChambre.TarifTotal)
+            @Html.DisplayNameFor(model => model.tarifChambre.TarifTotal) :
         </dt>
         <dd>
             @Html.DisplayFor(model => model.tarifChambre.TarifTotal) Ht
         </dd>
     </dl>
-    <dl>
-        <dd>
-            <a asp-controller="Account" asp-action="Login" asp-route-id="" class="btn btn-primary">Reserver</a>
-        </dd>
-    </dl>
+
+    <br /><br />
+
+    <div class="container-fluid text-center center-block" >
+        <dl>
+            <dd>
+                <a asp-controller="Account" asp-action="Login" asp-route-id="" class="btn btn-primary">Reserver</a>
+            </dd>
+        </dl>
+     </div>
 
 
+        <a asp-action="VerifDisponibilite" asp-route-Jour="@(new DateTime(ViewBag.DetailAnnee, ViewBag.DetailMois, ViewBag.DetailJour).ToString(" yyyy-MM-dd"))"
+           asp-route-NbNuit="@ViewBag.DetailNbnuit" asp-route-NbPersonnes="@ViewBag.DetailNbPersonne">Retour</a>
 
-    <a asp-action="VerifDisponibilite" asp-route-Jour="@(new DateTime(ViewBag.DetailAnnee, ViewBag.DetailMois, ViewBag.DetailJour).ToString(" yyyy-MM-dd"))"
-       asp-route-NbNuit="@ViewBag.DetailNbnuit" asp-route-NbPersonnes="@ViewBag.DetailNbPersonne">Retour</a>
-
-</div>
+    </div>

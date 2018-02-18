@@ -18,8 +18,8 @@
                 <p>
                     <h1>GRAND HOTEL</h1>
                     @*<a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525028&clcid=0x409">
-                        Learn More
-                    </a>*@
+                            Learn More
+                        </a>*@
                 </p>
             </div>
         </div>
@@ -30,8 +30,8 @@
                 <p>
                     <h1>GRAND HOTEL</h1>
                     @*<a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525030&clcid=0x409">
-                        Learn More
-                    </a>*@
+                            Learn More
+                        </a>*@
                 </p>
             </div>
         </div>
@@ -69,16 +69,18 @@
     <br />
     <div class="col-md-3">
         <a asp-area="" asp-controller="Reservations" asp-action="Index" class="btn btn-info btn-lg" role="button">
-            <span class="glyphicons glyphicon-calendar"></span> Réservation des chambre</a>
+            <span class="glyphicons glyphicon-calendar"></span> Réservation des chambre
+        </a>
     </div>
     <div class="col-md-3">
         <a asp-area="" asp-controller="Clients" asp-action="Index" class="btn btn-info  btn-lg" role="button">
-            <span class="glyphicon glyphicon-folder-open"></span>  Gestion du compte Client</a>
+            <span class="glyphicon glyphicon-folder-open"></span>  Gestion du compte Client
+        </a>
     </div>
     <div class="col-md-3">
         <a asp-area="" asp-controller="Factures" asp-action="Index" class="btn btn-info  btn-lg " role="button">
             <span class="glyphicon glyphicon-credit-card"></span> Consultation des factures
-          
+
         </a>
     </div>
     <div class="col-md-3">
@@ -92,13 +94,58 @@
             </button>
 
             <ul class="dropdown-menu  ">
-                <li><a asp-area="" asp-controller="Clients" asp-action="Index" >
-                        <span class="glyphicon glyphicon-list-alt"></span> Liste des clients</a></li>
-                <li><a asp-area="" asp-controller="Chambres" asp-action="Index" >
-                        <span class="glyphicon glyphicon-list-alt"></span> Liste des chambres</a></li>
+                <li>
+                    <a asp-area="" asp-controller="Clients" asp-action="Index">
+                        <span class="glyphicon glyphicon-list-alt"></span> Liste des clients
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Chambres" asp-action="Index">
+                        <span class="glyphicon glyphicon-list-alt"></span> Liste des chambres
+                    </a>
+                </li>
             </ul>
 
         </div>
     </div>
 </div>
+<br /><br /><br /><br /><br />
+<div class="container-fluid bg-grey">
+
+    <div class="row">
+        <h2>Nous contactez</h2>
+        <br /><br /><br />
+        <div class="col-sm-5">
+
+            <address>
+                20 rue saint nicolas<br />
+                Paris, 75014<br />
+                <abbr title="Phone">telephone:</abbr>
+                00330105897510
+            </address>
+
+            <address>
+                <strong>Support:</strong> <a href="mailto:Gh@Grandhotel.com">Gh@Grandhotel.com</a><br />
+                <strong>Marketing:</strong> <a href="mailto:Marketing@GrandHotel.com">Marketing@Grandhotel.com</a>
+            </address>
+        </div>
+        <div class="col-sm-7">
+            <div class="row">
+                <div class="col-sm-6 form-group">
+                    <input class="form-control" id="name" name="name" placeholder="Nom" type="text" required>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <input class="form-control" id="email" name="email" placeholder="Email" type="email" required>
+                </div>
+            </div>
+            <textarea class="form-control" id="comments" name="comments" placeholder="Commentaires" rows="5"></textarea><br>
+            <div class="row">
+                <div class="col-sm-12 form-group">
+                    <button class="btn btn-default pull-right" type="submit">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br /><br /><br /><br /><br />
 

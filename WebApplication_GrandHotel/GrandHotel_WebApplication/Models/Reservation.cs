@@ -7,6 +7,7 @@ namespace GrandHotel_WebApplication.Models
 {
     public partial class Reservation 
     {
+        [Display(Name = "Numero de chambre")]
         public short NumChambre { get; set; }
 
         [DataType(DataType.Date)]

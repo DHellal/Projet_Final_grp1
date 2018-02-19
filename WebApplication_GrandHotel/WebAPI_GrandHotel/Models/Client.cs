@@ -5,11 +5,6 @@ namespace WebAPI_GrandHotel.Models
 {
     public partial class Client
     {
-        public Client()
-        {
-            Telephone = new List<Telephone>();
-            Adresse = new Adresse();
-        }
 
         public int Id { get; set; }
         public string Civilite { get; set; }

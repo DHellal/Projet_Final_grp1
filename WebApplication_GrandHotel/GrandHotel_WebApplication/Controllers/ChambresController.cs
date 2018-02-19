@@ -20,7 +20,7 @@ namespace GrandHotel_WebApplication.Controllers
         {
             _context = context;
         }
-        #region Auteur : Lydia
+        #region Auteur : Lydia  Réalisation: du 14 au 19 février 2018
         // GET: Chambres
         [Authorize]
         public async Task<IActionResult> Index(string statusChambre)
@@ -73,7 +73,7 @@ namespace GrandHotel_WebApplication.Controllers
             return View(vmChambre);
 
         }
-        #endregion
+       
         // GET: Chambres/Details/5
         //[Authorize]
         public IActionResult Details(short? id, string status)
@@ -98,6 +98,8 @@ namespace GrandHotel_WebApplication.Controllers
             vmChambre.TarifChambre = tarif;
             return View(vmChambre);
         }
+        #endregion
+        #region Fonctionnalités à ajouter: en effet pour l'instant n'import quel utilisateur peut acceder au menu gestion. On ajoutera ces fonctionnalités si l'accès est limité aux gestionnaire par mesure de sécurité. 
 
         // GET: Chambres/Create
         //[Authorize]
@@ -212,5 +214,6 @@ namespace GrandHotel_WebApplication.Controllers
         {
             return _context.Chambre.Any(e => e.Numero == id);
         }
+        #endregion
     }
 }

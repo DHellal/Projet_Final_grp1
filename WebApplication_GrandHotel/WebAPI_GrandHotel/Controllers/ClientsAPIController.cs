@@ -22,13 +22,15 @@ namespace WebAPI_GrandHotel.Controllers
         }
 
         // GET: api/ClientsAPI
+        //Envoie la liste des clients
         [HttpGet]
         public IEnumerable<Client> GetClient()
         {
-            return _context.Client;
+            return _context.Client.Include(c=>c.Adresse).Include(c=>c.Telephone);
         }
 
         // GET: api/ClientsAPI/5
+        // Envoie le client selon ID
         [HttpGet("{id}")]
         public async Task<IActionResult> GetClient([FromRoute] int id)
         {
@@ -37,7 +39,7 @@ namespace WebAPI_GrandHotel.Controllers
                 return BadRequest(ModelState);
             }
 
-            var client = await _context.Client.SingleOrDefaultAsync(m => m.Id == id);
+            var client = await _context.Client.Where(m => m.Id == id).Include(c => c.Adresse).Include(c => c.Telephone).SingleOrDefaultAsync();
 
             if (client == null)
             {
@@ -48,15 +50,16 @@ namespace WebAPI_GrandHotel.Controllers
         }
 
         // GET: api/ClientsAPI/5
+        //Envoie le client selon NOM
         [HttpGet("FiltreNom/{Nom}")]
         public async Task<IActionResult> GetClientNom([FromRoute] string Nom)
         {
-            if (Nom.Length <3)
+            if (Nom.Length < 3)
             {
                 return BadRequest();
             }
 
-            List<Client> clients = await _context.Client.Where(m => m.Nom.Contains(Nom)).ToListAsync();
+            List<Client> clients = await _context.Client.Where(m => m.Nom.Contains(Nom)).Include(c => c.Adresse).Include(c => c.Telephone).ToListAsync();
 
             if (clients == null)
             {
@@ -66,44 +69,8 @@ namespace WebAPI_GrandHotel.Controllers
             return Ok(clients);
         }
 
-        //// PUT: api/ClientsAPI/5
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutClient([FromRoute] int id, [FromBody] Client client)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    if (id != client.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    _context.Entry(client).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!ClientExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
-
-
         // POST: api/ClientsAPI
+        // Création du client
         [HttpPost]
         public async Task<IActionResult> PostClient([FromBody] Client client)
         {
@@ -114,23 +81,24 @@ namespace WebAPI_GrandHotel.Controllers
 
             Client testEmail = await _context.Client.Where(c => c.Email == client.Email).SingleOrDefaultAsync();
 
-            if(testEmail == null)
+            if (testEmail == null)
             {
-            _context.Client.Add(client);
-            await _context.SaveChangesAsync();
+                _context.Client.Add(client);
+                await _context.SaveChangesAsync();
 
-             int id =  await _context.Client.OrderBy(c=> c.Id).Select(c=> c.Id).LastOrDefaultAsync();
+                int id = await _context.Client.OrderBy(c => c.Id).Select(c => c.Id).LastOrDefaultAsync();
 
-                string idClient = "Client créé à l'id" +id.ToString();
+                string idClient = "Client créé à l'id" + id.ToString();
 
-            return Ok(idClient);
+                return Ok(idClient);
             }
             object mail = "Email deja prise...";
-            return BadRequest( error: mail);
+            return BadRequest(mail);
 
         }
 
         // DELETE: api/ClientsAPI/5
+        //Efface le client selon ID
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteClient([FromRoute] int id)
         {
@@ -139,10 +107,11 @@ namespace WebAPI_GrandHotel.Controllers
                 return BadRequest(ModelState);
             }
 
-            var client = await _context.Client.SingleOrDefaultAsync(m => m.Id == id);
-            if (client == null)
+            var client = await _context.Client.Where(m => m.Id == id).Include(c => c.Adresse).Include(c => c.Telephone).SingleOrDefaultAsync();
+            // On empeche la suppression de client avec des telephones ou adresses
+            if (client == null || client.Telephone != null || client.Adresse != null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             _context.Client.Remove(client);

@@ -43,6 +43,7 @@ namespace API_Console
 
                 string reponse = Console.ReadLine();
 
+                // Gestion de la reponse
                 switch (reponse)
                 {
                     // Nouveau client
@@ -53,7 +54,7 @@ namespace API_Console
                             Civilite = "M",
                             Nom = "Durant",
                             Prenom = "Eric",
-                            Email = "azersuyty@azttyerty",
+                            Email = "azersuyty@azttygfhhferty",
                             CarteFidelite = false
                         };
 
@@ -120,10 +121,7 @@ namespace API_Console
 
                         encore = false;
                         break;
-                }
-            } while (encore);
-
-            Console.Read();
+                }} while (encore);
         }
 
         //Methodes de Test
@@ -140,12 +138,15 @@ namespace API_Console
         {
             if (cli.Adresse == null)
             {
+                
+                cli.Adresse = new Adresse();
                 cli.Adresse.CodePostal = "Non resigné";
                 cli.Adresse.Rue = "";
                 cli.Adresse.Ville = "";
             }
             if (cli.Telephone == null)
             {
+                cli.Telephone = new List<Telephone>();
                 cli.Telephone.Add(new Telephone());
                 cli.Telephone[0].Numero = "Non renseigné";
             }
@@ -166,7 +167,7 @@ namespace API_Console
                 "api/ClientsAPI", cli);
 
             // retourne l'uri de la ressource créée
-            return response.StatusCode.ToString();
+            return response.
         }
         //Get Client selon id
         static async Task<Client> GetClientAsync(string id)
@@ -199,7 +200,7 @@ namespace API_Console
         static async Task<List<Client>> GetClientNomAsync(string Nom)
         {
             List<Client> cli = null;
-            HttpResponseMessage response = await client.GetAsync("api/ClientsAPI/FiltreNom/" + Nom);
+            HttpResponseMessage response = await client.GetAsync("api/ClientsAPI/FiltreNom/" + Nom.ToUpper());
             if (response.IsSuccessStatusCode)
             {
                 cli = await response.Content.ReadAsAsync<List<Client>>();

@@ -1,4 +1,4 @@
-﻿using GrandHotel_WebApplication.Models;
+﻿using WebApi.Models;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using GrandHotel_WebApplication;
 using System.Collections.Generic;
 
 namespace ConsoleTestAPI

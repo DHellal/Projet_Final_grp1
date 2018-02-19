@@ -5,9 +5,4 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\GrandHotel_WebApplication\GrandHotel_WebApplication.csproj" />
-    <ProjectReference Include="..\WebApi\WebApi.csproj" />
-  </ItemGroup>
-
 </Project>

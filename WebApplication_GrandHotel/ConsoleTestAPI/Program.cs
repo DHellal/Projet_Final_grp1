@@ -15,10 +15,9 @@ namespace ConsoleTestAPI
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Grand Hotel API!");
 
             RunAsync().GetAwaiter().GetResult();
-
         }
 
         static async Task RunAsync()
@@ -29,55 +28,110 @@ namespace ConsoleTestAPI
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
-            try
+
+
+            bool encore = true;
+            do
             {
-                // Creation client
-                Client cli = new Client()
+            Console.WriteLine("Veuillez choisir l'action à effectuer :");
+            Console.WriteLine("Tapez 1 pour créer un client");
+            Console.WriteLine("Tapez 2 pour chercher un client selon l'ID");
+            Console.WriteLine("Tapez 3 pour chercher un client selon les lettres de son nom");
+            Console.WriteLine("Tapez 4 pour retirer un client");
+            Console.WriteLine("Tapez 5 pour afficher la liste des clients");
+            Console.WriteLine("Tapez 6 pour sortir");
+
+            string reponse = Console.ReadLine();
+
+                switch (reponse)
                 {
-                    Civilite = "M",
-                    Nom = "Durant",
-                    Prenom = "Eric",
-                    Email = "azersuyty@azttyerty",
-                    CarteFidelite = false
-                };
+                    // Nouveau client
+                    case "1":
 
-                var reponse = await CreateClientAsync(cli);
-                Console.WriteLine($"{reponse}");
+                        Client cli = new Client()
+                        {
+                            Civilite = "M",
+                            Nom = "Durant",
+                            Prenom = "Eric",
+                            Email = "azersuyty@azttyerty",
+                            CarteFidelite = false
+                        };
 
-                // Get Client selon id
-                string id = Console.ReadLine();
+                        try
+                        {
+                        var statut = await CreateClientAsync(cli);
+                            Console.WriteLine($"{statut}");
+                        }
+                        catch(Exception e)
+                        {
+                        Console.WriteLine($"{e}");
+                        }
 
-                cli = await GetClientAsync(id);
-                ShowClient(cli);
+                        break;
 
-                Console.Read();
+                    // Get Client selon id
+                    case "2":
+                        Console.WriteLine("Veullez entrer l'id du client");
+                        string id = Console.ReadLine();
+
+                        cli = await GetClientAsync(id);
+                        if(cli != null)
+                        ShowClient(cli);
+                        else
+                            Console.WriteLine("Client introuvable");
+                        break;
+
+                    // Get Client selon Nom
+                    case "3":
+                        Console.WriteLine("Veuillez entrer 3 lettres au minimum");
+                        string Nom = Console.ReadLine();
+                        var clis = await GetClientNomAsync(Nom);
+                        if (clis != null)
+                        {
+                        foreach (var c in clis)
+                            ShowClient(c);
+                        }
+                        break;
+
+                        //Delete client
+                    case "4":
+                        Console.WriteLine("Veullez entrer l'id du client");
+                        string idDelete = Console.ReadLine();
+                        var statusCode = await DeleteClientAsync(idDelete);
+                        Console.WriteLine($"Client supprimé (statut HTTP = {(int)statusCode})");
+                        Console.Read();
+
+                        break;
+                    // Get liste client
+                    case "5":
+                        
+
+                        var cliList = await GetClientListAsync();
+                        if (cliList != null)
+                        {
+                            foreach (var c in cliList)
+                                ShowClient(c);
+                        }
+                        else
+                            Console.WriteLine("Client introuvable");
+                        break;
+
+                    case "6":
+
+                        encore = false;
+                        break;
+                }
+            } while (encore);
+           
+               
                 //// Update the emp
                 //Console.WriteLine("Mise à jour ...");
                 //await UpdateClientAsync(cli);
-
                 //// Get the updated emp
                 //cli = await GetClientAsync(url.PathAndQuery);
                 //ShowClient(cli);
 
-                // Delete the emp
-                var statusCode = await DeleteClientAsync(id);
-                Console.WriteLine($"Client supprimé (statut HTTP = {(int)statusCode})");
                 Console.Read();
-
-                string Nom = Console.ReadLine();
-                var clis = await GetClientNomAsync(Nom);
-                foreach(var c in clis)
-                ShowClient(cli);
-
-                Console.Read();
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-            Console.ReadLine();
         }
 
         //Methodes de Test
@@ -107,20 +161,20 @@ namespace ConsoleTestAPI
             }
                 
 
-                Console.WriteLine($"{cli.Civilite} {cli.Nom} {cli.Prenom}, Email : { cli.Email} \n Adresse { cli.Adresse.Rue} {cli.Adresse.CodePostal} {cli.Adresse.Ville} \n Telephone : {cli.Telephone[0].Numero}  ");
+                Console.WriteLine($"\n {cli.Id} {cli.Civilite} {cli.Nom} {cli.Prenom}, Email : { cli.Email} \n Adresse { cli.Adresse.Rue} {cli.Adresse.CodePostal} {cli.Adresse.Ville} \n Telephone : {cli.Telephone[0].Numero}  \n");
         }
 
         //Post nouveau client
         static async Task<string> CreateClientAsync(Client cli)
         {
+
             HttpResponseMessage response = await client.PostAsJsonAsync(
                 "api/ClientsAPI", cli);
-            response.EnsureSuccessStatusCode();
 
-            
+            //response.EnsureSuccessStatusCode();
 
             // retourne l'uri de la ressource créée
-            return response.Content.ToString();
+            return response.StatusCode.ToString();
         }
         //Get Client selon id
         static async Task<Client> GetClientAsync(string id)
@@ -130,25 +184,34 @@ namespace ConsoleTestAPI
             if (response.IsSuccessStatusCode)
             {
                 cli = await response.Content.ReadAsAsync<Client>();
-                ShowClient(cli);
             }
             return cli;
         }
+
+        //Get Client selon id
+        static async Task<List<Client>> GetClientListAsync()
+        {
+            List<Client> cli = null;
+            HttpResponseMessage response = await client.GetAsync("api/ClientsAPI/");
+            if (response.IsSuccessStatusCode)
+            {
+                cli = await response.Content.ReadAsAsync<List<Client>>();
+
+            }
+            return cli;
+        }
+
 
 
         //Get Client selon nom
         static async Task<List<Client>> GetClientNomAsync(string Nom)
         {
             List<Client> cli = null;
-            HttpResponseMessage response = await client.GetAsync("api/ClientsAPI/FiltreNom" + Nom);
+            HttpResponseMessage response = await client.GetAsync("api/ClientsAPI/FiltreNom/" + Nom);
             if (response.IsSuccessStatusCode)
             {
                 cli = await response.Content.ReadAsAsync<List<Client>>();
 
-                foreach (var c in cli)
-                {
-                    ShowClient(c);
-                }
             }
             return cli;
         }

@@ -24,10 +24,10 @@ namespace GrandHotel_WebApplication.Models
 
         [Display(Name = "Heure d'arrivée")]
         [Range(6, 22, ErrorMessage = "entrer un heure entre 6h et 22h")]
-
+        [Required(ErrorMessage = "Saississez l'heure d'arrivée")]
         public byte HeureArrivee { get; set; }
-        [Display(Name = "Nature du séjour(Travail)")]
 
+        [Display(Name = "Nature du séjour(Travail)")]
         public bool? Travail { get; set; }
 
         [NotMapped]
@@ -45,9 +45,6 @@ namespace GrandHotel_WebApplication.Models
 
         public Chambre NumChambreNavigation { get; set; }
 
-        public static implicit operator Reservation(ReservationVM v)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

@@ -12,7 +12,7 @@
     <div class="carousel-inner" role="listbox">
         <div class="item active">
             @*<img src="~/images/banner1.svg" alt="ASP.NET" class="img-responsive" />*@
-            <img src="~/images/image1.jpg" class="img-responsive" style="width:1100px; height:500px" />
+            <img src="~/images/image1.jpg" class="img-responsive"  />
             @*<img src="~/images/image1.jpg"  class="img-responsive"/>*@
             <div class="carousel-caption" role="option">
                 <p>
@@ -25,7 +25,7 @@
         </div>
         <div class="item">
             @*<img src="~/images/banner2.svg" alt="Visual Studio" class="img-responsive" />*@
-            <img src="~/images/images2.jpg" style="width:1100px; height:500px" />
+            <img src="~/images/images2.jpg" />
             <div class="carousel-caption" role="option">
                 <p>
                     <h1>GRAND HOTEL</h1>
@@ -37,7 +37,7 @@
         </div>
         <div class="item">
             @*<img src="~/images/banner3.svg" alt="Package Management" class="img-responsive" />*@
-            <img src="~/images/images3.jpg" class="img-responsive" style="width:1100px; height:500px" />
+            <img src="~/images/images3.jpg" class="img-responsive" />
             <div class="carousel-caption" role="option">
                 <p>
                     <h1>GRAND HOTEL</h1>
@@ -46,7 +46,7 @@
         </div>
         <div class="item">
             @*<img src="~/images/banner3.svg" alt="Package Management" class="img-responsive" />*@
-            <img src="~/images/images4.jpg" class="img-responsive" style="width:1100px; height:500px" />
+            <img src="~/images/images4.jpg" class="img-responsive" />
             <div class="carousel-caption" role="option">
                 <p>
                     <h1>GRAND HOTEL</h1>
@@ -63,6 +63,7 @@
         <span class="sr-only">Suivant</span>
     </a>
 </div>
+<div class="container">
 
 <div class="row">
     <br />
@@ -83,9 +84,10 @@
 
         </a>
     </div>
+
     <div class="col-md-3">
         @*<a asp-area="" asp-controller="Clients" asp-action="Index" class="btn btn-link glyphicon glyphicon-grain btn-lg" role="button">Gestion de l'hôtel</a>*@
-        <div class="dropdown navbar-collapse collapse">
+        <div class="dropdown navbar-collapse ">
             @*  *@
             <button class="btn btn-info btn-lg dropdown-toggle" type="button" data-toggle="dropdown">
                 <span class="glyphicon glyphicon-th-list"></span>
@@ -109,6 +111,8 @@
         </div>
     </div>
 </div>
+</div>
+
 <br /><br /><br /><br /><br />
 <div class="container-fluid bg-grey">
 
@@ -129,6 +133,7 @@
                 <span class="glyphicon glyphicon-envelope"> </span><strong>Marketing:</strong> <a href="mailto:Marketing@GrandHotel.com">Marketing@Grandhotel.com</a>
             </address>
         </div>
+
         <div class="col-sm-7">
             <div class="row">
                 <div class="col-sm-6 form-group">
@@ -141,7 +146,7 @@
             <textarea class="form-control" id="comments" name="comments" placeholder="Commentaires" rows="5"></textarea><br>
             <div class="row">
                 <div class="col-sm-12 form-group">
-                    <button class="btn btn-default pull-right" type="submit">Send</button>
+                    <button class="btn btn-default pull-right" type="submit" asp-action="ReceptionMessage">Send</button>
                 </div>
             </div>
         </div>

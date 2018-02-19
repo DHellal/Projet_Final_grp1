@@ -21,8 +21,8 @@ namespace GrandHotel_WebApplication.Models.AccountViewModels
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirmer le mot de passe")]
-        [Compare("Password", ErrorMessage = "Le mot de passe ne correspond pas...")]
+       // [Display(Name = "Confirmer le mot de passe")]
+        [Compare("Password",ErrorMessage ="Le mot de passe ne correspond pas...")]
         public string ConfirmPassword { get; set; }
     }
 }

@@ -67,7 +67,7 @@ namespace GrandHotel_WebApplication.Controllers
                 }
 
             }
-            /*L'instruction using appelle la méthode dispose de */
+            /*L'instruction using appelle la méthode dispose qui ferme la connexion */
             vmChambre.Chambre = chambres;
 
             return View(vmChambre);

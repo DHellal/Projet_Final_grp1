@@ -208,11 +208,7 @@ namespace WebAPI_GrandHotel.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Facture_Paiement");
 
-                entity.HasOne(d => d.IdClientNavigation)
-                    .WithMany(p => p.Facture)
-                    .HasForeignKey(d => d.IdClient)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Facture_Client");
+        
             });
 
             modelBuilder.Entity<LigneFacture>(entity =>
@@ -265,11 +261,6 @@ namespace WebAPI_GrandHotel.Models
 
                 entity.Property(e => e.HeureArrivee).HasDefaultValueSql("((17))");
 
-                entity.HasOne(d => d.IdClientNavigation)
-                    .WithMany(p => p.Reservation)
-                    .HasForeignKey(d => d.IdClient)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Reservation_Client");
 
                 entity.HasOne(d => d.JourNavigation)
                     .WithMany(p => p.Reservation)

@@ -5,6 +5,11 @@ namespace WebAPI_GrandHotel.Models
 {
     public partial class Client
     {
+        public Client()
+        {
+            Adresse = new Adresse();
+            Telephone = new List<Telephone>();
+        }
 
         public int Id { get; set; }
         public string Civilite { get; set; }
@@ -15,8 +20,6 @@ namespace WebAPI_GrandHotel.Models
         public string Societe { get; set; }
 
         public Adresse Adresse { get; set; }
-        public ICollection<Facture> Facture { get; set; }
-        public ICollection<Reservation> Reservation { get; set; }
         public List<Telephone> Telephone { get; set; }
     }
 }

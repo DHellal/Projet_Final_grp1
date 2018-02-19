@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Les factures pour client N°:  @ViewBag.Id </h2>
+<h2>Les factures pour client N°  @ViewBag.Id </h2>
 
 
 <form asp-controller="Factures" asp-action="Afficher" method="get">
@@ -19,6 +19,16 @@
     </p>
 </form>
 
+@{
+    if (Model.Factures.Count == 0)
+    {
+        <div>
+            Vous n'avez pas de facture pour l'année @DateTime.Today.Year
+        </div>
+
+
+    }
+}
 
 <table class="table">
     <thead>
@@ -40,10 +50,15 @@
             </th>
         </tr>
     </thead>
+
     <tbody>
+
         @foreach (var item in Model.Factures)
         {
+
             <tr>
+
+
                 <td>
                     @Html.DisplayFor(modelItem => item.Id)
                 </td>
@@ -74,10 +89,16 @@
                 <td>
                     @prixCurrency
                 </td>
+
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" asp-route-annee="@ViewBag.Annee">Details</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" asp-route-annee="@ViewBag.Annee">
+                        <span class="glyphicon glyphicon-list-alt"></span> Details
+                    </a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+
+

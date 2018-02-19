@@ -21,6 +21,7 @@ namespace GrandHotel_WebApplication.Models
         [DataType(DataType.Date)]
         [Display(Name = "Date de Paiement")]
         public DateTime? DatePaiement { get; set; }
+        [Display(Name = "Mode de Paiement")]
         public string CodeModePaiement { get; set; }
 
         public ModePaiement CodeModePaiementNavigation { get; set; }

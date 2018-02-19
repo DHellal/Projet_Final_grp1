@@ -188,7 +188,28 @@ namespace GrandHotel_WebApplication.Controllers
             return View(reservations);
             
         }
-    
+
+        public async Task<IActionResult> VerifConnexion()
+        {
+            var user = await _userManager.GetUserAsync(User);
+           
+            if (user==null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                var clientExist = _context.Client.Where(c => c.Email == user.Email).FirstOrDefaultAsync();
+                if (clientExist != null)
+                {
+                    return RedirectToAction("Creates");
+                }
+                else
+                {
+                    return RedirectToAction("Create", "Client");
+                }
+            }
+        }
     }
 }
    

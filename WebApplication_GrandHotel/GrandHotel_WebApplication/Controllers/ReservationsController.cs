@@ -20,19 +20,19 @@ namespace GrandHotel_WebApplication.Controllers
 
     public class ReservationsController : Controller
     {
-       
+
         private readonly GrandHotelContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private const string SessionKeyReservationVM = "_ReservationVM";
-        
+
         public ReservationsController(GrandHotelContext context, UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
             _context = context;
-           
+
         }
 
-       
+
 
         //J'affiche le formulaire qui permet à l'utilisateur de saisir les carractéristiques de sa reservation
         public IActionResult Index()
@@ -67,7 +67,7 @@ namespace GrandHotel_WebApplication.Controllers
             //ViewBag.guid = guid;
             //j'enregistre les information de ma reservation dans la session
             var reservation = new Reservation();
-            
+
             reservation.Jour = jour;
             reservation.NbPersonnes = nbpersonne;
             reservation.NumChambre = id;
@@ -76,12 +76,12 @@ namespace GrandHotel_WebApplication.Controllers
             reservation.NbNuit = nbnuit;
             reservation.PrixTotal = prix;
             HttpContext.Session.SetObjectAsJson(SessionKeyReservationVM, reservation);
-            
+
             return View(chambreVM);
         }
 
 
-       
+
         public async Task<IActionResult> VerifDisponibilite(DateTime Jour, int NbNuit, byte NbPersonnes, byte HeureArrivee, bool? Travail)
         {
             //je stocke les informations de mes parametres dans des ViewBag pour pouvoir les envoyer dans les paramètre de mon action Details
@@ -136,7 +136,7 @@ namespace GrandHotel_WebApplication.Controllers
                         Jour = Jour.AddDays(1);
                     }
                     //liste total des chambre avec le nombre de lits >= au nombre de personnes
-                    var chambreTotal = _context.TarifChambre.Include(n=> n.NumChambreNavigation).Where(n=>n.NumChambreNavigation.NbLits>=NbPersonnes);
+                    var chambreTotal = _context.TarifChambre.Include(n => n.NumChambreNavigation).Where(n => n.NumChambreNavigation.NbLits >= NbPersonnes);
                     //je deduis dela liste total des chambres les chambres occupées et j'inclus le prix
                     DateTime date = new DateTime(DateTime.Now.Year, 01, 01);
                     chambreVM.TarifChambre = await chambreTotal
@@ -147,7 +147,7 @@ namespace GrandHotel_WebApplication.Controllers
                 }
             }
 
-            if(chambreVM.TarifChambre.Count == 0)
+            if (chambreVM.TarifChambre.Count == 0)
             {
                 //j'affiche la vue Indisponible quand il n'y a aucune chambre de disponible
                 return View("Indisponible");
@@ -156,14 +156,14 @@ namespace GrandHotel_WebApplication.Controllers
             {
                 return View(chambreVM);
             }
-          
+
         }
 
-       
+
         [HttpGet]
         public async Task<IActionResult> Creates()
         {
-            
+
             //je recupere l'email l'email de l'utilisateur
             var user = await _userManager.GetUserAsync(User);
             var email = user.Email;
@@ -175,18 +175,18 @@ namespace GrandHotel_WebApplication.Controllers
             var duree = reservations.NbNuit;
             //je fais une boucle pour enregistrer la reservion sur la durée du sejour
             for (int i = 0; i < duree; i++)
-            {                
-                reservations.Jour=reservations.Jour.AddDays(i);
+            {
+                reservations.Jour = reservations.Jour.AddDays(i);
                 _context.Add(reservations);
                 //j'enregistre la reservation 
                 await _context.SaveChangesAsync();
             }
             //je reinitialise la date d'arrivée pour pouvoir afficher la bonne date dans ma vue
-            reservations.Jour = reservations.Jour.AddDays(-(duree-1));
+            reservations.Jour = reservations.Jour.AddDays(-(duree - 1));
             //je vide ma session pour q'un client puisse accéder
             HttpContext.Session.Remove(SessionKeyReservationVM);
             return View(reservations);
-            
+
         }
 
         public async Task<IActionResult> VerifConnexion()
@@ -194,25 +194,24 @@ namespace GrandHotel_WebApplication.Controllers
             //on verifie que le client est connecté
             var user = await _userManager.GetUserAsync(User);
             //si le client n'est connecté on le redirige vers la page ou il peut créer son compte ou se connecter
-            if (user==null)
+            if (user == null)
             {
                 return RedirectToAction("Login", "Account");
             }
+
+            ////si l'id du client existe déjà en base de donnée et cela veut dire qu'il est dejà client et on le redirige vers l'action qui crée la réservation
+            var idClientExist = _context.Client.Where(c => c.Email == user.Email).FirstOrDefaultAsync();
+            if (idClientExist != null)
+            {
+                return RedirectToAction("Creates");
+            }
+            //si l'id du client n'existe pas on lui permet de créer son compte
             else
             {
-                //si l'id du client existe déjà en base de donnée et cela veut dire qu'il est dejà client et on le redirige vers l'action qui crée la réservation
-                var idClientExist = _context.Client.Where(c => c.Email == user.Email).Select(i=>i.Id).FirstOrDefaultAsync();
-                if (idClientExist != null)
-                {
-                    return RedirectToAction("Creates");
-                }
-                //si l'id du client n'existe pas on lui permet de créer son compte
-                else
-                {
-                    return RedirectToAction("Create", "Client");
-                }
+                return RedirectToAction("Create", "Client");
             }
+
         }
     }
 }
-   
+

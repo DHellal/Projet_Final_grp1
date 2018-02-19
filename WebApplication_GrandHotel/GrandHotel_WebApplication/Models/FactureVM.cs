@@ -11,8 +11,6 @@ namespace GrandHotel_WebApplication.Models
 
         public List<Facture> Factures { get; set; }
 
-        //public PageItems<Facture> FacturesPages { get; set; }
-
-        public string AnneeEnCour { get; set; }
+        public string AnneeSelected { get; set; }
     }
 }

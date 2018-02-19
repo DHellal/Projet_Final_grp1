@@ -51,7 +51,7 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: api/ClientsAPI/5
-        [HttpGet("FiltreNom")]
+        [HttpGet("FiltreNom/{Nom}")]
         public async Task<IActionResult> GetClientNom([FromRoute] string Nom)
         {
             if (Nom.Length <3)

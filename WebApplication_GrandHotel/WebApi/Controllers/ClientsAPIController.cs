@@ -129,7 +129,7 @@ namespace GrandHotel_WebApplication.Controllers
             return Ok(idClient);
             }
             object mail = "Email deja prise...";
-            return BadRequest( error: mail);
+            return BadRequest();
 
         }
 

@@ -6,8 +6,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GrandHotel_WebApplication\GrandHotel_WebApplication.csproj" />
-    <ProjectReference Include="..\WebApi\WebApi.csproj" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WebAPI_GrandHotel\WebAPI_GrandHotel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore\2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Hosting.Abstractions">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.hosting.abstractions\2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Hosting.Abstractions.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

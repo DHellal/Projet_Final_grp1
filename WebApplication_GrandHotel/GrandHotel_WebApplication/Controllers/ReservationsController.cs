@@ -81,7 +81,7 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
 
-        [HttpPost]
+       
         public async Task<IActionResult> VerifDisponibilite(DateTime Jour, int NbNuit, byte NbPersonnes, byte HeureArrivee, bool? Travail)
         {
             //je stocke les informations de mes parametres dans des ViewBag pour pouvoir les envoyer dans les paramètre de mon action Details
@@ -188,7 +188,31 @@ namespace GrandHotel_WebApplication.Controllers
             return View(reservations);
             
         }
-    
+
+        public async Task<IActionResult> VerifConnexion()
+        {
+            //on verifie que le client est connecté
+            var user = await _userManager.GetUserAsync(User);
+            //si le client n'est connecté on le redirige vers la page ou il peut créer son compte ou se connecter
+            if (user==null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                //si l'id du client existe déjà en base de donnée et cela veut dire qu'il est dejà client et on le redirige vers l'action qui crée la réservation
+                var idClientExist = _context.Client.Where(c => c.Email == user.Email).Select(i=>i.Id).FirstOrDefaultAsync();
+                if (idClientExist != null)
+                {
+                    return RedirectToAction("Creates");
+                }
+                //si l'id du client n'existe pas on lui permet de créer son compte
+                else
+                {
+                    return RedirectToAction("Create", "Client");
+                }
+            }
+        }
     }
 }
    

@@ -67,10 +67,9 @@
                     <input asp-for="ProPort" class="form-control" />
                     <span asp-validation-for="ProPort" class="text-danger"></span>
                 </div>
-
-
                 <div class="form-inline form-group col-md-3 col-sm-3">
                     <input type="submit" value="Enregistrer" class="btn btn-default" />
+                    <button asp-controller="Home" asp-action="Index" class="btn btn-default">Annuler</button>
                 </div>
             </form>
         </div>

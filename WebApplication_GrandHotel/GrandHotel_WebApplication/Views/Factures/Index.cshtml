@@ -4,16 +4,14 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Les factures pour client N°:  </h2>
+<h2>Les factures pour client N°:  @ViewBag.Id</h2>
 
 
 <form asp-controller="Factures" asp-action="Index" method="get">
     <p>
         <span>Année</span>
 
-
-        <select asp-for="AnneeEnCour" asp-items="@(new SelectList(ViewBag.Years))"></select>
-
+        <select asp-for="AnneeSelected" asp-items="@(new SelectList(ViewBag.Years))"></select>
 
         <input type="submit" value="Filtrer" />
     </p>
@@ -21,6 +19,7 @@
 
 
 <table class="table">
+    s
     <thead>
         <tr>
             <th>

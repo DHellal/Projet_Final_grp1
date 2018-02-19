@@ -4,7 +4,7 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Details de la facture N° </h2>
+<h2>Details de la facture N° @ViewBag.NumeroFacture</h2>
 
 <table class="table">
     <thead>
@@ -23,6 +23,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.LigneFacture.First().TauxReduction)
+            </th>
+            <th>
+                Prix
             </th>
             <th></th>
         </tr>
@@ -46,55 +49,22 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.TauxReduction)
                 </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.NumLigne">Edit</a> |
+                @{
+                    int quantite = item.Quantite;
+                    decimal montantHT = item.MontantHt;
+                    decimal tauxTva = item.TauxTva;
+                    decimal tauxReduction = item.TauxReduction;
+                    decimal prix = montantHT * quantite * (1 + tauxTva) * (1 - tauxReduction);
+                    string prixCurrency = string.Format("{0:C}", prix);
 
-                    <a asp-action="Delete" asp-route-id="@item.NumLigne">Delete</a>
+                }
+                <td>
+                    @prixCurrency
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
-
-
-@*<div>
-        <h4>FactureDDétails</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.LigneFacture.First().NumLigne)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.DateFacture)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.LigneFacture.First().Quantite)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.DatePaiement)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.LigneFacture.First().MontantHt)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.CodeModePaiementNavigation.Code)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.LigneFacture.First().TauxTva)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.IdClientNavigation.Civilite)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.LigneFacture.First().TauxReduction)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.IdClientNavigation.Civilite)
-            </dd>
-        </dl>
-    </div>
-    <div>
-        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-        <a asp-action="Index">Back to List</a>
-    </div>*@
+<div>
+    <a asp-route-AnneeSelected="@ViewBag.AnneeChoisi" asp-action="Afficher">Back to List</a>
+</div>

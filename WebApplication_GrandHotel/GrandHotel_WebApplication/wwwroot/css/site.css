@@ -1,7 +1,7 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
-    /*background-color: whitesmoke;*/
+    background-color: aliceblue;
 }
 
 /* Wrapping element */
@@ -24,7 +24,7 @@
 
 /* QR code generator */
 #qrCode {
-    margin: 15px;
+    /*margin: 15px;*/
 }
 
 /* Hide/rearrange for smaller screens */
@@ -42,4 +42,7 @@ h2 {
 }
 #formu {
     background-image: url('../../../../images/img.jpg');
+}
+#detail {
+    background-image: url('../images/img1.jpg');
 }

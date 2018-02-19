@@ -7,67 +7,68 @@
 <h4 class="text-center">(cliquez sur détail pour reserver la chambre)</h4>
 
 <br /><br />
-<div class="container-fluid">
-    <table class="table">
-        <thead class="table-striped">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.TarifChambre.First().NumChambre)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.TarifChambre.First().NumChambreNavigation.Etage)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.TarifChambre.First().NumChambreNavigation.NbLits)
-                </th>
+      <div class="container-fluid">
+          <table class="table">
+              <thead class="table-striped">
+                  <tr>
+                      <th>
+                          @Html.DisplayNameFor(model => model.TarifChambre.First().NumChambre)
+                      </th>
+                      <th>
+                          @Html.DisplayNameFor(model => model.TarifChambre.First().NumChambreNavigation.Etage)
+                      </th>
+                      <th>
+                          @Html.DisplayNameFor(model => model.TarifChambre.First().NumChambreNavigation.NbLits)
+                      </th>
 
 
-                <th>
-                    @Html.DisplayNameFor(model => model.TarifChambre.First().CodeTarifNavigation.Prix)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.TarifChambre.First().TarifTotal)
-                </th>
+                      <th>
+                          @Html.DisplayNameFor(model => model.TarifChambre.First().CodeTarifNavigation.Prix)
+                      </th>
+                      <th>
+                          @Html.DisplayNameFor(model => model.TarifChambre.First().TarifTotal)
+                      </th>
 
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.TarifChambre)
+                      <th></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  @foreach (var item in Model.TarifChambre)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NumChambreNavigation.Numero)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NumChambreNavigation.Etage)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NumChambreNavigation.NbLits)
-                    </td>
+              <tr>
+                  <td>
+                      @Html.DisplayFor(modelItem => item.NumChambreNavigation.Numero)
+                  </td>
+                  <td>
+                      @Html.DisplayFor(modelItem => item.NumChambreNavigation.Etage)
+                  </td>
+                  <td>
+                      @Html.DisplayFor(modelItem => item.NumChambreNavigation.NbLits)
+                  </td>
 
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CodeTarifNavigation.Prix)
-                    </td>
-                    <td>
-                        @{
-                            decimal nbnuit = ViewBag.Nbnuit;
-                            decimal prix = item.CodeTarifNavigation.Prix;
-                            prix = prix * nbnuit;
-                        }
-                        @prix Ht
-                    </td>
-                    <td>
+                  <td>
+                      @Html.DisplayFor(modelItem => item.CodeTarifNavigation.Prix)
+                  </td>
+                  <td>
+                      @{
+                    decimal nbnuit = ViewBag.Nbnuit;
+                    decimal prix = item.CodeTarifNavigation.Prix;
+                    prix = prix * nbnuit;
+                      }
+                      @prix Ht
+                  </td>
+                  <td>
 
-                        <a asp-action="Details" asp-route-id="@item.NumChambreNavigation.Numero" asp-route-prix="@prix.ToString().Replace(",", ".")"
-                           asp-route-nbnuit="@ViewBag.Nbnuit" asp-route-Nbpersonne="@ViewBag.NbPersonnes"
-                           asp-route-jour="@(new DateTime(ViewBag.Annee, ViewBag.Mois, ViewBag.Jour).ToString("yyyy-MM-dd"))" asp-route-heure="@ViewBag.HeureArrivee"
-                           asp-route-travail="@ViewBag.Travail"><span class="glyphicon glyphicon-list-alt" ></span>Détails</a>
-                    </td>
-                </tr>
-            }
+                      <a asp-action="Details" asp-route-id="@item.NumChambreNavigation.Numero" asp-route-prix="@prix.ToString().Replace(",", ".")"
+                         asp-route-nbnuit="@ViewBag.Nbnuit" asp-route-Nbpersonne="@ViewBag.NbPersonnes"
+                         asp-route-jour="@(new DateTime(ViewBag.Annee, ViewBag.Mois, ViewBag.Jour).ToString("yyyy-MM-dd"))" asp-route-heure="@ViewBag.HeureArrivee"
+                         asp-route-travail="@ViewBag.Travail"><span class="glyphicon glyphicon-list-alt"></span>Détails</a>
+                  </td>
+              </tr>
+    }
 
-        </tbody>
-    </table>
-</div>
+              </tbody>
+          </table>
+          <a asp-action="Index">Retour</a>
+      </div>
 <br /><br /><br /><br /><br />

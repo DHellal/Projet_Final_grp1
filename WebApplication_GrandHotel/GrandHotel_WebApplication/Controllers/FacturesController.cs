@@ -51,7 +51,7 @@ namespace GrandHotel_WebApplication.Controllers
             int clientId = 2;  //pour tester
                                // var clientId = await _context.Client.Where(e => e.Email == email).Select(i => i.Id).SingleOrDefaultAsync();
             ViewBag.Id = clientId;
-            ViewBag.Annee= AnneeSelected;
+            ViewBag.Annee = AnneeSelected;
 
             if (AnneeSelected == null)
             {
@@ -90,7 +90,7 @@ namespace GrandHotel_WebApplication.Controllers
 
 
         // GET: Factures/Details/5
-        public IActionResult Details(int? id,string annee)
+        public IActionResult Details(int? id, string annee)
         {
 
             ViewBag.AnneeChoisi = annee;

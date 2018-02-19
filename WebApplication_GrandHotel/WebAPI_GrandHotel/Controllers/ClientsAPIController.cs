@@ -38,7 +38,7 @@ namespace WebAPI_GrandHotel.Controllers
             {
                 return BadRequest(ModelState);
             }
-            
+
 
             //Client cli = await _context.Client.Where(m => m.Id == id).Include(a=> a.Adresse).Include(t=> t.Telephone).SingleOrDefaultAsync();
 
@@ -48,20 +48,31 @@ namespace WebAPI_GrandHotel.Controllers
                         Include(c => c.Adresse).
                         Where(m => m.Id == id).
                         Select(a => new Adresse
-                        { Rue = a.Adresse.Rue,
+                        {
+                            Rue = a.Adresse.Rue,
                             Complement = a.Adresse.Complement,
                             CodePostal = a.Adresse.CodePostal,
-                            Ville=a.Adresse.Ville
+                            Ville = a.Adresse.Ville
                         }).SingleOrDefaultAsync();
 
             cli.Adresse = addr;
 
-            //Telephone tele= await _context.Client.Include(c => c.Telephone).Where(m => m.Id == id).
-            //                    Select(t => new Telephone
-            //                    {
-            //                        Numero = t.Telephone.Numero,
-                                    
-            //                    }).SingleOrDefaultAsync();
+            List<Telephone> teles = new List<Telephone>();
+            int nombreTele = _context.Client.Include(c => c.Telephone).Where(m => m.Id == id).Select(t => t.Telephone).Count();
+
+            for (int i = 0; i < nombreTele; i++)
+            {
+                Telephone tele = await _context.Client.Include(c => c.Telephone).Where(m => m.Id == id).
+                                Select(t => new Telephone
+                                {
+                                    Numero = t.Telephone[i].Numero,
+                                    CodeType = t.Telephone[i].CodeType,
+                                    Pro = t.Telephone[i].Pro
+                                }).SingleOrDefaultAsync();
+                teles.Add(tele);
+            }
+
+            cli.Telephone = teles;
 
             if (cli == null)
             {
@@ -81,7 +92,7 @@ namespace WebAPI_GrandHotel.Controllers
                 return BadRequest();
             }
 
-            List<Client> clients = await _context.Client.Where(m => m.Nom.Contains(Nom)).ToListAsync(); 
+            List<Client> clients = await _context.Client.Where(m => m.Nom.Contains(Nom)).ToListAsync();
 
             if (clients == null)
             {

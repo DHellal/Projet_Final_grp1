@@ -116,13 +116,7 @@ namespace GrandHotel_WebApplication.Controllers
             return View(client);
         }
         #endregion
-        #region Fonctionnalités à ajouter: en effet pour l'instant n'import quel utilisateur peut acceder au menu gestion. On ajoutera ces fonctionnalités si l'accès est limité aux gestionnaire par mesure de sécurité. 
-        // GET: Clients/Create
-        public IActionResult Create()
-        {
-            ModelState.Clear();
-            return View();
-        }
+       
 
         // POST: Clients/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -254,6 +248,14 @@ namespace GrandHotel_WebApplication.Controllers
             return View(clientVM);
         }
 
+        #region Fonctionnalités à ajouter: en effet pour l'instant n'import quel utilisateur peut acceder au menu gestion. On ajoutera ces fonctionnalités si l'accès est limité aux gestionnaire par mesure de sécurité. 
+
+        // GET: Clients/Create
+        public IActionResult Create()
+        {
+            ModelState.Clear();
+            return View();
+        }
 
         // GET: Clients/Edit/5
         public async Task<IActionResult> Edit(int? id, string status)

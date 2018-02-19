@@ -28,7 +28,7 @@ namespace GrandHotel_WebApplication.Controllers
             _userManager = userManager;
             _context = context;
         }
-
+        #region Auteur: Lydia Réalisation: du 14 au 19 février 2018
         // GET: Clients
         public async Task<IActionResult> Index(char lettre = 'A')
         {
@@ -93,7 +93,7 @@ namespace GrandHotel_WebApplication.Controllers
             //    .OrderBy(a => a.Id).ToListAsync();
             return View(clients);
         }
-
+       
         // GET: Clients/Details/5
         public async Task<IActionResult> Details(int? id, string status)
         {
@@ -112,7 +112,8 @@ namespace GrandHotel_WebApplication.Controllers
             ViewBag.id = id;
             return View(client);
         }
-
+        #endregion
+        #region Fonctionnalités à ajouter: en effet pour l'instant n'import quel utilisateur peut acceder au menu gestion. On ajoutera ces fonctionnalités si l'accès est limité aux gestionnaire par mesure de sécurité. 
         // GET: Clients/Create
         public IActionResult Create()
         {
@@ -338,5 +339,6 @@ namespace GrandHotel_WebApplication.Controllers
         {
             return _context.Client.Any(e => e.Id == id);
         }
+        #endregion
     }
 }

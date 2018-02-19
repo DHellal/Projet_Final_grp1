@@ -1,4 +1,7 @@
-﻿@model GrandHotel_WebApplication.Models.Client
+﻿@* Auteur: Lydia  *@
+@* Réalisation: du 14 au 19 février 2018 *@
+
+@model GrandHotel_WebApplication.Models.Client
 
 @{
     ViewData["Title"] = "Details";
@@ -43,6 +46,8 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Editer</a> |
+    @*<a asp-action="Edit" asp-route-id="@Model.Id">Editer</a> |*@
+
+    @* retour à la page précédente *@
     <a asp-action="Index" asp-route-Lettre="@ViewBag.DetailStatus">Retour</a>
 </div>

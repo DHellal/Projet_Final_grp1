@@ -88,11 +88,11 @@ namespace WebAPI_GrandHotel.Controllers
 
                 int id = await _context.Client.OrderBy(c => c.Id).Select(c => c.Id).LastOrDefaultAsync();
 
-                string idClient = "Client créé à l'id" + id.ToString();
+                string idClient = id.ToString();
 
                 return Ok(idClient);
             }
-            object mail = "Email deja prise...";
+            string mail = "Mail";
             return BadRequest(mail);
 
         }

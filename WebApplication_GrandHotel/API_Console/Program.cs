@@ -167,7 +167,7 @@ namespace API_Console
                 "api/ClientsAPI", cli);
 
             // retourne l'uri de la ressource créée
-            return response.
+            return response.StatusCode.ToString();
         }
         //Get Client selon id
         static async Task<Client> GetClientAsync(string id)

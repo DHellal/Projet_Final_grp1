@@ -199,7 +199,7 @@ namespace API_Console
         static async Task<List<Client>> GetClientNomAsync(string Nom)
         {
             List<Client> cli = null;
-            HttpResponseMessage response = await client.GetAsync("api/ClientsAPI/FiltreNom/" + Nom);
+            HttpResponseMessage response = await client.GetAsync("api/ClientsAPI/FiltreNom/" + Nom.ToUpper());
             if (response.IsSuccessStatusCode)
             {
                 cli = await response.Content.ReadAsAsync<List<Client>>();

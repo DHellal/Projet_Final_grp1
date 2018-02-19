@@ -26,7 +26,7 @@ namespace WebAPI_GrandHotel.Controllers
         [HttpGet]
         public IEnumerable<Client> GetClient()
         {
-            return _context.Client.Include(c=>c.Adresse).Include(c=>c.Telephone);
+            return _context.Client;     //.Include(c=>c.Adresse).Include(c=>c.Telephone);
         }
 
         // GET: api/ClientsAPI/5
@@ -38,15 +38,20 @@ namespace WebAPI_GrandHotel.Controllers
             {
                 return BadRequest(ModelState);
             }
+            
 
-            var client = await _context.Client.Where(m => m.Id == id).Include(c => c.Adresse).Include(c => c.Telephone).SingleOrDefaultAsync();
+            //Client cli = await _context.Client.Where(m => m.Id == id).Include(a=> a.Adresse).Include(t=> t.Telephone).SingleOrDefaultAsync();
 
-            if (client == null)
+            Client cli = await _context.Client.Where(m => m.Id == id).SingleOrDefaultAsync();
+
+
+
+            if (cli == null)
             {
                 return NotFound();
             }
 
-            return Ok(client);
+            return Ok(cli);
         }
 
         // GET: api/ClientsAPI/5
@@ -59,7 +64,7 @@ namespace WebAPI_GrandHotel.Controllers
                 return BadRequest();
             }
 
-            List<Client> clients = await _context.Client.Where(m => m.Nom.Contains(Nom)).Include(c => c.Adresse).Include(c => c.Telephone).ToListAsync();
+            List<Client> clients = await _context.Client.Where(m => m.Nom.Contains(Nom)).ToListAsync(); 
 
             if (clients == null)
             {

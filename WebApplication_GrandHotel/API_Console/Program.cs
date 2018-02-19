@@ -33,7 +33,7 @@ namespace API_Console
             bool encore = true;
             do
             {
-                Console.WriteLine("Veuillez choisir l'action à effectuer :");
+                Console.WriteLine("\nVeuillez choisir l'action à effectuer :");
                 Console.WriteLine("Tapez 1 pour créer un client");
                 Console.WriteLine("Tapez 2 pour chercher un client selon l'ID");
                 Console.WriteLine("Tapez 3 pour chercher un client selon les lettres de son nom");
@@ -54,7 +54,7 @@ namespace API_Console
                             Civilite = "M",
                             Nom = "Durant",
                             Prenom = "Eric",
-                            Email = "azersuyty@azttygfhhferty",
+                            Email = "azersufdghdyty@azttygfhhferty",
                             CarteFidelite = false
                         };
 

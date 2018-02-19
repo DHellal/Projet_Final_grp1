@@ -27,7 +27,5 @@ namespace GrandHotel_WebApplication.Models
         public Client IdClientNavigation { get; set; }
         public ICollection<LigneFacture> LigneFacture { get; set; }
 
-        [NotMapped]
-        public string AnneeEnCour { get; set; }
     }
 }

@@ -1,15 +1,20 @@
 ﻿@model GrandHotel_WebApplication.Models.Reservation
 
 
-@{ 
+@{
     var date = DateTime.Today.ToString("yyyy-MM-dd");
-   
+
 }
+<style>
+    body {
+        background-image: url('../../wwwroot/images/img.jpg');
+    }
+</style>
 
 <br /><br />
 <h2><strong>Faites votre Reservation</strong> </h2>
 <hr />
-<div class="row">
+<div class="row" id="row">
     <div class="col-md-4">
         <form asp-action="VerifDisponibilite">
 
@@ -35,7 +40,7 @@
 
             <div class="form-group">
                 <label asp-for="HeureArrivee" class="control-label"></label>
-                <input asp-for="HeureArrivee" class="form-control" type="number" min="6" max="22"  />
+                <input asp-for="HeureArrivee" class="form-control" type="number" min="6" max="22" />
                 <span asp-validation-for="HeureArrivee" class="text-danger"></span>
             </div>
 

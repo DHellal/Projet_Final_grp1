@@ -4,15 +4,15 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Les factures pour client N°:  </h2>
+<h2>Les factures pour client N°:  @ViewBag.Id </h2>
 
 
-<form asp-controller="Factures" asp-action="Index" method="get">
+<form asp-controller="Factures" asp-action="Afficher" method="get">
     <p>
         <span>Année</span>
 
 
-        <select asp-for="AnneeEnCour" asp-items="@(new SelectList(ViewBag.Years))"></select>
+        <select asp-for="AnneeSelected" asp-items="@(new SelectList(ViewBag.Years))"></select>
 
 
         <input type="submit" value="Filtrer" />
@@ -35,29 +35,49 @@
             <th>
                 @Html.DisplayNameFor(model => model.Factures[0].CodeModePaiement)
             </th>
-            <th></th>
+            <th>
+                Montant Total
+            </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.Factures)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateFacture)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DatePaiement)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CodeModePaiement)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateFacture)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DatePaiement)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CodeModePaiement)
+                </td>
+
+                @{
+                    decimal prix = 0M;
+                    foreach (var ligne in item.LigneFacture)
+                    {
+                        int quantite = ligne.Quantite;
+                        decimal montantHT = ligne.MontantHt;
+                        decimal tauxTva = ligne.TauxTva;
+                        decimal tauxReduction = ligne.TauxReduction;
+                        prix += montantHT * quantite * (1 + tauxTva) * (1 - tauxReduction);
+
+                    }
+                    string prixCurrency = string.Format("{0:C}", prix);
+
+                }
+                <td>
+                    @prixCurrency
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" asp-route-annee="@ViewBag.Annee">Details</a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>

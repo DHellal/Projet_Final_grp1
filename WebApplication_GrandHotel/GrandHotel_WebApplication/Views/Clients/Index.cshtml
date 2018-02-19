@@ -12,7 +12,8 @@
         {<a asp-action="Index" asp-route-lettre=@Char.ConvertFromUtf32(i)> @Char.ConvertFromUtf32(i)</a>}
     }
 </div>
-<br/>
+
+<br />
 <table class="table">
     <thead>
         <tr>
@@ -43,42 +44,43 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Civilite)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nom)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Prenom)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NbReservation)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NbReservationEnCours)
-            </td>
-            <td>
-                @*<a asp-action="Edit" asp-route-id="@item.Id" asp-route-status="@ViewBag.stat">Editer</a> |*@
-                <a asp-action="Details" asp-route-id="@item.Id" asp-route-status="@ViewBag.stat">
-                    <span class="glyphicon glyphicon-list-alt"></span> Details</a> 
-                @*<a asp-action="Delete" asp-route-id="@item.Id" asp-route-status="@ViewBag.stat">Supprimer</a>*@
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Civilite)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nom)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Prenom)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NbReservation)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NbReservationEnCours)
+                </td>
+                <td>
+                    @*<a asp-action="Edit" asp-route-id="@item.Id" asp-route-status="@ViewBag.stat">Editer</a> |*@
+                    <a asp-action="Details" asp-route-id="@item.Id" asp-route-status="@ViewBag.stat">
+                        <span class="glyphicon glyphicon-list-alt"></span> Details
+                    </a>
+                    @*<a asp-action="Delete" asp-route-id="@item.Id" asp-route-status="@ViewBag.stat">Supprimer</a>*@
+                </td>
+            </tr>
         }
     </tbody>
 </table>
 @*<p>
-    <a asp-action="Create">Ajouter un nouveau client</a>
-</p>*@
+        <a asp-action="Create">Ajouter un nouveau client</a>
+    </p>*@
 
 <div>
-    <a asp-controller="Home"  asp-action="Index">Retour</a>
+    <a asp-controller="Home" asp-action="Index">Retour</a>
 </div>

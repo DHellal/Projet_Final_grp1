@@ -7,10 +7,17 @@
     ViewData["Title"] = "Details";
 }
 
-@*<h2>Details</h2>*@
-<h2 style="text-align:center">Détails de la chambre @ViewBag.id</h2>
-<div>
-    @*<h4>Chambre</h4>*@
+<style>
+    dt {
+        margin-left: 300px;
+        margin-right: 20px;
+    }
+</style>
+
+
+<h2 style="text-align:center">Détails de la chambre N° @ViewBag.id</h2>
+<div class="container-fluid ">
+   
     <hr />
     <dl class="dl-horizontal">
         <dt>

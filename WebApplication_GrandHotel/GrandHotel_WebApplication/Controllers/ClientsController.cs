@@ -245,7 +245,6 @@ namespace GrandHotel_WebApplication.Controllers
                     return RedirectToAction("Creates", "Reservations");
                 else
                 {
-                    clientVM.StatusMessage = "Bienvenue";
                     return RedirectToAction("Index", "Manage");
                 }               
             }

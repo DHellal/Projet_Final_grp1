@@ -4,8 +4,8 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Les factures pour client N°  @ViewBag.Id </h2>
-
+<h2>Les factures pour client N°@ViewBag.Id  @ViewBag.Nom</h2>
+<h2></h2>
 
 <form asp-controller="Factures" asp-action="Afficher" method="get">
     <p>
@@ -23,7 +23,9 @@
     if (Model.Factures.Count == 0)
     {
         <div>
-            Vous n'avez pas de facture pour l'année @DateTime.Today.Year
+            <h3>
+                Vous n'avez pas de facture pour l'année @DateTime.Today.Year
+            </h3>
         </div>
 
 
@@ -57,8 +59,6 @@
         {
 
             <tr>
-
-
                 <td>
                     @Html.DisplayFor(modelItem => item.Id)
                 </td>

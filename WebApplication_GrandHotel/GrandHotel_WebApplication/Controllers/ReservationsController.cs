@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Http;
 namespace GrandHotel_WebApplication.Controllers
 {
     // Travail fait par ARMELLE
+    //Yiqing a travaillé avec moi pour faire le passage en paramètre des valeurs dans le contrôleurs détails avec les ViewBag.
 
     public class ReservationsController : Controller
     {

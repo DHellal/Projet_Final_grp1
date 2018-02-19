@@ -44,7 +44,24 @@ namespace WebAPI_GrandHotel.Controllers
 
             Client cli = await _context.Client.Where(m => m.Id == id).SingleOrDefaultAsync();
 
+            Adresse addr = await _context.Client.
+                        Include(c => c.Adresse).
+                        Where(m => m.Id == id).
+                        Select(a => new Adresse
+                        { Rue = a.Adresse.Rue,
+                            Complement = a.Adresse.Complement,
+                            CodePostal = a.Adresse.CodePostal,
+                            Ville=a.Adresse.Ville
+                        }).SingleOrDefaultAsync();
 
+            cli.Adresse = addr;
+
+            //Telephone tele= await _context.Client.Include(c => c.Telephone).Where(m => m.Id == id).
+            //                    Select(t => new Telephone
+            //                    {
+            //                        Numero = t.Telephone.Numero,
+                                    
+            //                    }).SingleOrDefaultAsync();
 
             if (cli == null)
             {

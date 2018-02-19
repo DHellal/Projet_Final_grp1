@@ -98,7 +98,7 @@ namespace GrandHotel_WebApplication.Controllers
         }
        
         // GET: Clients/Details/5
-        public async Task<IActionResult> Details(int? id, string status)
+        public async Task<IActionResult> Details(int? id, string status, string nom, string prenom, int nbReserv, int nbReservEnCours)
         {
             ViewBag.DetailStatus = status;
             if (id == null)
@@ -113,6 +113,10 @@ namespace GrandHotel_WebApplication.Controllers
                 return NotFound();
             }
             ViewBag.id = id;
+            ViewBag.nom = nom;
+            ViewBag.prenom = prenom;
+            ViewBag.nbReserv = nbReserv;
+            ViewBag.nbReservEnCours = nbReservEnCours;
             return View(client);
         }
         #endregion

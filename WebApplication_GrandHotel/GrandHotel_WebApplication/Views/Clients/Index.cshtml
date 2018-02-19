@@ -68,7 +68,9 @@
                 </td>
                 <td>
                     @*<a asp-action="Edit" asp-route-id="@item.Id" asp-route-status="@ViewBag.stat">Editer</a> |*@
-                    <a asp-action="Details" asp-route-id="@item.Id" asp-route-status="@ViewBag.stat">
+                    <a asp-action="Details" asp-route-id="@item.Id" asp-route-status="@ViewBag.stat" 
+                       asp-route-nom="@item.Nom" asp-route-prenom="@item.Prenom"
+                       asp-route-nbReserv="@item.NbReservation" asp-route-nbReservEnCours="@item.NbReservationEnCours">
                         <span class="glyphicon glyphicon-list-alt"></span> Details
                     </a>
                     @*<a asp-action="Delete" asp-route-id="@item.Id" asp-route-status="@ViewBag.stat">Supprimer</a>*@

@@ -33,6 +33,7 @@ namespace GrandHotel_WebApplication.Controllers
         public async Task<IActionResult> Index(char lettre = 'A')
         {
             var clients = new List<Client>();
+
             /*Requete sql qui recupère la liste des client et leurs nombres totaux de reservations, selon la première lettre
              de leurs noms*/
             string req = @"select C.Id, C.Civilite, C.Nom, C.Prenom, C.Email, count(R.IdClient) NbReservation
@@ -70,6 +71,7 @@ namespace GrandHotel_WebApplication.Controllers
                            from Reservation R
                            inner join Client C on C.Id = R.IdClient
                            where R.Jour>=GETDATE() And C.Id=@Id";
+
                         cmd = new SqlCommand(req, conn);
                         cmd.Parameters.Add(new SqlParameter
                         {
@@ -84,13 +86,14 @@ namespace GrandHotel_WebApplication.Controllers
                 }
             }
             ViewBag.stat = lettre;
+
             /*Requete Link to entity (EF) qui recupère la liste des client et leurs nombres totaux de reservations,
-             selon la première lettre
-           de leurs noms*/
+             selon la première lettre de leurs noms*/
             //var client = await _context.Client
             //    .Where(a => a.Nom.StartsWith(lettre))
             //    .Include(c => c.Reservation)
             //    .OrderBy(a => a.Id).ToListAsync();
+
             return View(clients);
         }
        

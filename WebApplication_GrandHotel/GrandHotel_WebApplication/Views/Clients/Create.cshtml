@@ -8,79 +8,96 @@
 <hr />
 
 <h3 class="text-danger">@Html.DisplayFor(Model => Model.StatusMessage)</h3>
-<div class="container-fluid">
+<div class="container-fluid row " id="detail">
     <h2>@ViewData["Title"]</h2>
     <br /><br />
-    <div class="row">
-        <div class="col-md-12 col-sm-12">
-            <form asp-controller="Clients" asp-action="Create" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="row form-group col-md-2 col-sm-2">
-                    <label asp-for="Civilite" class="control-label"></label>
-                    <select asp-for="Civilite" class="form-control">
-                        <option value="M">M</option>
-                        <option value="Mme">Mme</option>
-                        <option value="Mlle">Mlle</option>
-                    </select>
-                    <span asp-validation-for="Civilite" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-4 col-sm-4">
-                    <label asp-for="Nom" class="control-label"></label>
-                    <input asp-for="Nom" class="form-control" />
-                    <span asp-validation-for="Nom" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-3 col-sm-3">
-                    <label asp-for="Prenom" class="control-label"></label>
-                    <input asp-for="Prenom" class="form-control" />
-                    <span asp-validation-for="Prenom" class="text-danger"></span>
-                </div>
-                <div class="row form-group form-inline col-md-10 col-sm-10">
-                    <label asp-for="AdresseRue" class="control-label"></label>
-                    <input asp-for="AdresseRue" class="form-control" />
+    <div class="col-lg-offset-4 col-md-6">
 
-                    <label asp-for="AdresseCodePostal" class="control-label"></label>
-                    <input asp-for="AdresseCodePostal" class="form-control" />
-                    <span asp-validation-for="AdresseCodePostal" class="text-danger"></span>
+        <form asp-controller="Clients" asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Civilite" class="control-label"></label>
+                <select asp-for="Civilite" class="form-control">
+                    <option value="M">M</option>
+                    <option value="Mme">Mme</option>
+                    <option value="Mlle">Mlle</option>
+                </select>
+                <span asp-validation-for="Civilite" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nom" class="control-label"></label>
+                <input asp-for="Nom" class="form-control" />
+                <span asp-validation-for="Nom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Prenom" class="control-label"></label>
+                <input asp-for="Prenom" class="form-control" />
+                <span asp-validation-for="Prenom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AdresseRue" class="control-label"></label>
+                <input asp-for="AdresseRue" class="form-control" />
 
-                    <label asp-for="AdresseVille" class="control-label"></label>
-                    <span><input asp-for="AdresseVille" class="form-control" /> </span>
+                <label asp-for="AdresseCodePostal" class="control-label"></label>
+                <input asp-for="AdresseCodePostal" class="form-control" />
+                <span asp-validation-for="AdresseCodePostal" class="text-danger"></span>
 
-                </div>
+                <label asp-for="AdresseVille" class="control-label"></label>
+                <span><input asp-for="AdresseVille" class="form-control" /> </span>
 
-                <div class=" form-inline col-md-8 col-sm-8">
-                    <label asp-for="TelephoneDom" class="control-label"></label>
-                    <input asp-for="TelephoneDom" class="form-control" />
-                    <span asp-validation-for="TelephoneDom" class="text-danger"></span>
-                </div>
-                <div class="row form-group form-inline col-md-5 col-sm-5">
-                    <label asp-for="ProDom" class="control-label"></label>
-                    <input asp-for="ProDom" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TelephoneDom" class="control-label"></label>
+                <input asp-for="TelephoneDom" class="form-control" />
+                <span asp-validation-for="TelephoneDom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label asp-for="ProDom" class="control-label"></label>
+                    </div>
+                    <div class="col-sm-1" style="float:left">
+                        <input asp-for="ProDom" class="form-control" />
+                    </div>
+
                     <span asp-validation-for="ProDom" class="text-danger"></span>
                 </div>
-                <div class=" form-inline col-md-8 col-sm-8">
-                    <label asp-for="TelephonePort" class="control-label"></label>
-                    <input asp-for="TelephonePort" class="form-control" />
-                    <span asp-validation-for="TelephonePort" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TelephonePort" class="control-label"></label>
+                <input asp-for="TelephonePort" class="form-control" />
+                <span asp-validation-for="TelephonePort" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label asp-for="ProPort" class="control-label"></label>
+                    </div>
+                    <div class="col-sm-1">
+                        <input asp-for="ProPort" class="form-control" />
+                    </div>
                 </div>
-                <div class="row form-group form-inline col-md-5 col-sm-5">
-                    <label asp-for="ProPort" class="control-label"></label>
-                    <input asp-for="ProPort" class="form-control" />
-                    <span asp-validation-for="ProPort" class="text-danger"></span>
-                </div>
-                <div class="form-inline form-group col-md-3 col-sm-3">
-                    <input type="submit" value="Enregistrer" class="btn btn-default" />
-                    <button asp-controller="Home" asp-action="Index" class="btn btn-default">Annuler</button>
-                </div>
-            </form>
+                <span asp-validation-for="ProPort" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-inline form-group col-md-3 col-sm-3">
+                <input type="submit" value="Enregistrer" class="btn btn-primary center-block" />
+            </div>
+        </form>
+        <br /><br /><br /><br />
+
+        <div class="form-inline form-group col-md-3 col-sm-3">
+            <a asp-action="Index" class="btn btn-primary center-block">Annuler</a>
         </div>
     </div>
 
     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    <br /><br /><br /><br /><br /><br />
 </div>
 
-<div>
-    <a asp-action="Index">Annuler</a>
-</div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

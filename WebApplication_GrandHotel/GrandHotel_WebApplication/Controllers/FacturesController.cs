@@ -9,10 +9,14 @@ using GrandHotel_WebApplication.Data;
 using GrandHotel_WebApplication.Models;
 using Microsoft.AspNetCore.Identity;
 using GrandHotel_WebApplication.Outil;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GrandHotel_WebApplication.Controllers
 {
-    //Auteur: Yiqing 
+    //Auteur: Yiqing
+
+    //Si le client n'est pas connecté , orienter vers la page de connection
+    [Authorize]
     public class FacturesController : Controller
     {
         private readonly GrandHotelContext _context;
@@ -24,15 +28,19 @@ namespace GrandHotel_WebApplication.Controllers
             _userManager = userManager;
         }
 
-        //Si le client n'est pas connecté , orienter vers la page de connection
-        //si connecté, orienter vers la page affichage ses factures 
+
+        //Vérifier s'il existe un client avec cet email dans BDD
+        //Si oui, afficher ses factures
+        //Sinon, réorienter vers la page Création Client
         public async Task<IActionResult> Index()
         {
-
             var user = await _userManager.GetUserAsync(User);
-            if (user == null)
+
+            var ClientExist = await _context.Client.Where(c => c.Email == user.Email).FirstOrDefaultAsync();
+
+            if (ClientExist == null)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Create", "Clients");
             }
             else
             {
@@ -41,32 +49,37 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: Factures
+        //Afficher la liste de facture selon Année Sélectionnée
         public async Task<IActionResult> Afficher(string AnneeSelected)
         {
-
             //Récuperer l'info de client connecté
             var user = await _userManager.GetUserAsync(User);
-            var email = user.Email;
+            var clientId = await _context.Client.Where(e => e.Email == user.Email).Select(i => i.Id).SingleOrDefaultAsync();
 
-            int clientId = 2;  //pour tester
-                               // var clientId = await _context.Client.Where(e => e.Email == email).Select(i => i.Id).SingleOrDefaultAsync();
+            if (clientId == 0)
+            {
+                return RedirectToAction("Create", "Clients");
+            }
+
+            var clientNom = await _context.Client.Where(e => e.Email == user.Email).Select(i => i.Nom).SingleOrDefaultAsync();
+            var clientPrenom = await _context.Client.Where(e => e.Email == user.Email).Select(i => i.Prenom).SingleOrDefaultAsync();
+
+            //Récuperer Id,Nom,Prénom de client pour l'afficher dans View 
+            ViewBag.Nom = clientPrenom + " " + clientNom;
             ViewBag.Id = clientId;
             ViewBag.Annee = AnneeSelected;
 
+            //Par défaut, afficher pour l'année 
             if (AnneeSelected == null)
             {
                 AnneeSelected = "2018";
             }
-
             int year = int.Parse(AnneeSelected);
-
-            var facturesVM = new FactureVM();
-
 
             //ajouter l'année en cours
             List<int> listYears = new List<int>();
             listYears.Add(DateTime.Today.Year);
-            //ajouter l'année de toutes les réservations
+            //ajouter l'année du factures
             int yearToAdd = 0;
             var factures = await _context.Facture.Where(f => f.IdClient == clientId).OrderByDescending(o => o.DateFacture).ToListAsync();
             foreach (var facture in factures)
@@ -79,12 +92,11 @@ namespace GrandHotel_WebApplication.Controllers
             }
             ViewBag.Years = listYears;
 
-            //liste factures selon l'année choisi
-            // factures = await _context.Facture.Where(f => f.IdClient == clientId && f.DateFacture.Year == year).OrderByDescending(o => o.DateFacture).ToListAsync();
+            //liste factures selon l'année sélectionné
+            var facturesVM = new FactureVM();
             facturesVM.Factures = await _context.Facture.Include(f => f.LigneFacture).Where(f => f.IdClient == clientId && f.DateFacture.Year == year).OrderByDescending(o => o.DateFacture).ToListAsync();
 
             return View(facturesVM);
-
         }
 
 
@@ -92,7 +104,7 @@ namespace GrandHotel_WebApplication.Controllers
         // GET: Factures/Details/5
         public IActionResult Details(int? id, string annee)
         {
-
+            //Enregistrer l'année sélectionné pour retourner à la liste trié par année
             ViewBag.AnneeChoisi = annee;
             if (id == 0)
             {
@@ -103,11 +115,10 @@ namespace GrandHotel_WebApplication.Controllers
                 ViewBag.NumeroFacture = id;
             }
 
-            // Chambre facture = new Chambre();
             var facture = _context.Facture
-                            .Include(f => f.LigneFacture)
-                            .Where(l => l.Id == id)
-                            .SingleOrDefault();
+                   .Include(f => f.LigneFacture)
+                   .Where(l => l.Id == id)
+                   .SingleOrDefault();
 
             if (facture == null)
             {
@@ -117,6 +128,7 @@ namespace GrandHotel_WebApplication.Controllers
             return View(facture);
         }
 
+        #region Méthode pas utilisé, mais peux servir à futur besoins pour l'administrateur
         // GET: Factures/Create
         public IActionResult Create()
         {
@@ -233,6 +245,7 @@ namespace GrandHotel_WebApplication.Controllers
         {
             return _context.Facture.Any(e => e.Id == id);
         }
+        #endregion
     }
 }
 

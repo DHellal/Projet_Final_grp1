@@ -8,19 +8,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using WebAPI_GrandHotel.Models;
 
-namespace GrandHotel_WebApplication.Controllers
+namespace WebAPI_GrandHotel.Controllers
 {
     [Produces("application/json")]
     [Route("api/ClientsAPI")]
     public class ClientsAPIController : Controller
     {
         private readonly GrandHotelContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ClientsAPIController(GrandHotelContext context, UserManager<ApplicationUser> userManager)
+        public ClientsAPIController(GrandHotelContext context)
         {
             _context = context;
-            _userManager = userManager;
         }
 
         // GET: api/ClientsAPI

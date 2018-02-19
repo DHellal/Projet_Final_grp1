@@ -1,16 +1,15 @@
-﻿
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
 using System.Collections.Generic;
 using WebAPI_GrandHotel.Models;
 using WebAPI_GrandHotel;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore;
 
-namespace ConsoleTestAPI
+namespace API_Console
 {
     class Program
     {
@@ -24,7 +23,7 @@ namespace ConsoleTestAPI
         static async Task RunAsync()
         {
             // Modifier le port selon les besoins
-            client.BaseAddress = new Uri("https://localhost:50144/");
+            client.BaseAddress = new Uri("http://localhost:50144/");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
@@ -124,14 +123,6 @@ namespace ConsoleTestAPI
                 }
             } while (encore);
 
-
-            //// Update the emp
-            //Console.WriteLine("Mise à jour ...");
-            //await UpdateClientAsync(cli);
-            //// Get the updated emp
-            //cli = await GetClientAsync(url.PathAndQuery);
-            //ShowClient(cli);
-
             Console.Read();
         }
 
@@ -149,20 +140,22 @@ namespace ConsoleTestAPI
         {
             if (cli.Adresse == null)
             {
-                cli.Adresse = new Adresse();
                 cli.Adresse.CodePostal = "Non resigné";
                 cli.Adresse.Rue = "";
                 cli.Adresse.Ville = "";
             }
             if (cli.Telephone == null)
             {
-                cli.Telephone = new List<Telephone>();
                 cli.Telephone.Add(new Telephone());
                 cli.Telephone[0].Numero = "Non renseigné";
             }
 
 
-            Console.WriteLine($"\n {cli.Id} {cli.Civilite} {cli.Nom} {cli.Prenom}, Email : { cli.Email} \n Adresse { cli.Adresse.Rue} {cli.Adresse.CodePostal} {cli.Adresse.Ville} \n Telephone : {cli.Telephone[0].Numero}  \n");
+            Console.WriteLine($"\n {cli.Id} {cli.Civilite} {cli.Nom} {cli.Prenom}, Email : { cli.Email} \n Adresse { cli.Adresse.Rue} {cli.Adresse.CodePostal} {cli.Adresse.Ville} \n Telephone: ");
+            foreach(var t in cli.Telephone)
+            {
+                Console.WriteLine($"{ cli.Telephone[0].Numero}  \n");
+            }
         }
 
         //Post nouveau client
@@ -171,8 +164,6 @@ namespace ConsoleTestAPI
 
             HttpResponseMessage response = await client.PostAsJsonAsync(
                 "api/ClientsAPI", cli);
-
-            //response.EnsureSuccessStatusCode();
 
             // retourne l'uri de la ressource créée
             return response.StatusCode.ToString();
@@ -217,17 +208,6 @@ namespace ConsoleTestAPI
             return cli;
         }
 
-        //static async Task<Client> UpdateEmployeeAsync(Client cli)
-        //{
-        //    HttpResponseMessage response = await client.PutAsJsonAsync(
-        //        $"api/ClientsAPI/{cli.Id}", cli);
-        //    response.EnsureSuccessStatusCode();
-
-        //    // Deserialise l'employé mis à jour depuis le corps de la réponse
-        //    cli = await response.Content.ReadAsAsync<Client>();
-        //    return cli;
-        //}
-
         static async Task<HttpStatusCode> DeleteClientAsync(string id)
         {
             HttpResponseMessage response = await client.DeleteAsync(
@@ -235,5 +215,8 @@ namespace ConsoleTestAPI
             return response.StatusCode;
         }
         #endregion
+
+
+
     }
 }

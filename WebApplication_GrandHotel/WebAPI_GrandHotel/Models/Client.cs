@@ -7,9 +7,8 @@ namespace WebAPI_GrandHotel.Models
     {
         public Client()
         {
-            Facture = new HashSet<Facture>();
-            Reservation = new HashSet<Reservation>();
-            Telephone = new HashSet<Telephone>();
+            Telephone = new List<Telephone>();
+            Adresse = new Adresse();
         }
 
         public int Id { get; set; }
@@ -23,6 +22,6 @@ namespace WebAPI_GrandHotel.Models
         public Adresse Adresse { get; set; }
         public ICollection<Facture> Facture { get; set; }
         public ICollection<Reservation> Reservation { get; set; }
-        public ICollection<Telephone> Telephone { get; set; }
+        public List<Telephone> Telephone { get; set; }
     }
 }

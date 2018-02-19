@@ -8,6 +8,7 @@
     <li class="@ManageNavPages.IndexNavClass(ViewContext)"><a asp-action="index">Profil</a></li>
     <li class="@ManageNavPages.ChangePasswordNavClass(ViewContext)"><a asp-action="ChangePassword">Mot de passe</a></li>
     <li class="@ManageNavPages.ChangeAccountNavClass(ViewContext)"><a asp-action="ChangeAccount">Modifier le compte</a></li>
+    <li class="@ManageNavPages.MesFacturesNavClass(ViewContext)"><a asp-controller="Factures" asp-action="Index">Mes factures</a></li>
     @*@if (hasExternalLogins)
     {
         <li class="@ManageNavPages.ExternalLoginsNavClass(ViewContext)"><a asp-action="ExternalLogins">External logins</a></li>

@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Http;
 namespace GrandHotel_WebApplication.Controllers
 {
     // Travail fait par ARMELLE
+    //Yiqing a travaillé avec moi pour faire le passage en paramètre des valeurs dans le contrôleurs détails avec les ViewBag.
 
     public class ReservationsController : Controller
     {
@@ -80,7 +81,7 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> VerifDisponibilite(DateTime Jour, int NbNuit, byte NbPersonnes, byte HeureArrivee, bool? Travail)
         {
             //je stocke les informations de mes parametres dans des ViewBag pour pouvoir les envoyer dans les paramètre de mon action Details
@@ -146,12 +147,16 @@ namespace GrandHotel_WebApplication.Controllers
                 }
             }
 
-            if(chambreVM==null)
+            if(chambreVM.TarifChambre.Count == 0)
             {
                 //j'affiche la vue Indisponible quand il n'y a aucune chambre de disponible
                 return View("Indisponible");
             }
-            return View(chambreVM);
+            else
+            {
+                return View(chambreVM);
+            }
+          
         }
 
        

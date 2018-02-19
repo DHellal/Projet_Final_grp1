@@ -22,12 +22,12 @@ namespace GrandHotel_WebApplication.Controllers
             return View();
         }
 
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
+        //public IActionResult Contact()
+        //{
+        //    ViewData["Message"] = "Your contact page.";
 
-            return View();
-        }
+        //    return View();
+        //}
 
         public IActionResult Error()
         {
@@ -36,7 +36,7 @@ namespace GrandHotel_WebApplication.Controllers
 
         public IActionResult ReceptionMessage()
         {
-            ViewData["Message"] = "Votre est bien envoye";
+            ViewData["Message"] = "Votre message a bien été envoyé. A Bientot!";
 
             return View();
         }

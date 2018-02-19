@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using GrandHotel_WebApplication.Data;
-using GrandHotel_WebApplication.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace GrandHotel_WebApplication.Controllers
@@ -51,7 +49,7 @@ namespace GrandHotel_WebApplication.Controllers
         }
 
         // GET: api/ClientsAPI/5
-        [HttpGet("FiltreNom")]
+        [HttpGet("FiltreNom/{Nom}")]
         public async Task<IActionResult> GetClientNom([FromRoute] string Nom)
         {
             if (Nom.Length <3)
@@ -129,7 +127,7 @@ namespace GrandHotel_WebApplication.Controllers
             return Ok(idClient);
             }
             object mail = "Email deja prise...";
-            return BadRequest();
+            return BadRequest( error: mail);
 
         }
 

@@ -9,7 +9,7 @@ using GrandHotel_WebApplication.Data;
 using GrandHotel_WebApplication.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace GrandHotel_WebApplication.Controllers
+namespace WebAPI_GrandHotel.Models
 {
     [Produces("application/json")]
     [Route("api/ClientsAPI")]

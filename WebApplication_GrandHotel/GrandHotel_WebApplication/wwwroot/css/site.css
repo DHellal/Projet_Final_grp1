@@ -35,7 +35,11 @@
     }
 }
 /*Centrer les titres: Lydia*/
-h2{
-    text-align:center;
+h2 {
+    text-align: center;
+    font-weight: bold;
     /*background-color: lightcyan;*/
- }
+}
+#formu {
+    background-image: url('../../../../images/img.jpg');
+}

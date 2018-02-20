@@ -36,6 +36,8 @@ namespace GrandHotel_WebApplication.Models
         [RegularExpression("(0[6-7]{1}[0-9]{8})|", ErrorMessage = "10 chiffres commençant par 06 ou 07")]
         [Display(Name = "Telephone Portable")]
         public string TelephonePort { get; set; }
+
+
         [Display(Name = "Cochez si numéro professionel")]
         public bool ProPort { get; set; }
 

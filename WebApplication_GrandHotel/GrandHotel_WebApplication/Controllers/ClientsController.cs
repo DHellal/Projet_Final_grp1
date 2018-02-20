@@ -96,7 +96,7 @@ namespace GrandHotel_WebApplication.Controllers
 
             return View(clients);
         }
-       
+
         // GET: Clients/Details/5
         public async Task<IActionResult> Details(int? id, string status, string nom, string prenom, int nbReserv, int nbReservEnCours)
         {
@@ -106,7 +106,7 @@ namespace GrandHotel_WebApplication.Controllers
                 return NotFound();
             }
 
-           
+
             var client = await _context.Client.SingleOrDefaultAsync(m => m.Id == id);
             if (client == null)
             {
@@ -120,7 +120,14 @@ namespace GrandHotel_WebApplication.Controllers
             return View(client);
         }
         #endregion
-       
+
+
+        // GET: Clients/Create 
+        public IActionResult Create()
+        {
+            ModelState.Clear();
+            return View();
+        }
 
         // POST: Clients/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -247,7 +254,7 @@ namespace GrandHotel_WebApplication.Controllers
                 else
                 {
                     return RedirectToAction("Index", "Manage");
-                }               
+                }
             }
             return View(clientVM);
         }
@@ -305,7 +312,7 @@ namespace GrandHotel_WebApplication.Controllers
             return View(client);
         }
 
-        
+
 
         // GET: Clients/Delete/5
         public async Task<IActionResult> Delete(int? id, string status)
@@ -336,7 +343,7 @@ namespace GrandHotel_WebApplication.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-       
+
         private bool ClientExists(int id)
         {
             return _context.Client.Any(e => e.Id == id);
